@@ -10,6 +10,18 @@
 </head>
 
 <body>
+	<div id="modal" class="modal">
+		<div class="modal-content">
+			<h5>百步梯 · 光迹涂鸦</h5>
+			<p>同学你好，这里是百步梯光迹涂鸦线上预约系统，通过线上取号帮你续命，确定预约请点击下方按钮</p>
+		</div>
+
+		<div class="modal-footer">
+			<a class="modal-action modal-close waves-effect waves-red btn-flat grey-text">不了</a>
+			<a class="modal-action modal-close waves-effect waves-red btn-flat">吼蛙</a>
+		</div>
+	</div>
+
 	<form>
 		<p>请填写你的个人信息，方便我们将照片发送给你~</p>
 
@@ -56,5 +68,9 @@
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdn.bootcss.com/materialize/0.100.2/js/materialize.min.js"></script>
+	<script type="text/javascript">
+		$("#modal").modal();
+		$("#modal").modal('open');
+	</script>
 </body>
 </html>
