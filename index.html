@@ -13,12 +13,14 @@
 	<div id="status" class="status">
 		<p id="success">预约成功啦(*´▽｀*)</p>
 		<p>你的号码为</p>
-		<h1>{{ num }}</h1>
-		<p>前方还有 {{ pre_num }} 位同学在等待</p>
-		<p>大约需要 {{ time }} 分钟</p>
-		<p>到号前将有微信提示，但仍以现场为准</p>
+		<p class="position" id="position">loading...</p>
+		<p>前方还有 <span id="waiting">loading...</span> 位同学在等待</p>
+		<p>大约需要 <span id="time">loading...</span> 分钟</p>
+		<p>到号前将有微信提示 但具体仍以现场为准</p>
 		<p>所以请留意大屏幕上的叫号信息哦</p>
 		<p>感谢你的参与(•̀ω•́)✧</p>
+
+		<button class="fresh">刷新</button>
 	</div>
 
 	<form id="reserve">

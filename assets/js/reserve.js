@@ -1,15 +1,9 @@
 if (true/*document.referrer == 'source'*/) {
+	$("#position").text(17);
+	$("#waiting").text(3);
+	$("#time").text(15);
+
 	$("#reserve").hide();
-	
-	var status = new Vue({
-		el: "#status",
-		data: {
-			num: 17,
-			cur_num: 13,
-			pre_num: 3,
-			time: 15
-		}
-	})
 
 	$("#reserve").submit(function(e) {
 		e.preventDefault();
@@ -23,14 +17,13 @@ if (true/*document.referrer == 'source'*/) {
 		$.post(
 			'./user/register/',
 			JSON.stringify(data),
-			function(rsp) {
-				if (rsp.status == 0) {
-					status.num = rsp.data.userPos;
-					status.cur_num = rsp.data.curPos;
-					status.pre_num = rsp.data.queueLength - curPos - 1;
-					status.time = status.pre_num * rsp.data.avgServeTime;
+			function(response) {
+				if (response.status == 0) {
+					$("#position").text(response.data.userPos);
+					$("#waiting").text(response.data.queueLength - curPos - 1);
+					$("#time").text(status.pre_num * response.data.avgServeTime);
 				} else {
-					alert(rsp.data.errorMessage);
+					alert(response.data.errorMessage);
 				}
 			}
 		)
