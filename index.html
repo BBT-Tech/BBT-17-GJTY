@@ -5,7 +5,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<title>百步梯 · 光迹涂鸦</title>
-	<link rel="stylesheet" href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css">
 	<link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
@@ -23,43 +22,24 @@
 		<button class="fresh">刷新</button>
 	</div>
 
+	<div class="title"></div>
+
 	<form id="reserve">
-		<p>请填写你的个人信息，方便我们将照片发送给你~</p>
-
-		<div style="margin-left: 12.5%;">
-			<div class="row">
-				<div class="input-field col s9">
-					<i class="material-icons prefix">account_box</i>
-					<input type="text" class="validate" name="name">
-					<label for="i">姓名</label>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="input-field col s9">
-					<i class="material-icons prefix">phone_iphone</i>
-					<input type="text" class="validate" name="mobileNumber">
-					<label for="i">手机</label>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="input-field col s9">
-					<i class="material-icons prefix">email</i>
-					<input type="email" class="validate" name="emailAddress">
-					<label for="i">邮箱</label>
-				</div>
-			</div>
+		<div>
+			<input type="text" name="name" placeholder="姓名">
 		</div>
 
-		<div class="center">
-			<button class="btn btn-outline-success waves-effect">
-				确定<i class="material-icons right">send</i>
-			</button>
+		<div>
+			<input type="text" name="mobileNumber" placeholder="手机">
 		</div>
+
+		<div>
+			<input type="email" name="emailAddress" placeholder="邮箱（照片将发送至此哦）">
+		</div>
+
+		<button class="submit">提交</button>
 	</form>
 
-	<script src="https://cdn.bootcss.com/vue/2.4.3/vue.min.js"></script>
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script src="./assets/js/reserve.js"></script>
 </body>

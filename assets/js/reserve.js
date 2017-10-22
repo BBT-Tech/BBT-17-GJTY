@@ -3,7 +3,7 @@ if (true/*document.referrer == 'source'*/) {
 	$("#waiting").text(3);
 	$("#time").text(15);
 
-	$("#reserve").hide();
+	$("#status").hide();
 
 	$("#reserve").submit(function(e) {
 		e.preventDefault();
