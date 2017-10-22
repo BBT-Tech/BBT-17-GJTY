@@ -5,29 +5,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<title>百步梯 · 光迹涂鸦</title>
-	<link rel="stylesheet" href="https://cdn.bootcss.com/materialize/0.100.2/css/materialize.min.css">
 	<link rel="stylesheet" href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css">
+	<link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
-	<div id="modal" class="modal">
-		<div class="modal-content">
-			<h5 class="center">百步梯 · 光迹涂鸦</h5>
-			<p>同学你好，这里是百步梯光迹涂鸦线上预约系统，通过线上取号帮你续命，确定预约请点击下方按钮</p>
-		</div>
-
-		<div class="modal-footer">
-			<a class="modal-action modal-close waves-effect waves-red btn-flat grey-text">不了</a>
-			<a class="modal-action modal-close waves-effect waves-red btn-flat">吼蛙</a>
-		</div>
-	</div>
-
-	<div id="success">
+	<div id="status">
 		<p>恭喜你，预约成功啦，你的号数为 {{ num }} ，前方还有 {{ pre_num }} 位同学在等待，大约还需要 {{ time }} 分钟</p>
-		<p>到号前将会有微信提示，但具体情况请以大屏幕为准</p>
-	</div>
 
-	<div id="progress">
 		<p>你的号数为 {{ num }} ，当前号数为 {{ cur_num }}</p>
 		<p>前方还有 {{ pre_num }} 位同学在等待，大约还需要 {{ time }} 分钟</p>
 		<p>请留意大屏幕上的叫号信息哦</p>
@@ -79,29 +64,6 @@
 
 	<script src="https://cdn.bootcss.com/vue/2.4.3/vue.min.js"></script>
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://cdn.bootcss.com/materialize/0.100.2/js/materialize.min.js"></script>
-	<script type="text/javascript">
-		$("#modal").modal();
-		$("#modal").modal('open');
-
-		var success = new Vue({
-			el: "#success",
-			data: {
-				num: 17,
-				pre_num: 3,
-				time: 15
-			}
-		})
-
-		var progress = new Vue({
-			el: "#progress",
-			data: {
-				num: 17,
-				cur_num: 13,
-				pre_num: 3,
-				time: 15
-			}
-		})
-	</script>
+	<script src="./assets/js/reserve.js"></script>
 </body>
 </html>
