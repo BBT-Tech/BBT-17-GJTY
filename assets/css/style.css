@@ -1,0 +1,11 @@
+.status {
+	background: #03A9F4;
+	text-align: center;
+}
+
+.status > p {
+	color: #fff;
+}
+
+.status > h1 {
+	color: #fea;
