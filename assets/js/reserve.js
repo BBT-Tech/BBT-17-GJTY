@@ -1,47 +1,58 @@
-// $('#' + (document.referrer == 'source' ? 'reserve' : 'status')).show();
-$("#reserve").show();
-$("#position").text(17);
-$("#waiting").text(3);
-$("#time").text(15);
+if (true/*document.referrer == 'source'*/) {
+	$("#reserve").show();
 
-$("#reserve").submit(function(e) {
-	e.preventDefault();
+	$("#reserve").submit(function(e) {
+		e.preventDefault();
 
-	data = {};
-	$.each(
-		$(this).serializeArray(),
-		function(i, v) { data[v.name] = v.value; }
-	);
+		data = {};
+		$.each(
+			$(this).serializeArray(),
+			function(i, v) { data[v.name] = v.value; }
+		);
 
-	$.post(
-		'./user/register/',
-		JSON.stringify(data),
+		$.post(
+			'./user/register/',
+			JSON.stringify(data),
+			function(response) {
+				if (response.status == 0) {
+					$("#position").text(response.data.userPos);
+					$("#waiting").text(response.data.userPos - response.data.curPos);
+					$("#time").text($("#waiting").text() * response.data.avgServeTime);
+
+					$("#reserve").hide();
+					$("#position").hide();
+					$("#status").fadeIn(1200, function() {
+						$("#position").show(1300);
+					});
+				} else {
+					alert(response.data.errorMessage);
+				}
+			}
+		).fail(function() {
+			alert('表单提交失败，请联系管理员');
+		});
+	});
+} else {
+	$("#status").show();
+	$.get(
+		'./user/isUserInQueue/',
 		function(response) {
-			if (response.status == 0) {
+			if (response.isInQueue) {
+				$("#success").hide();
+				$("#status-title").show();
+				
 				$("#position").text(response.data.userPos);
 				$("#waiting").text(response.data.userPos - response.data.curPos);
 				$("#time").text($("#waiting").text() * response.data.avgServeTime);
-
-				$("#reserve").hide();
-				$("#position").hide();
-				$("#status").fadeIn(1200, function() {
-					$("#position").show(1300);
-				});
 			} else {
-				alert(response.data.errorMessage);
+				window.location.href = './guide.html';
 			}
 		}
-	)
-
-	.fail(function() {
-		// alert('操作出错，请联系管理员');
-		$("#reserve").hide();
-		$("#position").hide();
-		$("#status").fadeIn(1200, function() {
-			$("#position").show(1300);
-		});
+	).fail(function() {
+		alert('获取状态信息失败，请联系管理员');
 	});
-});
+
+}
 
 $("#fresh").click(function () {
 	$.getJSON(
@@ -58,9 +69,7 @@ $("#fresh").click(function () {
 				$("#time").text(waiting * d.avgServeTime).fadeIn(500);
 			});
 		}
-	)
-
-	.fail(function() {
-		alert('获取队列信息出错，请联系管理员');
+	).fail(function() {
+		alert('获取队列信息失败，请联系管理员');
 	});
 });
