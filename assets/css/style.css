@@ -62,17 +62,26 @@ input::-moz-placeholder {
 	background-repeat: no-repeat;
 	background-size: 100%;
 }
+.warning {
+	padding-top: 1em;
+	color: #fff !important;
+}
+.guide,
 .status {
-	margin-top: calc((100vh - 440px) / 2);
+	margin-top: calc((100vh - 374px) / 2);
 }
-.status > p {
-	color: rgba(255,255,255,0.63);
-}
+
 .position {
 	font-size: 64px;
 	margin: 16px 0;
 	color: rgb(254,254,145) !important;
 }
+
+.guide > p,
+.status > p {
+	color: rgba(255,255,255,0.63);
+}
+.auth,
 .submit,
 .fresh {
 	width: 116px;
