@@ -1,9 +1,16 @@
 body {
 	background-image: url(../img/background.png);
-	background-repeat: no-repeat;
+	background-repeat-x: no-repeat;
 	background-size: 100%;
 	text-align: center;
 }
+
+.status,
+.status .title,
+.reserve {
+	display: none;
+}
+
 .info {
 	display: flex;
 	justify-content: center;
@@ -38,7 +45,7 @@ input {
 
 *:focus {
 	outline: none;
-} 
+}
 
 input::-webkit-input-placeholder {
 	color: rgba(255,255,255,0.36) !important;
@@ -56,7 +63,7 @@ input::-moz-placeholder {
 	background-size: 100%;
 }
 .status {
-	margin-top: 96px;
+	margin-top: calc((100vh - 440px) / 2);
 }
 .status > p {
 	color: rgba(255,255,255,0.63);
