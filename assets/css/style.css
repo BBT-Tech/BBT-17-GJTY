@@ -66,9 +66,18 @@ input::-moz-placeholder {
 	padding-top: 1em;
 	color: #fff !important;
 }
-.guide,
-.status {
+
+.guide {
 	margin-top: calc((100vh - 374px) / 2);
+}
+.reserve {
+	margin-top: calc((100vh - 450px) / 2);
+}
+.status {
+	margin-top: calc((100vh - 549px) / 2);
+}
+.success-status {
+	margin-top: calc((100vh - 456px) / 2) !important;
 }
 
 .position {

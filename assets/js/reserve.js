@@ -1,4 +1,4 @@
-if (true/*document.referrer == 'source'*/) {
+if (false/*document.referrer == 'source'*/) {
 	$("#reserve").show();
 
 	$("#reserve").submit(function(e) {
@@ -11,10 +11,14 @@ if (true/*document.referrer == 'source'*/) {
 		);
 
 		$.post(
-			'./user/register/',
+			// './user/register/',
+			'./test_register.php',
 			JSON.stringify(data),
 			function(response) {
+				console.log(response);
 				if (response.status == 0) {
+					$("#status").addClass("success-status");
+
 					$("#position").text(response.data.userPos);
 					$("#waiting").text(response.data.userPos - response.data.curPos);
 					$("#time").text($("#waiting").text() * response.data.avgServeTime);
@@ -25,7 +29,7 @@ if (true/*document.referrer == 'source'*/) {
 						$("#position").show(1300);
 					});
 				} else {
-					alert(response.data.errorMessage);
+					alert(response.errorMessage);
 				}
 			}
 		).fail(function() {
@@ -33,30 +37,39 @@ if (true/*document.referrer == 'source'*/) {
 		});
 	});
 } else {
-	$("#status").show();
 	$.get(
-		'./user/isUserInQueue/',
+		// './user/isUserInQueue/',
+		'./test_isUserInQueue.php',
 		function(response) {
-			if (response.isInQueue) {
-				$("#success").hide();
-				$("#status-title").show();
-				
-				$("#position").text(response.data.userPos);
-				$("#waiting").text(response.data.userPos - response.data.curPos);
-				$("#time").text($("#waiting").text() * response.data.avgServeTime);
+			if (response.status == 0) {
+				if (response.data.isInQueue) {
+					$("#success").hide();
+					$("#status-title").show();
+
+					$("#position").text(response.data.userPos);
+					$("#waiting").text(response.data.userPos - response.data.curPos);
+					$("#time").text($("#waiting").text() * response.data.avgServeTime);
+
+					$("#position").hide();
+					$("#status").fadeIn(1200, function() {
+						$("#position").show(1300);
+					});
+				} else {
+					window.location.href = './guide.html';
+				}
 			} else {
-				window.location.href = './guide.html';
+				alert(response.errorMessage);
 			}
 		}
 	).fail(function() {
 		alert('获取状态信息失败，请联系管理员');
 	});
-
 }
 
 $("#fresh").click(function () {
 	$.getJSON(
-		'./queueinfo.json',
+		// './queueinfo.json',
+		'./test_queueinfo.php',
 		function(d) {
 			var waiting = $("#position").text() - d.curPos;
 			waiting = waiting > 0 ? waiting : 0;
