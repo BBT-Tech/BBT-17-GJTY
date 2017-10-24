@@ -5,10 +5,29 @@ body {
 	text-align: center;
 }
 
+.guide {
+	margin-top: calc((100vh - 305px) / 2);
+}
+.reserve {
+	margin-top: calc((100vh - 450px) / 2);
+}
+.status {
+	margin-top: calc((100vh - 549px) / 2);
+}
+.success-status {
+	margin-top: calc((100vh - 472px) / 2) !important;
+}
+
 .status,
 .status .title,
 .reserve {
 	display: none;
+}
+
+.error {
+	display: none;
+	color: rgba(255, 152, 0, 0.7);
+	margin-top: 5px;
 }
 
 .info {
@@ -16,7 +35,7 @@ body {
 	justify-content: center;
 	width: 260px;
 	height: 48px;
-	margin-bottom: 32px;
+	margin-top: 32px;
 	margin-left: calc((100vw - 276px) / 2);
 	color: rgba(255,255,255,0.36);
 	background-repeat: no-repeat;
@@ -57,7 +76,7 @@ input::-moz-placeholder {
 .title {
 	width: 244px;
 	height: 82px;
-	margin: 48px calc((100vw - 260px) / 2);
+	margin: 32px calc((100vw - 260px) / 2);
 	background-image: url(../img/title.png);
 	background-repeat: no-repeat;
 	background-size: 100%;
@@ -65,19 +84,6 @@ input::-moz-placeholder {
 .warning {
 	padding-top: 1em;
 	color: #fff !important;
-}
-
-.guide {
-	margin-top: calc((100vh - 374px) / 2);
-}
-.reserve {
-	margin-top: calc((100vh - 450px) / 2);
-}
-.status {
-	margin-top: calc((100vh - 549px) / 2);
-}
-.success-status {
-	margin-top: calc((100vh - 456px) / 2) !important;
 }
 
 .position {
@@ -90,6 +96,7 @@ input::-moz-placeholder {
 .status > p {
 	color: rgba(255,255,255,0.63);
 }
+
 .auth,
 .submit,
 .fresh {
