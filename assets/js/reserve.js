@@ -6,22 +6,32 @@ var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((
 if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
 
-	$("#phone").mouseout(function() {
-		if (phoneReg.test($("#phone").val()))
-			$("#phone-error").slideUp(700);
-		else
+	$("#phone").change(function() {
+		if (!phoneReg.test(this.value)) {
 			$("#phone-error").slideDown(700);
+			$(this).on('input', function() {
+				if (phoneReg.test(this.value))
+					$("#phone-error").slideUp(700);
+			});
+		}
 	});
 
-	$("#email").mouseout(function() {
-		if (emailReg.test($("#email").val()))
-			$("#email-error").slideUp(700);
-		else
+	$("#email").change(function() {
+		if (!emailReg.test(this.value)) {
 			$("#email-error").slideDown(700);
+			$(this).on('input', function() {
+				if (emailReg.test(this.value))
+					$("#email-error").slideUp(700);
+			});
+		}
 	});
 
 	$("#reserve").submit(function(e) {
 		e.preventDefault();
+
+		if (!(phoneReg.test($("#phone").val())
+			&& emailReg.test($("#email").val())))
+			return;
 
 		var data = {};
 		$.each(
