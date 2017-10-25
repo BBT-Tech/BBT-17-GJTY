@@ -16,3 +16,6 @@ $Config['Host'] = 'localhost';
 $Config['User'] = 'root';
 $Config['Password'] = '';
 $Config['DBname'] = '';
+
+$Config['AdminUsername']='admin';
+$Config['AdminPassword']='password';
