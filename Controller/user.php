@@ -24,12 +24,14 @@ class user extends SlimvcController
                     "curPos"=>$var_model->getValue("curPos"),
                     "queueLength"=>$queue_model->getQueueTotalLength(),
                     "avgServeTime"=>$var_model->getValue("avgServeTime")
+
                 );
             }
             else
             {
                 $return['data']=array(
-                    "isInQueue"=>false
+                    "isInQueue"=>false,
+                    "isRegisterAble"=>$var_model->getValue("isRegisterAble")
                 );
             }
 
@@ -54,6 +56,8 @@ class user extends SlimvcController
         $var_model=$this->model("var_model");
         try {
             $return=array();
+            if($var_model->getValue("isRegisterAble")!=0)
+                throw new Exception("现在还未能预约哦！请关注现场信息！");
             if(($item=$queue_model->getItemByUserID($user_id)) && ($var_model->getValue("curPos")- $item['queue_id']<=5))
                 throw new Exception("您在队伍中哦，请勿重新报名。温馨提示：过号5个之内排队是有效的哦");
             $json=$this->getRequestJson();
@@ -62,9 +66,9 @@ class user extends SlimvcController
             $emailAddress=@$json['emailAddress'];
             if(empty($name) || strlen($name)>128)
                 throw new Exception("姓名未按格式填写");
-            if(empty($mobileNumber) || !preg_match("/^1[0-9]{10}$/",$mobileNumber))
+            if(empty($mobileNumber) || !preg_match_all("/^1[0-9]{10}$/",$mobileNumber))
                 throw new Exception("手机未按格式填写");
-            if(empty($emailAddress) || strlen($emailAddress)>256)
+            if(empty($emailAddress) || strlen($emailAddress)>256 || !preg_match_all('/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,}(\.[a-z]{2,})*)$/',$emailAddress))
                 throw new Exception("邮箱未按格式填写");
             $queue_id=$queue_model->insertNewItem($user_id,$name,$mobileNumber,$emailAddress);
             if(!$queue_id)

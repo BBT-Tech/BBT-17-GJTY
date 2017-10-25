@@ -208,5 +208,61 @@ class admin extends SlimvcController
         file_put_contents(_Root ._DS_ . "queueinfo.json",json_encode($json));
         return $json;
     }
+    function setIsRegisterAble()
+    {
+        try {
+            if(!$this->helper("global_helper")->isAdminLogin())
+                throw new Exception("请先登录");
+            /** @var queue_model $queue_model */
+            $queue_model=$this->model("queue_model");
+            /** @var var_model $var_model */
+            $var_model=$this->model("var_model");
+            /** @var user_model $user_model */
+            $user_model=$this->model("user_model");
+            $json=$this->getRequestJson();
+
+            $status=intval($json['status']);
+            if($status!=0 && $status!=1)
+                throw new Exception("无效的值");
+            $var_model->setValue("isRegisterAble",$status);
+            $return['status']=0;
+
+            $this->outputJson($return);
+
+        } catch (Exception $e) {
+            $return=array();
+            $return['status'] = 1;
+            $return['errorMessage'] = $e->getMessage();
+            $this->outputJson($return);
+
+        }
+    }
+    function getRegisterAble()
+    {
+        try {
+            if(!$this->helper("global_helper")->isAdminLogin())
+                throw new Exception("请先登录");
+            /** @var queue_model $queue_model */
+            $queue_model=$this->model("queue_model");
+            /** @var var_model $var_model */
+            $var_model=$this->model("var_model");
+            /** @var user_model $user_model */
+            $user_model=$this->model("user_model");
+            $json=$this->getRequestJson();
+            $return['data']=array(
+                "status"=>$var_model->getValue("isRegisterAble")
+            );
+            $return['status']=0;
+
+            $this->outputJson($return);
+
+        } catch (Exception $e) {
+            $return=array();
+            $return['status'] = 1;
+            $return['errorMessage'] = $e->getMessage();
+            $this->outputJson($return);
+
+        }
+    }
 
 }
