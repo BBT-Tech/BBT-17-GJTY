@@ -22,7 +22,6 @@ class global_helper extends SlimvcHelper
         $open_id=$this->getOpenID();
         /** @var user_model $user_model */
         $user_model=$this->model("user_model");
-        echo $open_id;
         if(!($user_id=$user_model->getUserIDByOpenID($open_id)))
             $user_id=$user_model->addNewUserByOpenID($open_id);
         return $user_id;
@@ -54,7 +53,22 @@ class global_helper extends SlimvcHelper
     }
     function sendMessage($open_id,$cur_pos)
     {
-        //TODO:与佳妹后端交互发送订阅信息
-        return true;
+        /** @var curlRequest $curl */
+        $curl=$this->newClass("curlRequest");
+        $return=$curl->post("https://100steps.withcic.cn/wechat_bbt/Home/Vote/sendMessage",array(
+            "openid"=>$open_id,
+            "url"=>"https://100steps.withcic.cn/2017_gjty/index.html",
+            "scene"=>1000,
+            "title"=>"即将到号提醒",
+            "content"=>"同学你好！你的光迹涂鸦编号是:【 $cur_pos 】现在前面仅有三位等待的小伙伴啦^_^梯仔提醒你在十分钟内赶到【光迹涂鸦摊位】哦～
+以上信息仅供参考，具体排号进度还请注意现场大屏幕上的排号信息吼--(～￣▽￣)→))*￣▽￣*)o
+【梯仔温馨提示:请及时赶到摊位哦～为了保证游戏的正常进行，过号【5个】后号码将不作保留，需要重新取号_(:з」∠)_】",
+            "color"=>"#0000CC"
+        ));
+        $json=json_decode($return,true);
+        if(!$json || $json['status']!=true)
+            return false;
+        else
+            return true;
     }
 }

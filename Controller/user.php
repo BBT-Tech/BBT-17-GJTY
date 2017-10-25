@@ -123,12 +123,12 @@ class user extends SlimvcController
         if($action=='confirm' && $openid==$_SESSION['openid'])
         {
             $user_model->updateUserSubscribeStatus($user_id,true);
-            $redirect=urlencode("https://100steps.withcic.cn/2017_gjty/index.html");
+            $redirect="https://100steps.withcic.cn/2017_gjty/index.html";
             header("Location: $redirect");
         }
         else
         {
-            $redirect=urlencode("https://100steps.withcic.cn/2017_gjty/guide.html");
+            $redirect="https://100steps.withcic.cn/2017_gjty/guide.html";
             header("Location: $redirect");
         }
     }
