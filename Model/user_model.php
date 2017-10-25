@@ -25,7 +25,7 @@ class user_model extends SlimvcModel
     }
     function addNewUserByOpenID($open_id)
     {
-        if(!$this->queryStmt("insert into user_info set open_id=? and is_subscribed=false",
+        if(!$this->queryStmt("insert into user_info set open_id=? , is_subscribed=false",
             "s",
             $open_id))
             return false;

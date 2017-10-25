@@ -158,7 +158,9 @@ class admin extends SlimvcController
             $var_model=$this->model("var_model");
             /** @var user_model $user_model */
             $user_model=$this->model("user_model");
-            $cur_id=intval($this->model("curPos"));
+            $json=$this->getRequestJson();
+
+            $cur_id=intval($json['curPos']);
             if($cur_id!=$var_model->getValue("curPos"))
                 throw new Exception("前后台数据不一致！请先尝试刷新页面！");
             if($cur_id>=$queue_model->getQueueTotalLength())

@@ -22,6 +22,7 @@ class global_helper extends SlimvcHelper
         $open_id=$this->getOpenID();
         /** @var user_model $user_model */
         $user_model=$this->model("user_model");
+        echo $open_id;
         if(!($user_id=$user_model->getUserIDByOpenID($open_id)))
             $user_id=$user_model->addNewUserByOpenID($open_id);
         return $user_id;
