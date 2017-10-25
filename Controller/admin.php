@@ -165,9 +165,9 @@ class admin extends SlimvcController
                 throw new Exception("前后台数据不一致！请先尝试刷新页面！");
             if($cur_id>=$queue_model->getQueueTotalLength())
                 throw new Exception("不能next哦，目前已经处理完所有排队了");
-            $start=$cur_id-4;
+            $start=$cur_id+1;
             if($start<1)    $start=1;
-            $results=$queue_model->getQueueListFrom($start,4);
+            $results=$queue_model->getQueueListFrom($start,3);
             foreach($results as $one)
             {
                 if(!$one['is_noticed'])
@@ -180,7 +180,7 @@ class admin extends SlimvcController
                 }
             }
             $var_model->setValue("curPos",$cur_id+1);
-            $return['data']=$this->updateQueueInfo();
+            $return['data']=$this->helper("global_helper")->updateQueueInfo();
 
             $return['status']=0;
 
@@ -194,20 +194,7 @@ class admin extends SlimvcController
 
         }
     }
-    function updateQueueInfo()
-    {
-        /** @var queue_model $queue_model */
-        $queue_model=$this->model("queue_model");
-        /** @var var_model $var_model */
-        $var_model=$this->model("var_model");
-        $json=array(
-            "curPos"=>$var_model->getValue("curPos"),
-            "queueLength"=>$queue_model->getQueueTotalLength(),
-            "avgServeTime"=>$var_model->getValue("avgServeTime")
-        );
-        file_put_contents(_Root ._DS_ . "queueinfo.json",json_encode($json));
-        return $json;
-    }
+
     function setIsRegisterAble()
     {
         try {

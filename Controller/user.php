@@ -54,6 +54,8 @@ class user extends SlimvcController
         $queue_model=$this->model("queue_model");
         /** @var var_model $var_model */
         $var_model=$this->model("var_model");
+        /** @var user_model $user_model */
+        $user_model=$this->model("user_model");
         try {
             $return=array();
             if($var_model->getValue("isRegisterAble")!=0)
@@ -73,12 +75,16 @@ class user extends SlimvcController
             $queue_id=$queue_model->insertNewItem($user_id,$name,$mobileNumber,$emailAddress);
             if(!$queue_id)
                 throw new Exception("系统出错！请联系现场工作人员！");
-            $return['data']=array(
-                "userPos"=>$queue_id,
-                "curPos"=>$var_model->getValue("curPos"),
-                "queueLength"=>$queue_model->getQueueTotalLength(),
-                "avgServeTime"=>$var_model->getValue("avgServeTime")
-            );
+            if($queue_id-$var_model->getValue("curPos")<=3)//需要立即通知了
+            {
+                $open_id=$user_model->getOpenIDByUserID($user_id);
+                if($this->helper("global_helper")->sendMessage($open_id,$queue_id))
+                {
+                    $queue_model->updateNoticeStatus($queue_id,true);
+                }
+            }
+            $return['data']=$this->helper("global_helper")->updateQueueInfo();
+            $return['userPos']=$queue_id;
             $return['status'] = 0;
             $this->outputJson($return);
 
