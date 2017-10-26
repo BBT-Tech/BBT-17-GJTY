@@ -11,6 +11,9 @@ body {
 .reserve {
 	margin-top: calc((100vh - 450px) / 2);
 }
+.missed {
+	margin-top: calc((100vh - 282px) / 2);
+}
 .status {
 	margin-top: calc((100vh - 549px) / 2);
 }
@@ -86,6 +89,9 @@ input::-moz-placeholder {
 	padding-top: 1em;
 	color: #fff !important;
 }
+.missed .notice {
+	padding-top: 2em;
+}
 
 .position {
 	font-size: 64px;
@@ -94,13 +100,12 @@ input::-moz-placeholder {
 }
 
 .guide-content > p,
+.missed > p,
 .status > p {
 	color: rgba(255,255,255,0.63);
 }
 
-.auth,
-.submit,
-.fresh {
+button {
 	width: 116px;
 	height: 48px;
 	margin-top: 48px;
@@ -111,4 +116,14 @@ input::-moz-placeholder {
 	border-width: 1px;
 	border-style: solid;
 	border-radius: 32px;
+}
+
+.choices {
+	display: flex;
+	justify-content: space-around;
+	margin-top: 30px;
+}
+
+.choices button {
+	margin-top: 0;
 }
