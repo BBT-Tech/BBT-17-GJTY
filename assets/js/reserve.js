@@ -1,8 +1,10 @@
-var phoneReg = /^1[0-9]{10}$/;
-var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+var regPattern = {
+	"phone": /^1[0-9]{10}$/,
+	"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+};
 
-// var formSource = '';
-var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+var formSource = '';
+// var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
 var statusHeight = "calc((100vh - 496px) / 2)";
 var successHeight = "calc((100vh - 419px) / 2)";
 
@@ -10,25 +12,8 @@ if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
 	setVerticalAlign("#reserve");
 
-	$("#phone").change(function() {
-		if (!phoneReg.test(this.value)) {
-			$("#phone-error").slideDown(700);
-			$(this).on('input', function() {
-				if (phoneReg.test(this.value))
-					$("#phone-error").slideUp(700);
-			});
-		}
-	});
-
-	$("#email").change(function() {
-		if (!emailReg.test(this.value)) {
-			$("#email-error").slideDown(700);
-			$(this).on('input', function() {
-				if (emailReg.test(this.value))
-					$("#email-error").slideUp(700);
-			});
-		}
-	});
+	bindChecker("phone");
+	bindChecker("email");
 
 	$("#reserve").submit(function(e) {
 		e.preventDefault();
@@ -152,6 +137,19 @@ function parseWaiting(w) {
 	}
 	return w > 0 ? w : 0;
 }
+
+function bindChecker(e) {
+	var err = "#" + e + "-error";
+	$("#" + e).change(function() {
+		if (!regPattern[e].test(this.value)) {
+			$(err).slideDown(700);
+			$(this).on('input', function() {
+				if (regPattern[e].test(this.value))
+					$(err).slideUp(700);
+			});
+		}
+	});
+};
 
 function setVerticalAlign(e) {
 	$("body").css("margin-top", function() {
