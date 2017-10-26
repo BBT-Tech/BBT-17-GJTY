@@ -3,8 +3,8 @@ var regPattern = {
 	"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 };
 
-var formSource = '';
-// var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+// var formSource = '';
+var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
 var statusHeight = "calc((100vh - 496px) / 2)";
 var successHeight = "calc((100vh - 419px) / 2)";
 
@@ -82,7 +82,7 @@ $("#fresh").click(function () {
 });
 
 $("#reserve-again").click(function() {
-	location.href = './user/subscribeMsg/';
+	location.href = './guide.html';
 });
 
 $("#show-status").click(function() {
@@ -97,25 +97,24 @@ function showStatus(missed =false) {
 		function(response) {
 			if (response.status == 0) {
 				var d = response.data;
-				if (d.isInQueue) {
-					var waiting = missed ? 0 : parseWaiting(d.userPos - d.curPos);
-					if (waiting == -1) return;
-
-					$("#position").text(d.userPos);
-					$("#waiting").text(waiting);
-					$("#time").text(waiting * d.avgServeTime);
-
-					$("body").css("margin-top", statusHeight);
-
-					$("#success").hide();
-					$("#position").hide();
-					$("#status-title").show();
-					$("#status").fadeIn(1200, function() {
-						$("#position").show(1300);
-					});
-				} else {
+				if (!d.isInQueue || (d.data.isRegisterAble == -1))
 					location.href = './guide.html';
-				}
+
+				var waiting = missed ? 0 : parseWaiting(d.userPos - d.curPos);
+				if (waiting == -1) return;
+
+				$("#position").text(d.userPos);
+				$("#waiting").text(waiting);
+				$("#time").text(waiting * d.avgServeTime);
+
+				$("body").css("margin-top", statusHeight);
+
+				$("#success").hide();
+				$("#position").hide();
+				$("#status-title").show();
+				$("#status").fadeIn(1200, function() {
+					$("#position").show(1300);
+				});
 			} else {
 				if (response.status == -1)
 					location.href = response.redirect;
