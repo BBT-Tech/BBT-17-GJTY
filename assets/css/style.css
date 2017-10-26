@@ -20,6 +20,7 @@ body {
 
 .status,
 .status .title,
+.guide-content,
 .reserve {
 	display: none;
 }
@@ -81,7 +82,7 @@ input::-moz-placeholder {
 	background-repeat: no-repeat;
 	background-size: 100%;
 }
-.warning {
+.notice {
 	padding-top: 1em;
 	color: #fff !important;
 }
@@ -92,7 +93,7 @@ input::-moz-placeholder {
 	color: rgb(254,254,145) !important;
 }
 
-.guide > p,
+.guide-content > p,
 .status > p {
 	color: rgba(255,255,255,0.63);
 }
@@ -102,11 +103,12 @@ input::-moz-placeholder {
 .fresh {
 	width: 116px;
 	height: 48px;
-	margin-top: 32px;
+	margin-top: 48px;
 	background-color: transparent;
 	font-size: 16px;
 	color: rgba(255,255,255,0.87);
 	border-color: white;
 	border-width: 1px;
+	border-style: solid;
 	border-radius: 32px;
 }
