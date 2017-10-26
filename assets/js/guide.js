@@ -6,7 +6,7 @@ $.get(
 			switch(r.data.isRegisterAble) {
 				case 0:
 					if ((typeof r.data.isInQueue != 'undefined')
-						&& (r.data.curPos - r.data.userPos >= 5))
+						&& (r.data.curPos - r.data.userPos <= 5))
 						location.href = './index.html';
 
 					setVerticalAlign("#welcome");

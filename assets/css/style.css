@@ -27,7 +27,7 @@ input::-moz-placeholder {
 button {
 	width: 116px;
 	height: 48px;
-	margin-top: 48px;
+	margin-top: 32px;
 	font-size: 16px;
 	color: rgba(255,255,255,0.87);
 	border-color: white;
@@ -36,8 +36,8 @@ button {
 	border-radius: 32px;
 	background-color: transparent;
 }
-.status button {
-	margin-top: 32px !important;
+.reserve button {
+	margin-top: 48px !important;
 }
 
 .info {
@@ -87,21 +87,9 @@ button {
 	padding-top: 1em;
 	color: #fff !important;
 }
-.missed .notice {
-	padding-top: 2em;
-}
 
 .pending-info {
 	padding-bottom: 2em;
-}
-
-.choices {
-	display: flex;
-	justify-content: space-around;
-	margin-top: 30px;
-}
-.choices button {
-	margin-top: 0;
 }
 
 .error {

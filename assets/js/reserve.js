@@ -18,8 +18,8 @@ if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").submit(function(e) {
 		e.preventDefault();
 
-		if (!(phoneReg.test($("#phone").val())
-			&& emailReg.test($("#email").val())))
+		if (!(regPattern["phone"].test($("#phone").val())
+			&& regPattern["email"].test($("#email").val())))
 			return;
 
 		var data = {};
@@ -57,50 +57,16 @@ if (document.referrer.indexOf(formSource) == 0) {
 		});
 	});
 } else {
-	showStatus();
-}
-
-$("#fresh").click(function () {
-	$.getJSON(
-		// './queueinfo.json',
-		'./test_queueinfo.php',
-		function(d) {
-			var waiting = parseWaiting($("#position").text() - d.curPos);
-			if (waiting == -1) return;
-
-			$("#waiting").fadeOut(300, function() {
-				$(this).text(waiting).fadeIn(500);
-			});
-
-			$("#time").fadeOut(300, function() {
-				$(this).text(waiting * d.avgServeTime).fadeIn(500);
-			});
-		}
-	).fail(function() {
-		alert('获取队列信息失败，请联系管理员');
-	});
-});
-
-$("#reserve-again").click(function() {
-	location.href = './guide.html';
-});
-
-$("#show-status").click(function() {
-	$("#missed").hide();
-	showStatus(true);
-});
-
-function showStatus(missed =false) {
 	$.get(
 		// './user/isUserInQueue/',
 		'./test_isUserInQueue.php',
 		function(response) {
 			if (response.status == 0) {
 				var d = response.data;
-				if (!d.isInQueue || (d.data.isRegisterAble == -1))
+				if (!d.isInQueue || (d.isRegisterAble == -1))
 					location.href = './guide.html';
 
-				var waiting = missed ? 0 : parseWaiting(d.userPos - d.curPos);
+				var waiting = parseWaiting(d.userPos - d.curPos);
 				if (waiting == -1) return;
 
 				$("#position").text(d.userPos);
@@ -127,11 +93,35 @@ function showStatus(missed =false) {
 	});
 }
 
+$("#fresh").click(function () {
+	$.getJSON(
+		// './queueinfo.json',
+		'./test_queueinfo.php',
+		function(d) {
+			var waiting = parseWaiting($("#position").text() - d.curPos);
+			if (waiting == -1) return;
+
+			$("#waiting").fadeOut(300, function() {
+				$(this).text(waiting).fadeIn(500);
+			});
+
+			$("#time").fadeOut(300, function() {
+				$(this).text(waiting * d.avgServeTime).fadeIn(500);
+			});
+		}
+	).fail(function() {
+		alert('获取队列信息失败，请联系管理员');
+	});
+});
+
 function parseWaiting(w) {
-	if (w <= -5) {
+	if (w < -5) {
 		$("#status").hide();
 		$("#missed").fadeIn(700);
 		setVerticalAlign("#missed");
+		$("#reserve-again").click(function() {
+			location.href = './guide.html';
+		});
 		return -1;
 	}
 	return w > 0 ? w : 0;
