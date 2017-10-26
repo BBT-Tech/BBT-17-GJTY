@@ -6,17 +6,8 @@ body {
 	text-align: center;
 }
 
-.reserve {
-	margin-top: calc((100vh - 450px) / 2);
-}
-.status {
-	margin-top: calc((100vh - 549px) / 2);
-}
-.success-status {
-	margin-top: calc((100vh - 472px) / 2) !important;
-}
-
 .status,
+.missed,
 .status .title,
 .guide-content,
 .reserve {

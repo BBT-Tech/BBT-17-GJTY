@@ -1,11 +1,13 @@
-// var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
-
-var formSource = 's';
 var phoneReg = /^1[0-9]{10}$/;
 var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+// var formSource = '';
+var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+var statusHeight = "calc((100vh - 512px) / 2)";
+var successHeight = "calc((100vh - 472px) / 2)";
 
 if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
+	setVerticalAlign("#reserve");
 
 	$("#phone").change(function() {
 		if (!phoneReg.test(this.value)) {
@@ -46,7 +48,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 			JSON.stringify(data),
 			function(response) {
 				if (response.status == 0) {
-					$("#status").addClass("success-status");
+					$("body").css("margin-top", successHeight);
 
 					$("#position").text(response.data.userPos);
 					$("#waiting").text(response.data.userPos - response.data.curPos);
@@ -59,7 +61,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 					});
 				} else {
 					if (response.status == -1)
-						window.location.href = response.redirect;
+						location.href = response.redirect;
 					else
 						alert(response.errorMessage);
 				}
@@ -69,44 +71,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 		});
 	});
 } else {
-	$.get(
-		// './user/isUserInQueue/',
-		'./test_isUserInQueue.php',
-		function(response) {
-			if (response.status == 0) {
-				var d = response.data;
-				if (d.isInQueue) {
-					var waiting = d.userPos - d.curPos;
-					if (waiting <= -5) {
-						alert('您已过号五个以上，请重新取号> <');
-						window.location.href = './guide.html';
-					}
-					waiting = waiting > 0 ? waiting : 0;
-
-					$("#success").hide();
-					$("#status-title").show();
-
-					$("#position").text(d.userPos);
-					$("#waiting").text(waiting);
-					$("#time").text(waiting * d.avgServeTime);
-
-					$("#position").hide();
-					$("#status").fadeIn(1200, function() {
-						$("#position").show(1300);
-					});
-				} else {
-					window.location.href = './guide.html';
-				}
-			} else {
-				if (response.status == -1)
-					window.location.href = response.redirect;
-				else
-					alert(response.errorMessage);
-			}
-		}
-	).fail(function() {
-		alert('获取状态信息失败，请联系管理员');
-	});
+	showStatus();
 }
 
 $("#fresh").click(function () {
@@ -114,12 +79,8 @@ $("#fresh").click(function () {
 		// './queueinfo.json',
 		'./test_queueinfo.php',
 		function(d) {
-			var waiting = $("#position").text() - d.curPos;
-			if (waiting <= -5) {
-				alert('您已过号五个以上，请重新取号> <');
-				window.location.href = './guide.html';
-			}
-			waiting = waiting > 0 ? waiting : 0;
+			var waiting = parseWaiting($("#position").text() - d.curPos);
+			if (waiting == -1) return;
 
 			$("#waiting").fadeOut(300, function() {
 				$(this).text(waiting).fadeIn(500);
@@ -133,3 +94,71 @@ $("#fresh").click(function () {
 		alert('获取队列信息失败，请联系管理员');
 	});
 });
+
+$("#reserve-again").click(function() {
+	location.href = './user/subscribeMsg/';
+});
+
+$("#show-status").click(function() {
+	$("#missed").hide();
+	showStatus(true);
+});
+
+function showStatus(missed =false) {
+	$.get(
+		// './user/isUserInQueue/',
+		'./test_isUserInQueue.php',
+		function(response) {
+			if (response.status == 0) {
+				var d = response.data;
+				if (d.isInQueue) {
+					var waiting = missed ? 0 : parseWaiting(d.userPos - d.curPos);
+					if (waiting == -1) return;
+
+					$("#success").hide();
+					$("#position").hide();
+					if (missed) {
+						$(".hide-when-missed").hide();
+						statusHeight = "calc(((100vh - 512px) + 5em) / 2)";
+					}
+
+					$("#position").text(d.userPos);
+					$("#waiting").text(waiting);
+					$("#time").text(waiting * d.avgServeTime);
+
+					$("body").css("margin-top", statusHeight);
+
+					$("#status-title").show();
+					$("#status").fadeIn(1200, function() {
+						$("#position").show(1300);
+					});
+				} else {
+					location.href = './guide.html';
+				}
+			} else {
+				if (response.status == -1)
+					location.href = response.redirect;
+				else
+					alert(response.errorMessage);
+			}
+		}
+	).fail(function() {
+		alert('获取状态信息失败，请联系管理员');
+	});
+}
+
+function parseWaiting(w) {
+	if (w <= -5) {
+		$("#status").hide();
+		$("#missed").fadeIn(500);
+		setVerticalAlign("#missed");
+		return -1;
+	}
+	return w > 0 ? w : 0;
+}
+
+function setVerticalAlign(e) {
+	$("body").css("margin-top", function() {
+		return (this.scrollHeight - $(e).prop('scrollHeight')) / 2;
+	});
+}
