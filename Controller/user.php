@@ -23,8 +23,8 @@ class user extends SlimvcController
                     "userPos"=>$item['queue_id'],
                     "curPos"=>$var_model->getValue("curPos"),
                     "queueLength"=>$queue_model->getQueueTotalLength(),
-                    "avgServeTime"=>$var_model->getValue("avgServeTime")
-
+                    "avgServeTime"=>$var_model->getValue("avgServeTime"),
+                    "isRegisterAble"=>$var_model->getValue("isRegisterAble")
                 );
             }
             else
