@@ -1,18 +1,13 @@
 body {
+	margin: 0;
 	background-image: url(../img/background.png);
 	background-repeat-x: no-repeat;
 	background-size: 100%;
 	text-align: center;
 }
 
-.guide {
-	margin-top: calc((100vh - 305px) / 2);
-}
 .reserve {
 	margin-top: calc((100vh - 450px) / 2);
-}
-.missed {
-	margin-top: calc((100vh - 282px) / 2);
 }
 .status {
 	margin-top: calc((100vh - 549px) / 2);
@@ -91,6 +86,9 @@ input::-moz-placeholder {
 }
 .missed .notice {
 	padding-top: 2em;
+}
+.pending-info {
+	padding-bottom: 2em;
 }
 
 .position {

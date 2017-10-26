@@ -9,7 +9,7 @@
 </head>
 
 <body>
-	<div class="guide">
+	<div class="guide" id="guide">
 		<div class="title"></div>
 
 		<div class="guide-content" id="welcome">
@@ -17,25 +17,24 @@
 			<p>预约取号需要首先通过微信授权</p>
 			<p>确定的话就按下下面的按钮吧</p>
 
-			<button onclick="window.location.href='./user/subscribeMsg/';">确定</button>
+			<button id="auth">确定</button>
 		</div>
 
 		<div class="guide-content" id="pending">
-			<p>唔>< 预约还没开始哦</p>
+			<p class="pending-info" id="pending-info">唔>< 预约还没开始哦</p>
 
-			<button id="xxx">刷新状态</button>
+			<button id="fresh">刷新状态</button>
 		</div>
 
 		<div class="guide-content" id="closed">
 			<p>唔>< 预约已经结束啦</p>
 			<p>感谢你对百步梯的支持( • ̀ω•́ )✧</p>
+
 			<p class="notice">欢迎继续关注我们的其他活动哦</p>
 		</div>
 	</div>
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript">
-		$("#pending").show();
-	</script>
+	<script src="./assets/js/guide.js"></script>
 </body>
 </html>
