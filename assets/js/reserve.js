@@ -5,6 +5,7 @@ var regPattern = {
 
 // var formSource = '';
 var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+var duringHeight = "calc(((100vh - 496px) / 2) + 2em)";
 var statusHeight = "calc((100vh - 496px) / 2)";
 var successHeight = "calc((100vh - 419px) / 2)";
 
@@ -67,13 +68,27 @@ if (document.referrer.indexOf(formSource) == 0) {
 					location.href = './guide.html';
 
 				var waiting = parseWaiting(d.userPos - d.curPos);
-				if (waiting == -1) return;
+				switch(waiting) {
+					case -1:
+						return;
 
-				$("#position").text(d.userPos);
-				$("#waiting").text(waiting);
-				$("#time").text(waiting * d.avgServeTime);
+					case 0:
+						$("#waiting-content").hide();
+						$("#during-content").show();
+						$("#position").text(d.userPos);
+						marginT = duringHeight;
+						break;
 
-				$("body").css("margin-top", statusHeight);
+					default:
+						$("#during-content").hide();
+						$("#position").text(d.userPos);
+						$("#waiting").text(waiting);
+						$("#time").text(waiting * d.avgServeTime);
+						marginT = statusHeight;
+						break;
+				}
+
+				$("body").css("margin-top", marginT);
 
 				$("#success").hide();
 				$("#position").hide();
@@ -99,15 +114,28 @@ $("#fresh").click(function () {
 		'./test_queueinfo.php',
 		function(d) {
 			var waiting = parseWaiting($("#position").text() - d.curPos);
-			if (waiting == -1) return;
+			switch(waiting) {
+				case -1:
+					return;
 
-			$("#waiting").fadeOut(300, function() {
-				$(this).text(waiting).fadeIn(500);
-			});
+				case 0:
+					$("#waiting-content").fadeOut(700, function() {
+						$("#during-content").fadeIn(1000, function() {
+							$("body").animate({marginTop: "+=2em"}, 900);
+						});
+					});
+					break;
 
-			$("#time").fadeOut(300, function() {
-				$(this).text(waiting * d.avgServeTime).fadeIn(500);
-			});
+				default:
+					$("#waiting").fadeOut(300, function() {
+						$(this).text(waiting).fadeIn(500);
+					});
+
+					$("#time").fadeOut(300, function() {
+						$(this).text(waiting * d.avgServeTime).fadeIn(500);
+					});
+					break;
+			}
 		}
 	).fail(function() {
 		alert('获取队列信息失败，请联系管理员');
