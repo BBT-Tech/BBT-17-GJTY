@@ -1,9 +1,10 @@
 var phoneReg = /^1[0-9]{10}$/;
 var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 // var formSource = '';
 var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
-var statusHeight = "calc((100vh - 512px) / 2)";
-var successHeight = "calc((100vh - 472px) / 2)";
+var statusHeight = "calc((100vh - 496px) / 2)";
+var successHeight = "calc((100vh - 419px) / 2)";
 
 if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
@@ -115,19 +116,14 @@ function showStatus(missed =false) {
 					var waiting = missed ? 0 : parseWaiting(d.userPos - d.curPos);
 					if (waiting == -1) return;
 
-					$("#success").hide();
-					$("#position").hide();
-					if (missed) {
-						$(".hide-when-missed").hide();
-						statusHeight = "calc(((100vh - 512px) + 5em) / 2)";
-					}
-
 					$("#position").text(d.userPos);
 					$("#waiting").text(waiting);
 					$("#time").text(waiting * d.avgServeTime);
 
 					$("body").css("margin-top", statusHeight);
 
+					$("#success").hide();
+					$("#position").hide();
 					$("#status-title").show();
 					$("#status").fadeIn(1200, function() {
 						$("#position").show(1300);
@@ -150,7 +146,7 @@ function showStatus(missed =false) {
 function parseWaiting(w) {
 	if (w <= -5) {
 		$("#status").hide();
-		$("#missed").fadeIn(500);
+		$("#missed").fadeIn(700);
 		setVerticalAlign("#missed");
 		return -1;
 	}

@@ -1,5 +1,5 @@
 function setVerticalAlign(e) {
-	divBase = e == "#closed" ? 4 : 2;
+	divBase = e == "#closed" ? 3 : 2;
 
 	$(e).show();
 	$("body").css("margin-top", function() {

@@ -1,23 +1,43 @@
 body {
 	margin: 0;
+	text-align: center;
 	background-image: url(../img/background.png);
 	background-repeat-x: no-repeat;
 	background-size: 100%;
-	text-align: center;
 }
-
-.status,
-.missed,
-.status .title,
-.guide-content,
-.reserve {
-	display: none;
+p {
+	color: rgba(255,255,255,0.63);
 }
-
-.error {
-	display: none;
-	color: rgba(255, 152, 0, 0.7);
-	margin-top: 5px;
+input {
+	margin-left: 52px;
+	font-size: 16px;
+	color: rgba(255,255,255,0.87);
+	background-color: transparent;
+	border-color: transparent;
+}
+input::-webkit-input-placeholder {
+	color: rgba(255,255,255,0.36) !important;
+}
+input::-moz-placeholder {
+	color: rgba(255,255,255,0.36) !important;
+}
+*:focus {
+	outline: none;
+}
+button {
+	width: 116px;
+	height: 48px;
+	margin-top: 48px;
+	font-size: 16px;
+	color: rgba(255,255,255,0.87);
+	border-color: white;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 32px;
+	background-color: transparent;
+}
+.status button {
+	margin-top: 32px !important;
 }
 
 .info {
@@ -26,7 +46,7 @@ body {
 	width: 260px;
 	height: 48px;
 	margin-top: 32px;
-	margin-left: calc((100vw - 276px) / 2);
+	margin-left: calc((100vw - 260px) / 2);
 	color: rgba(255,255,255,0.36);
 	background-repeat: no-repeat;
 	background-position: 24px center;
@@ -34,6 +54,7 @@ body {
 	border-color: transparent;
 	border-radius: 24px;
 }
+
 .name {
 	background-image: url(../img/name.png);
 }
@@ -44,33 +65,24 @@ body {
 	background-image: url(../img/email.png);
 }
 
-input {
-	margin-left: 52px;
-	font-size: 16px;
-	color: rgba(255,255,255,0.87);
-	background-color: transparent;
-	border-color: transparent;
-}
-
-*:focus {
-	outline: none;
-}
-
-input::-webkit-input-placeholder {
-	color: rgba(255,255,255,0.36) !important;
-}
-input::-moz-placeholder {
-	color: rgba(255,255,255,0.36) !important;
-}
-
 .title {
 	width: 244px;
 	height: 82px;
-	margin: 32px calc((100vw - 260px) / 2);
+	margin: 32px calc((100vw - 244px) / 2);
 	background-image: url(../img/title.png);
 	background-repeat: no-repeat;
 	background-size: 100%;
 }
+.reserve .title {
+	margin-bottom: 48px;
+}
+
+.position {
+	font-size: 64px;
+	margin: 16px 0;
+	color: #fff176 !important;
+}
+
 .notice {
 	padding-top: 1em;
 	color: #fff !important;
@@ -78,33 +90,9 @@ input::-moz-placeholder {
 .missed .notice {
 	padding-top: 2em;
 }
+
 .pending-info {
 	padding-bottom: 2em;
-}
-
-.position {
-	font-size: 64px;
-	margin: 16px 0;
-	color: rgb(254,254,145) !important;
-}
-
-.guide-content > p,
-.missed > p,
-.status > p {
-	color: rgba(255,255,255,0.63);
-}
-
-button {
-	width: 116px;
-	height: 48px;
-	margin-top: 48px;
-	background-color: transparent;
-	font-size: 16px;
-	color: rgba(255,255,255,0.87);
-	border-color: white;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 32px;
 }
 
 .choices {
@@ -112,7 +100,20 @@ button {
 	justify-content: space-around;
 	margin-top: 30px;
 }
-
 .choices button {
 	margin-top: 0;
+}
+
+.error {
+	display: none;
+	color: rgba(255,152,0,0.7);
+	margin-top: 5px;
+}
+
+.status,
+.missed,
+.status .title,
+.guide-content,
+.reserve {
+	display: none;
 }
