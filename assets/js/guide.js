@@ -3,9 +3,11 @@ $.get(
 	'./test_isUserInQueue.php',
 	function(r) {
 		if (r.status == 0 || r.status == -1) {
-			switch(r.data.isRegisterAble) {
+			regStatus = (r.status == -1 ? 0 : r.data.isRegisterAble);
+
+			switch(regStatus) {
 				case 0:
-					if ((typeof r.data.isInQueue != 'undefined')
+					if ((r.status != -1)
 						&& (r.data.curPos - r.data.userPos <= 5))
 						location.href = './index.html';
 
@@ -29,12 +31,27 @@ $.get(
 										$(this).fadeIn(500);
 									});
 							}
-						)
+						).fail(function() {
+							alert('获取状态信息失败，请联系管理员');
+						})
 					});
 					break;
 
 				case -1:
+					if (!r.data.isInQueue)
+						$("#show-pos").hide();
 					setVerticalAlign("#closed");
+
+					$("#show-pos").click(function() {
+							$("#position").text(r.data.userPos);
+
+							$("#epilogue").fadeOut(1000);
+							$("#closed-info").fadeOut(1000);
+							$("#show-pos").fadeOut(1000, function() {
+								$("#epilogue").fadeIn(1000);
+								$("#closed-pos").fadeIn(1000);
+							});
+					});
 					break;
 			}
 		} else {
