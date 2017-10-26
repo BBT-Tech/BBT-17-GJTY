@@ -209,7 +209,7 @@ class admin extends SlimvcController
             $json=$this->getRequestJson();
 
             $status=intval($json['status']);
-            if($status!=0 && $status!=1)
+            if($status!=0 && $status!=1 && $status!=-1)
                 throw new Exception("无效的值");
             $var_model->setValue("isRegisterAble",$status);
             $return['status']=0;
