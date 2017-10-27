@@ -3,8 +3,8 @@ var regPattern = {
 	"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 };
 
-var formSource = '';
-// var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+// var formSource = '';
+var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
 var duringHeight = "calc(((100vh - 496px) / 2) + 2em)";
 var statusHeight = "calc((100vh - 496px) / 2)";
 var successHeight = "calc((100vh - 419px) / 2)";
