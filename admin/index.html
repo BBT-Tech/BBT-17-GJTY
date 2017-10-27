@@ -42,7 +42,9 @@
 			</div>
 		</div>
 
-		<button type="button" class="btn btn-outline-warning waves-effect">更新至下一号</button>
+		<button class="btn btn-outline-warning waves-effect" id="call-next">
+			更新至下一号
+		</button>
 
 		<div class="related">
 			<h4 class="information-title">附近队列信息：</h4>
@@ -128,12 +130,29 @@
 	</div>
 
 	<div class="buttons">
-		<button type="button" class="btn btn-outline-warning waves-effect">打开号码投影页面</button>
-		<button type="button" class="btn btn-outline-warning waves-effect">查看所有预约信息</button>
-		<button type="button" class="btn btn-outline-warning waves-effect">收起所有预约信息</button>
-		<button type="button" class="btn btn-outline-danger waves-effect">开始接受预约</button>
-		<button type="button" class="btn btn-outline-danger waves-effect">结束本次光迹涂鸦活动</button>
-		<button type="button" class="btn btn-outline-danger waves-effect">退出管理系统</button>
+		<button class="btn btn-outline-warning waves-effect" id="open-screen">
+			打开投影页
+		</button>
+
+		<button class="btn btn-outline-warning waves-effect" id="show-all-info">
+			查看所有预约信息
+		</button>
+
+		<button class="btn btn-outline-warning waves-effect" id="hide-all-info">
+			收起所有预约信息
+		</button>
+
+		<button class="btn btn-outline-danger waves-effect" id="start-system">
+			开始接受预约
+		</button>
+
+		<button  class="btn btn-outline-danger waves-effect" id="close-system">
+			结束本次光迹涂鸦活动
+		</button>
+
+		<button class="btn btn-outline-danger waves-effect" id="logout">
+			退出管理系统
+		</button>
 	</div>
 
 	<div class="all-info" id="all-info">
@@ -250,5 +269,6 @@
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdn.bootcss.com/mdbootstrap/4.4.1/js/mdb.min.js"></script>
+	<script src="../assets/js/admin.js"></script>
 </body>
 </html>
