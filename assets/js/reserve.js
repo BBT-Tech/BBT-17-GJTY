@@ -3,8 +3,8 @@ var regPattern = {
 	"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 };
 
-// var formSource = '';
-var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+var formSource = '';
+// var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
 var duringHeight = "calc(((100vh - 496px) / 2) + 2em)";
 var statusHeight = "calc((100vh - 496px) / 2)";
 var successHeight = "calc((100vh - 419px) / 2)";
@@ -37,12 +37,20 @@ if (document.referrer.indexOf(formSource) == 0) {
 				if (response.status == 0) {
 					$("body").css("margin-top", successHeight);
 
-					$("#position").text(response.data.userPos);
-					$("#waiting").text(response.data.userPos - response.data.curPos);
-					$("#time").text($("#waiting").text() * response.data.avgServeTime);
+					var waiting = response.data.userPos - response.data.curPos;
+					if (waiting == 0) {
+						$("#waiting-content").hide();
+						$("body").css("margin-top", "+=2em");
+					} else {
+						$("#during-content").hide();
+						$("#waiting").text(waiting);
+						$("#time").text(waiting * response.data.avgServeTime);
+					}
 
-					$("#reserve").hide();
+					$("#position").text(response.data.userPos);
 					$("#position").hide();
+					$("#reserve").hide();
+
 					$("#status").fadeIn(1200, function() {
 						$("#position").show(1300);
 					});
@@ -74,7 +82,6 @@ if (document.referrer.indexOf(formSource) == 0) {
 
 					case 0:
 						$("#waiting-content").hide();
-						$("#during-content").show();
 						$("#position").text(d.userPos);
 						marginT = duringHeight;
 						break;
