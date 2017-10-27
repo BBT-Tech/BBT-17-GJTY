@@ -1,11 +1,15 @@
-if (window.getComputedStyle(document.body).marginTop.indexOf('-') == 0)
-	document.body.style.marginTop = 0;
-
 var request = new XMLHttpRequest();
 request.onload = function() {
 	var data = JSON.parse(this.response);
-	if(document.getElementById('position').innerText != data.curPos)
-		document.getElementById('position').innerText = data.curPos;
+	var e = document.getElementById("position");
+
+	if(e.innerText != data.curPos) {
+		e.classList.add("fade");
+		setTimeout(function() {
+			e.innerText = data.curPos;
+			e.classList.remove("fade");
+		}, 1000);
+	}
 };
 
 setInterval(function() {

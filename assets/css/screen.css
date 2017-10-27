@@ -4,14 +4,17 @@
 }
 
 body {
-	margin-top: calc((100vh - 698px) / 2);
+	margin: 0;
+	padding-top: calc((100vh - 698px) / 2);
 	font-family: ScreenFont;
 	font-size: 36px;
 	text-align: center;
 	color: #f7ffa0;
 	background-image: url(../img/screen-background.png);
-	background-repeat-x: no-repeat;
-	background-size: 100%;
+	background-repeat: no-repeat;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
 }
 
 p {
@@ -32,4 +35,8 @@ p {
 .position {
 	font-size: 156px;
 	color: #f3ff74;
+	transition: opacity 1s ease-in-out;
+}
+.fade {
+	opacity: 0;
 }
