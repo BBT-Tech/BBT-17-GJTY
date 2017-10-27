@@ -1,7 +1,5 @@
-$("#login").modal('show');
-
 $("#call-next").click(function() {
-	d;
+	//Todo
 });
 
 $("#open-screen").click(function() {
@@ -19,7 +17,7 @@ $("#hide-all-info").click(function() {
 $("#start-system").click(function() {
 	$.post(
 		'../admin/setIsRegisterAble/',
-		'{status: 0}',
+		'{"status": 0}',
 		function(response) {
 			//Todo
 		}
@@ -31,7 +29,7 @@ $("#start-system").click(function() {
 $("#close-system").click(function() {
 	$.post(
 		'../admin/setIsRegisterAble/',
-		'{status: -1}',
+		'{"status": -1}',
 		function(response) {
 			//Todo
 		}
@@ -40,10 +38,34 @@ $("#close-system").click(function() {
 	});
 });
 
+$("#login-btn").click(function() {
+	$.post(
+		'../admin/checkLogin/',
+		'{"userName": "' + $("#username").val() +
+		'","passWord": "' + $("#password").val() + '"}',
+		function(response) {
+			if (response.status == 0) {
+				//Success
+			} else {
+				alert(response.errorMessage);
+			}
+		}
+	).fail(function() {
+		alert('操作失败，请联系管理员');
+	});
+});
+
 $("#logout").click(function() {
-	$.post('../admin/logOut/.php', '',function(response) {
-			alert('退出系统成功！');
-			location.reload();
+	$.post(
+		'../admin/logOut/',
+		'',
+		function(response) {
+			if (response.status == 0) {
+				alert('退出系统成功！');
+				location.reload();
+			} else {
+				alert(response.errorMessage);
+			}
 		}
 	).fail(function() {
 		alert('操作失败，请联系管理员');
