@@ -1,3 +1,5 @@
+$("#login").modal('show');
+
 $("#call-next").click(function() {
 	d;
 });
