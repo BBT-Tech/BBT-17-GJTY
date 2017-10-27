@@ -3,161 +3,139 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta name="viewport" content="widtd=device-widtd,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<title>光迹涂鸦 · 管理页面</title>
-	<link rel="stylesheet" href="https://cdn.bootcss.com/material-design-lite/1.3.0/material.amber-deep_orange.min.css">
-	<style type="text/css">
-		.buttons {
-			display: flex;
-			justify-content: space-around;
-			clear: both;
-			padding-top: 30px;
-			padding-bottom: 30px;
-		}
-		table {
-			float: right;
-		}
-	</style>
+	<link rel="stylesheet" href="https://cdn.bootcss.com/mdbootstrap/4.4.1/css/mdb.min.css">
+	<link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 
 <body>
-	<table class="mdl-data-table mdl-js-data-table">
-		<thead>
-			<tr>
-				<th>号码</th>
-				<th class="mdl-data-table__cell--non-numeric">姓名</th>
-				<th class="mdl-data-table__cell--non-numeric">手机号</th>
-				<th class="mdl-data-table__cell--non-numeric">邮箱地址</th>
-				<th class="mdl-data-table__cell--non-numeric">报名时间</th>
-				<th class="mdl-data-table__cell--non-numeric">微信提醒</th>
-			</tr>
-		</tdead>
+	<div class="view overlay hm-white-slight">
+	   <div class="position-area">
+			<h2 class="position-text">
+				当前号码为：
+				<span class="position" id="position">17</span>
+			</h2>
+		</div>
 
-		<tbody>
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">麦克华莱士</td>
-				<td class="mdl-data-table__cell--non-numeric">13366651512</td>
-				<td class="mdl-data-table__cell--non-numeric">djf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric">已发送</td>
-			</tr>
+		<a class="mask"></a>
+	</div>
 
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">董建华</td>
-				<td class="mdl-data-table__cell--non-numeric">13366652545</td>
-				<td class="mdl-data-table__cell--non-numeric">dfdsfljfsdfjf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric">已发送</td>
-			</tr>
+	<div class="information">
+		<div class="current">
+			<h4 class="information-title">当前预约者信息：</h4>
 
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">董建华</td>
-				<td class="mdl-data-table__cell--non-numeric">13366652545</td>
-				<td class="mdl-data-table__cell--non-numeric">dfdsfljfsdfjf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric">已发送</td>
-			</tr>
+			<div class="card">
+				<div class="view overlay hm-white-slight">
+					<img class="admin-title" src="../assets/img/admin-title.png">
+					<a><div class="mask"></div></a>
+				</div>
 
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">董建华</td>
-				<td class="mdl-data-table__cell--non-numeric">13366652545</td>
-				<td class="mdl-data-table__cell--non-numeric">dfdsfljfsdfjf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric"></td>
-			</tr>
-
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">董建华</td>
-				<td class="mdl-data-table__cell--non-numeric">13366652545</td>
-				<td class="mdl-data-table__cell--non-numeric">dfdsfljfsdfjf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric"></td>
-			</tr>
-
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">董建华</td>
-				<td class="mdl-data-table__cell--non-numeric">13366652545</td>
-				<td class="mdl-data-table__cell--non-numeric">dfdsfljfsdfjf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric"></td>
-			</tr>
-
-			<tr>
-				<td>17</td>
-				<td class="mdl-data-table__cell--non-numeric">董建华</td>
-				<td class="mdl-data-table__cell--non-numeric">13366652545</td>
-				<td class="mdl-data-table__cell--non-numeric">dfdsfljfsdfjf@gmail.com</td>
-				<td class="mdl-data-table__cell--non-numeric">2017-10-27 10:22:33</td>
-				<td class="mdl-data-table__cell--non-numeric"></td>
-			</tr>
-			</tr>
-		</tbody>
-	</table>
-
-	<div class="demo-card-event mdl-card mdl-shadow--2dp">
-		<div class="mdl-card__title mdl-card--expand">
-			<div class="mdl-layout-spacer">
-				<h5>当前号码：<span id="position">17</span></h5>
+				<div class="card-body">
+					<p class="card-text">姓名：董建华</p>
+					<p class="card-text">手机：23333</p>
+					<p class="card-text">邮箱：emmm</p>
+					<p class="card-text">报名时间：2017-10-23-10xx</p>
+					<p class="card-text">微信提醒：已发送</p>
+				</div>
 			</div>
 		</div>
 
-		<div class="mdl-card__actions mdl-card--border center">
-			<h6>姓名：董建华</h6>
-			<h6>手机：23333</h6>
-			<h6>邮箱：emmm</h6>
-			<h6>报名时间：2017-10-23-10xx</h6>
-			<h6>微信提醒：已发送</h6>
+		<button type="button" class="btn btn-outline-warning waves-effect">更新至下一号</button>
 
-			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">更新至下一号</button>
+		<div class="related">
+			<h4 class="information-title">附近队列信息：</h4>
+
+			<table class="table table-hover table-responsive">
+				<thead>
+					<tr>
+						<th>号码</th>
+						<th>姓名</th>
+						<th>手机号</th>
+						<th>邮箱地址</th>
+						<th>报名时间</th>
+						<th>微信提醒</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td>17</td>
+						<td>麦克华莱士</td>
+						<td>13366651512</td>
+						<td>djf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td>已发送</td>
+					</tr>
+
+					<tr>
+						<td>17</td>
+						<td>董建华</td>
+						<td>13366652545</td>
+						<td>dfdsfljfsdfjf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td>已发送</td>
+					</tr>
+
+					<tr>
+						<td>17</td>
+						<td>董建华</td>
+						<td>13366652545</td>
+						<td>dfdsfljfsdfjf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td>已发送</td>
+					</tr>
+
+					<tr>
+						<td>17</td>
+						<td>董建华</td>
+						<td>13366652545</td>
+						<td>dfdsfljfsdfjf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>17</td>
+						<td>董建华</td>
+						<td>13366652545</td>
+						<td>dfdsfljfsdfjf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>17</td>
+						<td>董建华</td>
+						<td>13366652545</td>
+						<td>dfdsfljfsdfjf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>17</td>
+						<td>董建华</td>
+						<td>13366652545</td>
+						<td>dfdsfljfsdfjf@gmail.com</td>
+						<td>2017-10-27 10:22:33</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
 	<div class="buttons">
-		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">开始接受预约</button>
-
-		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">号码投影页面</button>
-
-		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">查看所有预约信息</button>
-
-		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">收起所有预约信息</button>
-
-		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">结束本次光迹涂鸦活动</button>
-
-		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="show-dialog">退出管理系统</button>
+		<button type="button" class="btn btn-outline-warning waves-effect">打开号码投影页面</button>
+		<button type="button" class="btn btn-outline-warning waves-effect">查看所有预约信息</button>
+		<button type="button" class="btn btn-outline-warning waves-effect">收起所有预约信息</button>
+		<button type="button" class="btn btn-outline-danger waves-effect">开始接受预约</button>
+		<button type="button" class="btn btn-outline-danger waves-effect">结束本次光迹涂鸦活动</button>
+		<button type="button" class="btn btn-outline-danger waves-effect">退出管理系统</button>
 	</div>
 
-	<dialog class="mdl-dialog">
-		<h4 class="mdl-dialog__title">操作确认</h4>
-
-		<div class="mdl-dialog__content">
-			<p>确定要退出系统吗？</p>
-		</div>
-
-		<div class="mdl-dialog__actions">
-			<button type="button" class="mdl-button">确定</button>
-			<button type="button" class="mdl-button close">不了</button>
-		</div>
-	</dialog>
-
-	<script src="https://cdn.bootcss.com/material-design-lite/1.3.0/material.min.js"></script>
-	<script>
-		var dialog = document.querySelector('dialog');
-		var showDialogButton = document.querySelector('#show-dialog');
-		if (!dialog.showModal)
-			dialogPolyfill.registerDialog(dialog);
-
-		showDialogButton.addEventListener('click', function() {
-			dialog.showModal();
-		});
-		dialog.querySelector('.close').addEventListener('click', function() {
-			dialog.close();
-		});
-	</script>
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/mdbootstrap/4.4.1/js/mdb.min.js"></script>
 </body>
 </html>

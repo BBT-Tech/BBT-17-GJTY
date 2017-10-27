@@ -1,0 +1,39 @@
+body {
+	margin: 0;
+}
+
+.position-area {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+	height: 70px;
+	background: linear-gradient(40deg,#FFD86F,#FC6262);
+	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
+}
+.position-text {
+	color: white;
+}
+
+.information {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-flow: wrap;
+}
+.information-title {
+	font-size: 1.2em;
+}
+.current .card {
+	padding: 25px;
+}
+
+.admin-title {
+	border-radius: 10px !important;
+}
+
+.buttons {
+	display: flex;
+	justify-content: space-around;
+	padding: 50px 0;
+}
