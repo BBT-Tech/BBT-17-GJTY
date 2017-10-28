@@ -68,20 +68,29 @@ $("#export-all-info").click(function() {
 });
 
 $("#start-system").click(function() {
-	$.post(
-		'../admin/setIsRegisterAble/',
-		'{"status": 0}',
-		function(response) {
-			//Todo
+	confirmOperation(
+		'<p>现场已经准备完成的话就可以开始接受预约了</p>' +
+		'<p>记得将投影页面接到大屏幕上哦</p>' +
+		'<p>一切就绪的话就点击下面的确定键吧</p>',
+		function() {
+			$.post(
+				// '../admin/setIsRegisterAble/',
+				'../test_registerable.php',
+				'{"status": 0}',
+				function(response) {
+					errorAlert('操作成功，系统开始接受预约');
+				}
+			).fail(function() {
+				errorAlert('操作失败，请联系管理员');
+			});
 		}
-	).fail(function() {
-		errorAlert('操作失败，请联系管理员');
-	});
+	)
 });
 
 $("#close-system").click(function() {
 	$.post(
-		'../admin/setIsRegisterAble/',
+		// '../admin/setIsRegisterAble/',
+		'../test_registerable.php',
 		'{"status": -1}',
 		function(response) {
 			//Todo
@@ -115,7 +124,7 @@ $("#login-btn").click(function() {
 
 $("#logout-btn").click(function() {
 	confirmOperation(
-		'<p class="confirm-info-oneline">确定要退出系统吗？</p>',
+		'<p>确定要退出系统吗？</p>',
 		function() {
 			$.post(
 				// '../admin/logOut/',

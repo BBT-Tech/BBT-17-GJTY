@@ -4,10 +4,13 @@ body {
 }
 
 .modal-dialog {
-	margin-top: 11em !important;
+	margin-top: 11em;
+}
+.modal-confirm {
+	margin-top: 7em;
 }
 
-.confirm-info-oneline {
+.confirm-info p {
 	text-align: center;
 	margin: 1em 0;
 }
