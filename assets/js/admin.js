@@ -63,20 +63,25 @@ $("#logout").click(function() {
 		'',
 		function(response) {
 			if (response.status == 0) {
-				errorAlert('退出系统成功！', false);
-				$('#error-alert').on('hide.bs.modal', function () {
-					$("#information").fadeOut(700);
-					$("#all-info").fadeOut(700);
+				confirmOperation(
+					'<p class="confirm-info-oneline">确定要退出系统吗？</p>',
+					function() {
+						errorAlert('退出系统成功！', false);
+						$('#error-alert').on('hide.bs.modal', function () {
+							$("#information").fadeOut(700);
+							$("#all-info").fadeOut(700);
 
-					$(".buttons").fadeOut(700, function() {
-						$(".buttons").css("padding-top", "calc(100vh - 11em)");
-						$(".buttons").fadeIn(500, function() {
-							setTimeout(function() {
-								$("#login").modal('show');
-							}, 500);
+							$(".buttons").fadeOut(700, function() {
+								$(".buttons").css("padding-top", "calc(100vh - 11em)");
+								$(".buttons").fadeIn(500, function() {
+									setTimeout(function() {
+										$("#login").modal('show');
+									}, 500);
+								});
+							});
 						});
-					});
-				});
+					}
+				);
 			} else {
 				errorAlert(response.errorMessage);
 			}
@@ -116,12 +121,3 @@ function errorAlert(err, refresh =true) {
 	$("#confirm-operation").modal('hide');
 	$("#error-alert").modal('show');
 }
-
-// confirmOperation(
-// 	'<p>emmmmmm</p>' +
-// 	'<p>确定操作吗</p>' +
-// 	'<p>董先生连任吼不吼哇？</p>',
-// 	function() {
-// 		errorAlert('喵喵喵？', false);
-// 	}
-// );

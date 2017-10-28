@@ -6,6 +6,11 @@ body {
 	margin-top: 11em !important;
 }
 
+.confirm-info-oneline {
+	text-align: center;
+	margin: 1em 0;
+}
+
 .position-text {
 	margin-bottom: 20px;
 	height: 4.5em;
