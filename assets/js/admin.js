@@ -45,8 +45,9 @@ $.get(
 								$("#related").show();
 								$("#call-next").show();
 								$.get(
+									// Make sure there are 7 suitable rows of data
 									// '../admin/getQueueListByPos/start/' +
-									// (data.curPos > 3 ? (data.curPos - 3) : 1) +
+									// parseStartPos(data.queueLength, data.curPos) +
 									// '/limit/7/',
 									'../test_queuelist.php',
 									function(response) {
@@ -277,6 +278,21 @@ $("#logout-btn").click(function() {
 	);
 });
 
+function parseStartPos(len, pos) {
+	return (len < 8 || pos < 5) ? 1 :
+		(len - pos > 3) ? (pos - 3) : (len - 6);
+}
+
+function infoToggle(ele, val) {
+	$(ele).removeClass("fadeInRight");
+	$(ele).addClass("animated zoomOutUp");
+	setTimeout(function() {
+		$(ele).text(val);
+		$(ele).removeClass("zoomOutUp");
+		$(ele).addClass("fadeInRight");
+	}, 1000);
+}
+
 function confirmOperation(msg, func) {
 	$("#progress").hide();
 	$("#confirm-info").html(msg);
@@ -310,14 +326,4 @@ function errorAlert(err, refresh =true) {
 	$("#progress").hide();
 	$("#confirm-operation").modal('hide');
 	$("#error-alert").modal('show');
-}
-
-function infoToggle(ele, val) {
-	$(ele).removeClass("fadeInRight");
-	$(ele).addClass("animated zoomOutUp");
-	setTimeout(function() {
-		$(ele).text(val);
-		$(ele).removeClass("zoomOutUp");
-		$(ele).addClass("fadeInRight");
-	}, 1000);
 }
