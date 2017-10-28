@@ -40,7 +40,8 @@ $("#close-system").click(function() {
 
 $("#login-btn").click(function() {
 	$.post(
-		'../admin/checkLogin/',
+		// '../admin/checkLogin/',
+		'../test_log.php',
 		'{"userName": "' + $("#username").val() +
 		'","passWord": "' + $("#password").val() + '"}',
 		function(response) {
@@ -57,12 +58,12 @@ $("#login-btn").click(function() {
 
 $("#logout").click(function() {
 	$.post(
-		'../admin/logOut/',
+		// '../admin/logOut/',
+		'../test_log.php',
 		'',
 		function(response) {
 			if (response.status == 0) {
-				errorAlert('退出系统成功！');
-				location.reload();
+				errorAlert('退出系统成功！', false);
 			} else {
 				errorAlert(response.errorMessage);
 			}
@@ -88,7 +89,7 @@ function confirmOperation(msg, func) {
 	$("#confirm-operation").modal('show');
 }
 
-function errorAlert(err, refresh =false) {
+function errorAlert(err, refresh =true) {
 	$("#error-info").text(err);
 	$('#error-alert').on('hide.bs.modal', function () {
 		if (refresh) location.reload();
@@ -103,11 +104,11 @@ function errorAlert(err, refresh =false) {
 	$("#error-alert").modal('show');
 }
 
-confirmOperation(
-	'<p>emmmmmm</p>' +
-	'<p>确定操作吗</p>' +
-	'<p>董先生连任吼不吼哇？</p>',
-	function() {
-		errorAlert('喵喵喵？');
-	}
-);
+// confirmOperation(
+// 	'<p>emmmmmm</p>' +
+// 	'<p>确定操作吗</p>' +
+// 	'<p>董先生连任吼不吼哇？</p>',
+// 	function() {
+// 		errorAlert('喵喵喵？', false);
+// 	}
+// );
