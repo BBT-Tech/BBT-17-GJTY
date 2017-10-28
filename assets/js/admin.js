@@ -44,11 +44,25 @@ $.get(
 							} else {
 								$("#related").show();
 								$("#call-next").show();
-								// Todo
+								$.get(
+									// '../admin/getQueueListByPos/start/' +
+									// (data.curPos > 3 ? (data.curPos - 3) : 1) +
+									// '/limit/7/',
+									'../test_queuelist.php',
+									function(response) {
+										if (response.status == 0) {
+											//Todo
+										} else {
+											errorAlert(response.errorMessage);
+										}
+									}
+								).fail(function() {
+									errorAlert('获取队列信息失败，请联系管理员');
+								});
 							}
 						}
 					).fail(function() {
-						alert('获取状态信息失败，请联系管理员');
+						errorAlert('获取状态信息失败，请联系管理员');
 					});
 					break;
 			}
@@ -65,7 +79,7 @@ $.get(
 		$(".buttons").animate({"opacity": 1}, 1000);
 	}
 ).fail(function() {
-	alert('获取状态信息失败，请联系管理员');
+	errorAlert('获取状态信息失败，请联系管理员');
 });
 
 $("#call-next").click(function() {
