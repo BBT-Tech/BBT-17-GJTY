@@ -2,6 +2,10 @@ body {
 	margin: 0;
 }
 
+.modal-dialog {
+	margin-top: 11em !important;
+}
+
 .position-text {
 	margin-bottom: 20px;
 	height: 4.5em;
@@ -33,11 +37,12 @@ body {
 .buttons {
 	display: flex;
 	justify-content: space-around;
-	padding: 50px 0;
+	padding-top: 55px;
+	padding-bottom: 1em;
 }
 
 .all-info {
-	margin: 30px 0;
+	margin: 50px 0;
 	border-width: 2px 0 0 0;
 	border-color: rgb(255,136,0);
 	border-style: solid;

@@ -46,7 +46,7 @@ $("#login-btn").click(function() {
 		'","passWord": "' + $("#password").val() + '"}',
 		function(response) {
 			if (response.status == 0) {
-				//Success
+				location.reload();
 			} else {
 				errorAlert(response.errorMessage);
 			}
@@ -64,6 +64,19 @@ $("#logout").click(function() {
 		function(response) {
 			if (response.status == 0) {
 				errorAlert('退出系统成功！', false);
+				$('#error-alert').on('hide.bs.modal', function () {
+					$("#information").fadeOut(700);
+					$("#all-info").fadeOut(700);
+
+					$(".buttons").fadeOut(700, function() {
+						$(".buttons").css("padding-top", "calc(100vh - 11em)");
+						$(".buttons").fadeIn(500, function() {
+							setTimeout(function() {
+								$("#login").modal('show');
+							}, 500);
+						});
+					});
+				});
 			} else {
 				errorAlert(response.errorMessage);
 			}
