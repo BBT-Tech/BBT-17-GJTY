@@ -119,16 +119,19 @@ $("#call-next").click(function() {
 										infoToggle("#email", d.emailAddress);
 										infoToggle("#reg-time", d.registerDate);
 										infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
+										// Not so easy of course
+										updateQueue(d);
 
 										setTimeout(function() {
 											$("#position").removeClass("fadeInUp");
 											$("#position").addClass("fadeOutUp");
+
 											setTimeout(function() {
 												$("#position").text(d.posID);
 												$("#position").removeClass("fadeOutUp");
 												$("#position").addClass("fadeInUp");
 											}, 700);
-										}, 2300);
+										}, 2333);
 									}, 700);
 								} else {
 									errorAlert(response.errorMessage);
@@ -277,6 +280,22 @@ $("#logout-btn").click(function() {
 		}
 	);
 });
+
+function updateQueue(newRow) {
+	$("#related-queue>tr:first-child").addClass("animated fadeOutUp");
+	setTimeout(function() {
+		$("#related-queue>tr:first-child").remove();
+		$("#related-queue").append(
+		'<tr class="animated fadeInUp">' +
+			'<td>' + newRow.posID + '</td>' +
+			'<td>' + newRow.name + '</td>' +
+			'<td>' + newRow.mobileNumber + '</td>' +
+			'<td>' + newRow.emailAddress + '</td>' +
+			'<td>' + newRow.registerDate + '</td>' +
+			'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
+		'</tr>');
+	}, 700);
+}
 
 function parseStartPos(len, pos) {
 	return (len < 8 || pos < 5) ? 1 :
