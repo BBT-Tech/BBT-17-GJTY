@@ -1,4 +1,4 @@
-$("#confirm-operation").modal('show');
+// $("#confirm-operation").modal('show');
 $("#call-next").click(function() {
 	//Todo
 });
@@ -23,7 +23,7 @@ $("#start-system").click(function() {
 			//Todo
 		}
 	).fail(function() {
-		alert('操作失败，请联系管理员');
+		errorAlert('操作失败，请联系管理员');
 	});
 });
 
@@ -35,7 +35,7 @@ $("#close-system").click(function() {
 			//Todo
 		}
 	).fail(function() {
-		alert('操作失败，请联系管理员');
+		errorAlert('操作失败，请联系管理员');
 	});
 });
 
@@ -48,11 +48,11 @@ $("#login-btn").click(function() {
 			if (response.status == 0) {
 				//Success
 			} else {
-				alert(response.errorMessage);
+				errorAlert(response.errorMessage);
 			}
 		}
 	).fail(function() {
-		alert('操作失败，请联系管理员');
+		errorAlert('操作失败，请联系管理员');
 	});
 });
 
@@ -62,13 +62,18 @@ $("#logout").click(function() {
 		'',
 		function(response) {
 			if (response.status == 0) {
-				alert('退出系统成功！');
+				errorAlert('退出系统成功！');
 				location.reload();
 			} else {
-				alert(response.errorMessage);
+				errorAlert(response.errorMessage);
 			}
 		}
 	).fail(function() {
-		alert('操作失败，请联系管理员');
+		errorAlert('操作失败，请联系管理员');
 	});
 });
+
+function errorAlert(err) {
+	$("#error-info").text(err);
+	$("#error-alert").modal('show');
+}
