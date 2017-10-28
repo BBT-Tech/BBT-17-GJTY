@@ -20,6 +20,7 @@ $.get(
 				case 0:
 					$("#call-next").fadeIn(1000);
 					$("#start-system").hide();
+					//Todo
 					break;
 			}
 			$("#login-btn").hide();
@@ -113,21 +114,30 @@ $("#login-btn").click(function() {
 });
 
 $("#logout-btn").click(function() {
-	$.post(
-		// '../admin/logOut/',
-		'../test_log.php',
-		'',
-		function(response) {
-			if (response.status == 0) {
-				confirmOperation(
-					'<p class="confirm-info-oneline">确定要退出系统吗？</p>',
-					function() {
+	confirmOperation(
+		'<p class="confirm-info-oneline">确定要退出系统吗？</p>',
+		function() {
+			$.post(
+				// '../admin/logOut/',
+				'../test_log.php',
+				'',
+				function(response) {
+					if (response.status == 0) {
 						errorAlert('退出系统成功！', false);
-						$('#error-alert').on('hide.bs.modal', function () {
+						$("#error-alert").on('hide.bs.modal', function () {
 							$("#information").fadeOut(700);
 							$("#all-info").fadeOut(700);
 
 							$(".buttons").fadeOut(700, function() {
+								$("#show-all-info").hide();
+								$("#hide-all-info").hide();
+								$("#export-all-info").hide();
+								$("#start-system").hide();
+								$("#close-system").hide();
+								$("#logout-btn").hide();
+								$("#login-btn").show();
+								$("#open-screen").show();
+
 								$(".buttons").css("padding-top", "calc(100vh - 11em)");
 								$(".buttons").fadeIn(500, function() {
 									setTimeout(function() {
@@ -136,15 +146,15 @@ $("#logout-btn").click(function() {
 								});
 							});
 						});
+					} else {
+						errorAlert(response.errorMessage);
 					}
-				);
-			} else {
-				errorAlert(response.errorMessage);
-			}
+				}
+			).fail(function() {
+				errorAlert('操作失败，请联系管理员');
+			});
 		}
-	).fail(function() {
-		errorAlert('操作失败，请联系管理员');
-	});
+	);
 });
 
 function confirmOperation(msg, func) {
