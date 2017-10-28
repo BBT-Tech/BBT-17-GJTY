@@ -25,6 +25,10 @@ $("#hide-all-info").click(function() {
 	$("#all-info").hide(2000);
 });
 
+$("#export-all-info").click(function() {
+	//Todo
+});
+
 $("#start-system").click(function() {
 	$.post(
 		'../admin/setIsRegisterAble/',
@@ -49,7 +53,7 @@ $("#close-system").click(function() {
 	});
 });
 
-$("#login-btn").click(function() {
+$("#login-modal-btn").click(function() {
 	$.post(
 		// '../admin/checkLogin/',
 		'../test_log.php',
@@ -67,7 +71,11 @@ $("#login-btn").click(function() {
 	});
 });
 
-$("#logout").click(function() {
+$("#login-btn").click(function() {
+	$("#login-modal").modal('show');
+});
+
+$("#logout-btn").click(function() {
 	$.post(
 		// '../admin/logOut/',
 		'../test_log.php',
@@ -86,7 +94,7 @@ $("#logout").click(function() {
 								$(".buttons").css("padding-top", "calc(100vh - 11em)");
 								$(".buttons").fadeIn(500, function() {
 									setTimeout(function() {
-										$("#login").modal('show');
+										$("#login-modal").modal('show');
 									}, 500);
 								});
 							});
@@ -121,7 +129,11 @@ function confirmOperation(msg, func) {
 function errorAlert(err, refresh =true) {
 	$("#error-info").text(err);
 	$('#error-alert').on('hide.bs.modal', function () {
-		if (refresh) location.reload();
+		if (refresh) {
+			setTimeout(function() {
+				location.reload();
+			}, 500);
+		}
 	});
 	$('#error-alert').on('show.bs.modal', function () {
 		// Prevent Bootstrap Operation: add scrollbarWidth as padding-right
