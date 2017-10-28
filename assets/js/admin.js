@@ -49,15 +49,34 @@ $("#call-next").click(function() {
 				// '../admin/goNext/',
 				'../test_callnext.php',
 				'{"curPos": ' + $("#position").text() + '}',
-				function(response) {
-					$("#progress").hide();
-					$("#confirm-operation").modal('hide');
-					setTimeout(function() {
-						$("#position").fadeOut(500, function() {
-							$(this).text(response.data.curPos);
-							$(this).fadeIn(700);
+				function(r) {
+					if (r.status == 0) {
+						$.get(
+							// '../admin/getQueueItem/posID/' + r.data.curPos + '/',
+							'../test_queueitem.php',
+							function(response) {
+								if (response.status == 0) {
+									var d = response.data;
+									$("#progress").hide();
+									$("#confirm-operation").modal('hide');
+									setTimeout(function() {
+										infoToggle("#position", d.posID);
+										infoToggle("#name", d.name);
+										infoToggle("#phone", d.mobileNumber);
+										infoToggle("#email", d.emailAddress);
+										infoToggle("#reg-time", d.registerDate);
+										infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
+									}, 700);
+								} else {
+									errorAlert(response.errorMessage);
+								}
+							}
+						).fail(function() {
+							errorAlert('获取更新信息失败，请联系管理员');
 						});
-					}, 700);
+					} else {
+						errorAlert(r.errorMessage);
+					}
 				}
 			).fail(function() {
 				errorAlert('操作失败，请联系管理员');
@@ -229,4 +248,11 @@ function errorAlert(err, refresh =true) {
 	$("#progress").hide();
 	$("#confirm-operation").modal('hide');
 	$("#error-alert").modal('show');
+}
+
+function infoToggle(ele, val) {
+	$(ele).fadeOut(500, function() {
+		$(this).text(val);
+		$(this).fadeIn(700);
+	})
 }
