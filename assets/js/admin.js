@@ -1,3 +1,43 @@
+$.get(
+	// '../admin/getRegisterAble/',
+	'../test_registerable.php',
+	function(response) {
+		$("body").show();
+		if (response.status == 0) {
+			switch(response.data.status) {
+				case 1:
+					$("#show-all-info").hide();
+					$("#export-all-info").hide();
+					$("#close-system").hide();
+					break;
+
+				case -1:
+					$("#open-screen").hide();
+					$("#start-system").hide();
+					$("#close-system").hide();
+					break;
+
+				case 0:
+					$("#call-next").fadeIn(1000);
+					$("#start-system").hide();
+					break;
+			}
+			$("#login-btn").hide();
+		} else {
+			$("#show-all-info").hide();
+			$("#export-all-info").hide();
+			$("#start-system").hide();
+			$("#close-system").hide();
+			$("#logout-btn").hide();
+			errorAlert(response.errorMessage, false);
+		}
+		$("#hide-all-info").hide();
+		$(".buttons").animate({"opacity": 1}, 1000);
+	}
+).fail(function() {
+	alert('获取状态信息失败，请联系管理员');
+});
+
 $("#call-next").click(function() {
 	//Todo
 });
@@ -5,9 +45,6 @@ $("#call-next").click(function() {
 $("#open-screen").click(function() {
 	window.open('./screen.html');
 });
-
-$("#hide-all-info").hide();
-$("#all-info").hide();
 
 $("#show-all-info").click(function() {
 	$("#show-all-info").fadeOut(100, function() {
