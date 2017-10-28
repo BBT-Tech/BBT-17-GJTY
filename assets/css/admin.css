@@ -21,6 +21,11 @@ body {
 	background: linear-gradient(40deg,#FFD86F,#FC6262);
 }
 
+.position-text span,
+.card-text span {
+	display: inline-block;
+}
+
 .information {
 	display: flex;
 	justify-content: space-around;

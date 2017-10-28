@@ -60,12 +60,21 @@ $("#call-next").click(function() {
 									$("#progress").hide();
 									$("#confirm-operation").modal('hide');
 									setTimeout(function() {
-										infoToggle("#position", d.posID);
 										infoToggle("#name", d.name);
 										infoToggle("#phone", d.mobileNumber);
 										infoToggle("#email", d.emailAddress);
 										infoToggle("#reg-time", d.registerDate);
 										infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
+
+										setTimeout(function() {
+											$("#position").removeClass("fadeInUp");
+											$("#position").addClass("fadeOutUp");
+											setTimeout(function() {
+												$("#position").text(d.posID);
+												$("#position").removeClass("fadeOutUp");
+												$("#position").addClass("fadeInUp");
+											}, 700);
+										}, 2300);
 									}, 700);
 								} else {
 									errorAlert(response.errorMessage);
@@ -251,8 +260,11 @@ function errorAlert(err, refresh =true) {
 }
 
 function infoToggle(ele, val) {
-	$(ele).fadeOut(500, function() {
-		$(this).text(val);
-		$(this).fadeIn(700);
-	})
+	$(ele).removeClass("fadeInRight");
+	$(ele).addClass("animated zoomOutUp");
+	setTimeout(function() {
+		$(ele).text(val);
+		$(ele).removeClass("zoomOutUp");
+		$(ele).addClass("fadeInRight");
+	}, 1000);
 }
