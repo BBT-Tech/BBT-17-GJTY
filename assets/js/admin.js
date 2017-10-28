@@ -6,12 +6,23 @@ $("#open-screen").click(function() {
 	window.open('./screen.html');
 });
 
+$("#hide-all-info").hide();
+$("#all-info").hide();
+
 $("#show-all-info").click(function() {
+	$("#show-all-info").fadeOut(100, function() {
+		$("#hide-all-info").fadeIn(200);
+	});
 	$("#all-info").show();
+	$("body").animate({scrollTop: $(document).height()}, 3000);
 });
 
 $("#hide-all-info").click(function() {
-	$("#all-info").hide();
+	$("#hide-all-info").fadeOut(100, function() {
+		$("#show-all-info").fadeIn(200);
+	});
+	$("body").animate({scrollTop: 0}, 3000);
+	$("#all-info").hide(2000);
 });
 
 $("#start-system").click(function() {
