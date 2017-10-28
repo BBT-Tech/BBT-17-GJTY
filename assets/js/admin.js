@@ -40,7 +40,23 @@ $.get(
 });
 
 $("#call-next").click(function() {
-	//Todo
+	confirmOperation(
+		'<p>更新至下一号的同时将通过微信提醒接下来的三位同学</p>' +
+		'<p>该操作可能需要较长的处理时间，请耐心等待</p>' +
+		'<p>是否确定更新？</p>',
+		function() {
+			$.post(
+				// '../admin/goNext/',
+				'../test_callnext.php',
+				'{"curPos": ' + $("#position").text() + '}',
+				function(response) {
+					$("#progress").hide();
+				}
+			).fail(function() {
+				errorAlert('操作失败，请联系管理员');
+			});
+		}
+	)
 });
 
 $("#open-screen").click(function() {
