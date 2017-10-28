@@ -1,4 +1,3 @@
-// $("#confirm-operation").modal('show');
 $("#call-next").click(function() {
 	//Todo
 });
@@ -73,7 +72,32 @@ $("#logout").click(function() {
 	});
 });
 
+function confirmOperation(msg, func) {
+	$("#progress").hide();
+	$("#confirm-info").html(msg);
+
+	$('#confirm-btn').on('click', function () {
+		$("#progress").show();
+		func();
+	});
+
+	$('#confirm-operation').on('hide.bs.modal', function () {
+		$("#confirm-btn").unbind('click');
+	});
+
+	$("#confirm-operation").modal('show');
+}
+
 function errorAlert(err) {
 	$("#error-info").text(err);
 	$("#error-alert").modal('show');
 }
+
+confirmOperation(
+	'<p>emmmmmm</p>' +
+	'<p>确定操作吗</p>' +
+	'<p>董先生连任吼不吼哇？</p>',
+	function() {
+		errorAlert('喵喵喵？');
+	}
+);
