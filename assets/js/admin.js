@@ -1,3 +1,4 @@
+$("#confirm-operation").modal('show');
 $("#call-next").click(function() {
 	//Todo
 });

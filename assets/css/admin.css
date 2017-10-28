@@ -53,3 +53,8 @@ body {
 	display: flex;
 	justify-content: center;
 }
+
+.error-info {
+	text-align: center;
+	margin-top: 1rem !important;
+}

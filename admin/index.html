@@ -11,8 +11,8 @@
 </head>
 
 <body>
-	<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog cascading-modal modal-avatar modal-sm" role="document">
+	<div class="modal fade" id="login">
+		<div class="modal-dialog cascading-modal modal-avatar modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<img src="../assets/img/login.jpg" class="rounded-circle img-responsive">
@@ -32,6 +32,44 @@
 
 				<div class="modal-footer d-flex justify-content-center">
 					<button class="btn btn-deep-orange" id="login-btn">登录系统</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="confirm-operation">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header justify-content-center">
+					<h5 class="modal-title">操作确认</h5>
+				</div>
+
+				<div class="modal-body" id="confirm-info">
+					<p>emmmmmm</p>
+					<p>确定操作吗</p>
+				</div>
+
+				<div class="modal-footer justify-content-center">
+					<button type="button" class="btn btn-outline-default waves-effect" data-dismiss="modal">不了</button>
+					<button type="button" class="btn btn-outline-primary waves-effect">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="error-alert">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header justify-content-center">
+					<h5 class="modal-title">系统提示</h5>
+				</div>
+
+				<div class="modal-body">
+					<p class="error-info" id="error-info">emmmm操作上出现了一些偏差</p>
+				</div>
+
+				<div class="modal-footer justify-content-center">
+					<button type="button" class="btn btn-outline-info waves-effect" data-dismiss="modal">我知道了</button>
 				</div>
 			</div>
 		</div>
