@@ -281,20 +281,47 @@ $("#logout-btn").click(function() {
 	);
 });
 
-function updateQueue(newRow) {
-	$("#related-queue>tr:first-child").addClass("animated fadeOutUp");
-	setTimeout(function() {
-		$("#related-queue>tr:first-child").remove();
-		$("#related-queue").append(
-		'<tr class="animated fadeInUp">' +
-			'<td>' + newRow.posID + '</td>' +
-			'<td>' + newRow.name + '</td>' +
-			'<td>' + newRow.mobileNumber + '</td>' +
-			'<td>' + newRow.emailAddress + '</td>' +
-			'<td>' + newRow.registerDate + '</td>' +
-			'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
-		'</tr>');
-	}, 700);
+function updateQueue() {
+	$.getJSON(
+		// '../queueinfo.json',
+		'../test_queueinfo.php',
+		function(data) {
+			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
+			if (data.queueLength > curMax) {
+				$.get(
+					// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
+					'../test_queueitem.php',
+					function(response) {
+						if (response.status == 0) {
+							var newRow = response.data;
+							var removeFirstRow = $("#related-queue>tr").length == 7;
+
+							if (removeFirstRow)
+								$("#related-queue>tr:first-child").addClass("animated fadeOutUp");
+
+							setTimeout(function() {
+								if (removeFirstRow) $("#related-queue>tr:first-child").remove();
+
+								$("#related-queue").append(
+								'<tr class="animated fadeInUp">' +
+									'<td>' + newRow.posID + '</td>' +
+									'<td>' + newRow.name + '</td>' +
+									'<td>' + newRow.mobileNumber + '</td>' +
+									'<td>' + newRow.emailAddress + '</td>' +
+									'<td>' + newRow.registerDate + '</td>' +
+									'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
+								'</tr>');
+							}, 700);
+						} else {
+							errorAlert(response.errorMessage);
+						}
+					}
+				).fail(function() {
+					errorAlert('获取更新信息失败，请联系管理员');
+				});
+			}
+		}
+	)
 }
 
 function parseStartPos(len, pos) {
