@@ -2,17 +2,10 @@ body {
 	margin: 0;
 }
 
-.position-area {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-bottom: 20px;
-	height: 70px;
-	background: linear-gradient(40deg,#FFD86F,#FC6262);
-	box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
-}
 .position-text {
-	color: white;
+	margin-bottom: 20px;
+	height: 4.5em;
+	background: linear-gradient(40deg,#FFD86F,#FC6262);
 }
 
 .information {
@@ -44,14 +37,10 @@ body {
 }
 
 .all-info {
-	border-style: solid;
-	border-color: rgb(255,136,0);
-	border-width: 2px 0 0 0;
 	margin: 30px 0;
-}
-.info-pagination {
-	display: flex;
-	justify-content: center;
+	border-width: 2px 0 0 0;
+	border-color: rgb(255,136,0);
+	border-style: solid;
 }
 
 .error-info {
