@@ -88,8 +88,18 @@ function confirmOperation(msg, func) {
 	$("#confirm-operation").modal('show');
 }
 
-function errorAlert(err) {
+function errorAlert(err, refresh =false) {
 	$("#error-info").text(err);
+	$('#error-alert').on('hide.bs.modal', function () {
+		if (refresh) location.reload();
+	});
+	$('#error-alert').on('show.bs.modal', function () {
+		// Prevent Bootstrap Operation: add scrollbarWidth as padding-right
+		$("body").css("padding-right", 0);
+	});
+
+	$("#progress").hide();
+	$("#confirm-operation").modal('hide');
 	$("#error-alert").modal('show');
 }
 
