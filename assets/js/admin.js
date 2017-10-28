@@ -51,7 +51,17 @@ $.get(
 									'../test_queuelist.php',
 									function(response) {
 										if (response.status == 0) {
-											//Todo
+											$.each(response.data, function(i, d) {
+												$("#related-queue").append(
+												'<tr>' +
+													'<td>' + d.posID + '</td>' +
+													'<td>' + d.name + '</td>' +
+													'<td>' + d.mobileNumber + '</td>' +
+													'<td>' + d.emailAddress + '</td>' +
+													'<td>' + d.registerDate + '</td>' +
+													'<td>' + (d.isNoticed ? '已发送' : '') + '</td>' +
+												'</tr>');
+											});
 										} else {
 											errorAlert(response.errorMessage);
 										}
