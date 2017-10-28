@@ -51,6 +51,13 @@ $("#call-next").click(function() {
 				'{"curPos": ' + $("#position").text() + '}',
 				function(response) {
 					$("#progress").hide();
+					$("#confirm-operation").modal('hide');
+					setTimeout(function() {
+						$("#position").fadeOut(500, function() {
+							$(this).text(response.data.curPos);
+							$(this).fadeIn(700);
+						});
+					}, 700);
 				}
 			).fail(function() {
 				errorAlert('操作失败，请联系管理员');
