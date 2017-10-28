@@ -6,6 +6,12 @@ $.get(
 		if (response.status == 0) {
 			switch(response.data.status) {
 				case 1:
+					$("#placeholder-title").text('预约系统暂未开放');
+					$("#placeholder-content").html(
+						'<p>提示： 连接投影页至大屏幕 &raquo; 开始接受预约</p>'
+					);
+					$("#placeholder").show();
+
 					$("#show-all-info").hide();
 					$("#export-all-info").hide();
 					$("#close-system").hide();
@@ -15,12 +21,35 @@ $.get(
 					$("#open-screen").hide();
 					$("#start-system").hide();
 					$("#close-system").hide();
+					// Todo
 					break;
 
 				case 0:
-					$("#call-next").fadeIn(1000);
 					$("#start-system").hide();
-					//Todo
+					$.getJSON(
+						// '../queueinfo.json',
+						'../test_queueinfo.php',
+						function(data) {
+							if (data.queueLength == 0) {
+								$("#placeholder").show();
+								setInterval(function() {
+									$.getJSON(
+										// '../queueinfo.json',
+										'../test_queueinfo.php',
+										function(d) {
+											if (d.queueLength > 0) location.reload();
+										}
+									);
+								}, 5000);
+							} else {
+								$("#related").show();
+								$("#call-next").show();
+								// Todo
+							}
+						}
+					).fail(function() {
+						alert('获取状态信息失败，请联系管理员');
+					});
 					break;
 			}
 			$("#login-btn").hide();

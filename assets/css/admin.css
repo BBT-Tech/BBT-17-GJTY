@@ -4,10 +4,10 @@ body {
 }
 
 .modal-dialog {
-	margin-top: 11em;
+	margin-top: 11em !important;
 }
 .modal-confirm {
-	margin-top: 7em;
+	margin-top: 7em !important;
 }
 
 .confirm-info p {
@@ -55,6 +55,9 @@ body {
 	padding-top: 55px;
 	padding-bottom: 1em;
 }
+
+.placeholder,
+.related,
 .call-next {
 	display: none;
 }

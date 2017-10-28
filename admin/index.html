@@ -96,7 +96,7 @@
 
 	<div class="information" id="information">
 		<div class="current">
-			<h4 class="information-title">当前预约者信息：</h4>
+			<p class="information-title">当前预约者：</p>
 
 			<div class="card">
 				<div class="view overlay hm-white-slight">
@@ -105,11 +105,11 @@
 				</div>
 
 				<div class="card-body">
-					<p class="card-text">姓名： <span id="name">董建华</span></p>
-					<p class="card-text">手机： <span id="phone">23333</span></p>
-					<p class="card-text">邮箱： <span id="email">emmm</span></p>
-					<p class="card-text">报名时间： <span id="reg-time">2017-10-23-10xx</span></p>
-					<p class="card-text">微信提醒： <span id="wechat-msg">已发送</span></p>
+					<p class="card-text">姓名： <span id="name">（等待预约开始）</span></p>
+					<p class="card-text">手机： <span id="phone">不给</span></p>
+					<p class="card-text">邮箱： <span id="email">不了不了</span></p>
+					<p class="card-text">报名时间： <span id="reg-time">2017-10-27 21:52:36</span></p>
+					<p class="card-text">微信提醒： <span id="wechat-msg">未发送</span></p>
 				</div>
 			</div>
 		</div>
@@ -118,10 +118,21 @@
 			更新至下一号
 		</button>
 
-		<div class="related">
-			<h4 class="information-title">附近队列信息：</h4>
+		<div class="placeholder" id="placeholder">
+			<h4 id="placeholder-title">（暂无预约信息）</h4>
 
-			<table class="table table-hover table-responsive">
+			<br><hr>
+			<div id="placeholder-content">
+				<p>系统每隔 5s 更新一次实时数据</p>
+				<p>预约开始后自动更新间隔将增加至 10s</p>
+			</div>
+			<p>* 建议在浏览器全屏模式下进行操作</p>
+		</div>
+
+		<div class="related" id="related">
+			<p class="information-title">附近队列信息：</p>
+
+			<table class="table table-hover table-responsive" id="related-table">
 				<thead>
 					<tr>
 						<th>号码</th>
