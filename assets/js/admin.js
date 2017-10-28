@@ -88,16 +88,23 @@ $("#start-system").click(function() {
 });
 
 $("#close-system").click(function() {
-	$.post(
-		// '../admin/setIsRegisterAble/',
-		'../test_registerable.php',
-		'{"status": -1}',
-		function(response) {
-			//Todo
+	confirmOperation(
+		'<p>活动结束后系统将不再接受新的预约</p>' +
+		'<p>管理页面会继续正常显示 直到所有已预约号码都处理完毕</p>' +
+		'<p>是否确定结束本次光迹涂鸦活动？</p>',
+		function() {
+			$.post(
+				// '../admin/setIsRegisterAble/',
+				'../test_registerable.php',
+				'{"status": -1}',
+				function(response) {
+					errorAlert('已结束本次光迹涂鸦活动');
+				}
+			).fail(function() {
+				errorAlert('操作失败，请联系管理员');
+			});
 		}
-	).fail(function() {
-		errorAlert('操作失败，请联系管理员');
-	});
+	)
 });
 
 $("#login-modal-btn").click(function() {
