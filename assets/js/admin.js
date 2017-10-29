@@ -35,29 +35,13 @@ $.get(
 						} else {
 							$("#related").show();
 							$("#call-next").show();
-							$.get(
-								// Make sure there are 7 suitable rows of data
-								// Better if the current position is centerd
-								// '../admin/getQueueListByPos/start/' +
-								// parseStartPos(data.queueLength, data.curPos) +
-								// '/limit/7/',
-								'../test_queuelist.php',
-								function(response) {
-									if (response.status == 0) {
-										$.each(response.data, function(i, d) {
-											appendToQueue(d);
-										});
-										setInterval(function() {
-											// Automatically request and add new reserve data
-											updateQueue();
-										}, 10000);
-									} else {
-										errorAlert(response.errorMessage);
-									}
-								}
-							).fail(function() {
-								errorAlert('获取队列信息失败，请联系管理员');
-							});
+
+							updateQueue(data.queueLength, data.curPos);
+
+							setInterval(function() {
+								// Automatically request and add new reserve data
+								updateQueue();
+							}, 10000);
 						}
 					}).fail(function() {
 						errorAlert('获取状态信息失败，请联系管理员');
@@ -266,21 +250,43 @@ $("#logout-btn").click(function() {
 	);
 });
 
-function updateQueue() {
-	$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
-		var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
-		if (data.queueLength > curMax) {
-			// There is new item in queue data
-			$.get(
-				// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
-				'../test_queueitem.php',
-				function(response) {
-					if (response.status == 0) {
-						if (!($("#related-queue>tr").length == 7)) {
-							// Rendered queue length is shorter than 7
-							// So just append the new row directly
-							appendToQueue(response.data);
-						} else {
+function updateQueue(l, p) {
+	// Variable l(length) and p(position) are for the initial render
+	var curLength = $("#related-queue>tr").length;
+	if (curLength < 7) {
+		// Rendered queue is not full
+		$.get(
+			/*************************************************************
+			  * Send request with appropriate start position
+			  * Center current position among rows if length >= 7
+			  * And then append all the responsed data to table
+			  ***********************************************************/
+			// '../admin/getQueueListByPos/start/' +
+			// (curLength == 0 ? parseStartPos(l, p) : (curLength + 1)) +
+			// '/limit/' + (7 - curLength) + '/',
+			'../test_queuelist.php',
+			function(response) {
+				if (response.status == 0) {
+					$.each(response.data, function(i, d) {
+						appendToQueue(d);
+					});
+				} else {
+					errorAlert(response.errorMessage);
+				}
+			}
+		).fail(function() {
+			errorAlert('获取队列信息失败，请联系管理员');
+		});
+	} else {
+		$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
+			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
+			if (data.queueLength > curMax) {
+				// There is new item in queue data
+				$.get(
+					// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
+					'../test_queueitem.php',
+					function(response) {
+						if (response.status == 0) {
 							var curCenter = parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text());
 							if (data.curPos > curCenter) {
 								// Make sure the centered row shows data of current position
@@ -290,16 +296,16 @@ function updateQueue() {
 									appendToQueue(response.data);
 								}, 700);
 							}
+						} else {
+							errorAlert(response.errorMessage);
 						}
-					} else {
-						errorAlert(response.errorMessage);
 					}
-				}
-			).fail(function() {
-				errorAlert('获取更新信息失败，请联系管理员');
-			});
-		}
-	});
+				).fail(function() {
+					errorAlert('获取更新信息失败，请联系管理员');
+				});
+			}
+		});
+	}
 }
 
 function appendToQueue(newRow) {
