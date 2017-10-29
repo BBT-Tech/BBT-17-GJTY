@@ -19,7 +19,7 @@ $.get(
 					$("#open-screen").hide();
 					$("#start-system").hide();
 					$("#close-system").hide();
-					initialPrepare();
+					initialPrepare(true);
 					break;
 
 				case 0:
@@ -56,6 +56,12 @@ $("#call-next").click(function() {
 				'{"curPos": ' + $("#position").text() + '}',
 				function(r) {
 					if (r.status == 0) {
+						if (r.curPos == r.queueLength) {
+							$("#call-next").fadeTo(1000, 0, function() {
+								$(this).css("visibility", "hidden");
+							});
+						}
+
 						$.get(
 							// '../admin/getQueueItem/posID/' + r.data.curPos + '/',
 							'../test_queueitem.php',
@@ -230,7 +236,7 @@ $("#logout-btn").click(function() {
 	);
 });
 
-function initialPrepare() {
+function initialPrepare(closed =false) {
 	$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
 		if (data.queueLength == 0) {
 			$("#placeholder").show();
@@ -239,7 +245,15 @@ function initialPrepare() {
 					if (d.queueLength > 0) location.reload();
 				});
 			}, 10000);
+			return;
 		} else {
+			if (closed && (data.queueLength == data.curPos)) {
+				$("#placeholder-title").text('本次光迹涂鸦活动已经结束');
+				$("#placeholder-content").text('预约队列处理完毕 现在可以查看或导出所有数据');
+				$("#placeholder").show();
+				return;
+			}
+
 			$("#related").show();
 			$("#call-next").show();
 
@@ -321,6 +335,9 @@ function appendToQueue(newRow) {
 		'<td>' + newRow.registerDate + '</td>' +
 		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
 	'</tr>');
+
+	if ($("#call-next").css("visibility") == "hidden")
+		$("#call-next").css("visibility", "visible").fadeTo(1000, 1);
 }
 
 function parseStartPos(len, pos) {
