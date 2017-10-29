@@ -3,6 +3,7 @@ $.get(
 	'../test_registerable.php',
 	function(response) {
 		$("body").show();
+		systemClosed = false;
 		if (response.status == 0) {
 			switch(response.data.status) {
 				case 1:
@@ -16,15 +17,17 @@ $.get(
 					break;
 
 				case -1:
+					systemClosed = true;
+					initialPrepare();
+
 					$("#open-screen").hide();
 					$("#start-system").hide();
 					$("#close-system").hide();
-					initialPrepare(true);
 					break;
 
 				case 0:
-					$("#start-system").hide();
 					initialPrepare();
+					$("#start-system").hide();
 					break;
 			}
 			$("#login-btn").hide();
@@ -99,7 +102,8 @@ $("#close-system").click(function() {
 				'../test_registerable.php',
 				'{"status": -1}',
 				function(response) {
-					errorAlert('已结束本次光迹涂鸦活动');
+					errorAlert('已结束本次光迹涂鸦活动', false);
+					systemClosed = true;
 				}
 			).fail(function() {
 				errorAlert('操作失败，请联系管理员');
@@ -174,7 +178,7 @@ $("#logout-btn").click(function() {
 	);
 });
 
-function initialPrepare(closed =false) {
+function initialPrepare() {
 	$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
 		if (data.queueLength == 0) {
 			$("#placeholder").show();
@@ -185,7 +189,8 @@ function initialPrepare(closed =false) {
 			}, 10000);
 			return;
 		} else {
-			if (closed && (data.queueLength == data.curPos)) {
+			if (systemClosed && (data.queueLength == data.curPos)) {
+				$("#name").text('（活动已结束）');
 				$("#placeholder-title").text('本次光迹涂鸦活动已经结束');
 				$("#placeholder-content").text('预约队列处理完毕 现在可以查看或导出所有数据');
 				$("#placeholder").show();
@@ -219,6 +224,7 @@ function callNextPrepare() {
 					function(r) {
 						if (r.status == 0) {
 							if (r.data.curPos == r.data.queueLength) {
+								if (systemClosed) location.reload();
 								$("#call-next").unbind('click');
 								$("#call-next").addClass("disabled");
 							}
