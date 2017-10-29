@@ -115,6 +115,7 @@ function initialPrepare() {
 	$("#all-info").show();
 	$("#information").hide();
 	$(".buttons").hide();
+	allInfoPrepare();
 	return;
 	///////////////////////////////////////
 	$("#logout-btn").click(function() {
@@ -245,14 +246,15 @@ function callNextPrepare() {
 }
 
 function allInfoPrepare() {
-	$("#show-all-info").click(function() {
+	// $("#show-all-info").click(function() {
 		$("#show-all-info").fadeOut(100, function() {
 			$("#hide-all-info").fadeIn(200);
 		});
-		//prepare table
+		//prepare pagination and table
+		$(".page-link").click(function() { togglePage($(this).text()); });
 		$("#all-info").show();
 		$("body").animate({scrollTop: $(document).height()}, 3000);
-	});
+	// });
 
 	$("#hide-all-info").click(function() {
 		$("#hide-all-info").fadeOut(100, function() {
@@ -386,6 +388,27 @@ function infoToggle(ele, val) {
 		$(ele).removeClass("zoomOutUp");
 		$(ele).addClass("fadeInRight");
 	}, 1000);
+}
+
+function togglePage(page) {
+	switch(page) {
+		case '首页':
+			alert('first');
+			break;
+		case '末页':
+			alert('first');
+			break;
+		case '«':
+			alert('prev');
+			break;
+		case '»':
+			alert('next');
+			break;
+
+		default:
+			alert(page);
+			break;
+	}
 }
 
 function confirmOperation(msg, func) {
