@@ -41,6 +41,25 @@ $.get(
 					$("#show-all-info").hide();
 					$("#export-all-info").hide();
 					$("#close-system").hide();
+
+					$("#start-system").click(function() {
+						confirmOperation(
+							'<p>现场已经准备完成的话就可以开始接受预约了</p>' +
+							'<p>记得将投影页面接到大屏幕上哦</p>' +
+							'<p>一切就绪的话就点击下面的确定键吧</p>',
+							function() {
+								$.post(
+									paths["setRegisterAble"],
+									'{"status": 0}',
+									function(response) {
+										handleResponse(response, function() {
+											errorAlert('操作成功，系统开始接受预约');
+										});
+									}
+								).fail(function() { failed(); });
+							}
+						)
+					});
 					break;
 
 				case -1:
@@ -75,63 +94,8 @@ $("#open-screen").click(function() {
 	window.open('./screen.html');
 });
 
-$("#show-all-info").click(function() {
-	$("#show-all-info").fadeOut(100, function() {
-		$("#hide-all-info").fadeIn(200);
-	});
-	$("#all-info").show();
-	$("body").animate({scrollTop: $(document).height()}, 3000);
-});
-
-$("#hide-all-info").click(function() {
-	$("#hide-all-info").fadeOut(100, function() {
-		$("#show-all-info").fadeIn(200);
-	});
-	$("body").animate({scrollTop: 0}, 3000);
-	$("#all-info").hide(2000);
-});
-
-$("#export-all-info").click(function() {
-	//Todo
-});
-
-$("#start-system").click(function() {
-	confirmOperation(
-		'<p>现场已经准备完成的话就可以开始接受预约了</p>' +
-		'<p>记得将投影页面接到大屏幕上哦</p>' +
-		'<p>一切就绪的话就点击下面的确定键吧</p>',
-		function() {
-			$.post(
-				paths["setRegisterAble"],
-				'{"status": 0}',
-				function(response) {
-					handleResponse(response, function() {
-						errorAlert('操作成功，系统开始接受预约');
-					});
-				}
-			).fail(function() { failed(); });
-		}
-	)
-});
-
-$("#close-system").click(function() {
-	confirmOperation(
-		'<p>活动结束后系统将不再接受新的预约</p>' +
-		'<p>管理页面会继续正常显示 直到所有已预约号码都处理完毕</p>' +
-		'<p>是否确定结束本次光迹涂鸦活动？</p>',
-		function() {
-			$.post(
-				paths["setRegisterAble"],
-				'{"status": -1}',
-				function(response) {
-					handleResponse(response, function() {
-						errorAlert('已结束本次光迹涂鸦活动', false);
-						systemClosed = true;
-					});
-				}
-			).fail(function() { failed(); });
-		}
-	)
+$("#login-btn").click(function() {
+	$("#login-modal").modal('show');
 });
 
 $("#login-modal-btn").click(function() {
@@ -147,52 +111,73 @@ $("#login-modal-btn").click(function() {
 	).fail(function() { failed(); });
 });
 
-$("#login-btn").click(function() {
-	$("#login-modal").modal('show');
-});
+function initialPrepare() {
+	$("#logout-btn").click(function() {
+		confirmOperation(
+			'<p>确定要退出系统吗？</p>',
+			function() {
+				$.post(
+					paths["logout"], '',
+					function(response) {
+						handleResponse(response, function() {
+							errorAlert('退出系统成功！', false);
+							$("#error-alert").on('hide.bs.modal', function () {
+								$("#information").fadeOut(700);
+								$("#all-info").fadeOut(700);
 
-$("#logout-btn").click(function() {
-	confirmOperation(
-		'<p>确定要退出系统吗？</p>',
-		function() {
-			$.post(
-				paths["logout"], '',
-				function(response) {
-					handleResponse(response, function() {
-						errorAlert('退出系统成功！', false);
-						$("#error-alert").on('hide.bs.modal', function () {
-							$("#information").fadeOut(700);
-							$("#all-info").fadeOut(700);
+								$(".buttons").fadeOut(700, function() {
+									$("#show-all-info").hide();
+									$("#hide-all-info").hide();
+									$("#export-all-info").hide();
+									$("#start-system").hide();
+									$("#close-system").hide();
+									$("#logout-btn").hide();
+									$("#login-btn").show();
+									$("#open-screen").show();
 
-							$(".buttons").fadeOut(700, function() {
-								$("#show-all-info").hide();
-								$("#hide-all-info").hide();
-								$("#export-all-info").hide();
-								$("#start-system").hide();
-								$("#close-system").hide();
-								$("#logout-btn").hide();
-								$("#login-btn").show();
-								$("#open-screen").show();
-
-								$(".buttons").css("padding-top", "calc(100vh - 11em)");
-								$(".buttons").fadeIn(500, function() {
-									setTimeout(function() {
-										$("#login-modal").modal('show');
-									}, 500);
+									$(".buttons").css("padding-top", "calc(100vh - 11em)");
+									$(".buttons").fadeIn(500, function() {
+										setTimeout(function() {
+											$("#login-modal").modal('show');
+										}, 500);
+									});
 								});
 							});
 						});
-					});
-				}
-			).fail(function() { failed(); });
-		}
-	);
-});
+					}
+				).fail(function() { failed(); });
+			}
+		);
+	});
 
-function initialPrepare() {
+	if (!systemClosed) {
+		$("#close-system").click(function() {
+			confirmOperation(
+				'<p>活动结束后系统将不再接受新的预约</p>' +
+				'<p>管理页面会继续正常显示 直到所有已预约号码都处理完毕</p>' +
+				'<p>是否确定结束本次光迹涂鸦活动？</p>',
+				function() {
+					$.post(
+						paths["setRegisterAble"],
+						'{"status": -1}',
+						function(response) {
+							handleResponse(response, function() {
+								errorAlert('已结束本次光迹涂鸦活动', false);
+								systemClosed = true;
+							});
+						}
+					).fail(function() { failed(); });
+				}
+			)
+		});
+	}
+
 	$.getJSON(paths["queueInfo"], function(data) {
 		if (data.queueLength == 0) {
+			$("#name").text('（暂无预约信息）');
 			$("#placeholder").show();
+			$("#show-all-info").hide();
+			$("#export-all-info").hide();
 			setInterval(function() {
 				$.getJSON(paths["queueInfo"], function(d) {
 					if (d.queueLength > 0) location.reload();
@@ -200,6 +185,8 @@ function initialPrepare() {
 			}, 10000);
 			return;
 		} else {
+			allInfoPrepare();
+
 			if (systemClosed && (data.queueLength == data.curPos)) {
 				$("#name").text('（活动已结束）');
 				$("#open-screen").hide();
@@ -272,6 +259,28 @@ function callNextPrepare() {
 				).fail(function() { failed(); });
 			}
 		)
+	});
+}
+
+function allInfoPrepare() {
+	$("#show-all-info").click(function() {
+		$("#show-all-info").fadeOut(100, function() {
+			$("#hide-all-info").fadeIn(200);
+		});
+		$("#all-info").show();
+		$("body").animate({scrollTop: $(document).height()}, 3000);
+	});
+
+	$("#hide-all-info").click(function() {
+		$("#hide-all-info").fadeOut(100, function() {
+			$("#show-all-info").fadeIn(200);
+		});
+		$("body").animate({scrollTop: 0}, 3000);
+		$("#all-info").hide(2000);
+	});
+
+	$("#export-all-info").click(function() {
+		//Todo
 	});
 }
 
