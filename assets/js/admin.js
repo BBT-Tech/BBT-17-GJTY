@@ -320,21 +320,19 @@ function updateQueue(l, p) {
 	} else {
 		$.getJSON(paths["queueInfo"], function(data) {
 			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
-			if (data.queueLength > curMax) {
+			if (data.queueLength > curMax
 				// There is new item in queue data
+				&& data.curPos > parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text())) {
+				// Make sure the centered row displays data of current position
 				$.get(
 					paths["getQueueItem"] + (testing ? '' : ((curMax + 1) + '/')),
 					function(response) {
 						handleResponse(response, function() {
-							var curCenter = parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text());
-							if (data.curPos > curCenter) {
-								// Make sure the centered row shows data of current position
-								$("#related-queue>tr:first-child").addClass("fadeOutUp");
-								setTimeout(function() {
-									$("#related-queue>tr:first-child").remove();
-									appendToQueue(response.data);
-								}, 700);
-							}
+							$("#related-queue>tr:first-child").addClass("fadeOutUp");
+							setTimeout(function() {
+								$("#related-queue>tr:first-child").remove();
+								appendToQueue(response.data);
+							}, 700);
 						});
 					}
 				).fail(function() { failed(); });
