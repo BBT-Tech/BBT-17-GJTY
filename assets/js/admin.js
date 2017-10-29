@@ -247,11 +247,23 @@ function callNextPrepare() {
 
 function allInfoPrepare() {
 	// $("#show-all-info").click(function() {
+		$.getJSON(paths["queueInfo"], function(data) {
+			var rowLimit = 15, pageLimit = 9;
+			pages = Math.ceil(data.queueLength / rowLimit);
+			for (var i = 0; i < pages; i++) {
+				$(".page-item:nth-last-child(2)").before(
+					'<li class="page-item' + (i < pageLimit ? '' : ' d-none') +
+					'"><a class="page-link">' + (i + 1) + '</a></li>'
+					);
+			}
+			$(".page-item:nth-child(3)").addClass("active");
+			$(".page-link").click(function() { togglePage($(this).text()); });
+		});
+
 		$("#show-all-info").fadeOut(100, function() {
 			$("#hide-all-info").fadeIn(200);
 		});
 		//prepare pagination and table
-		$(".page-link").click(function() { togglePage($(this).text()); });
 		$("#all-info").show();
 		$("body").animate({scrollTop: $(document).height()}, 3000);
 	// });
@@ -393,16 +405,16 @@ function infoToggle(ele, val) {
 function togglePage(page) {
 	switch(page) {
 		case '首页':
-			alert('first');
+			togglePage(1);
 			break;
 		case '末页':
-			alert('first');
+			togglePage(pages);
 			break;
 		case '«':
-			alert('prev');
+			togglePage(parseInt($(".page-item.active").text()) - 1);
 			break;
 		case '»':
-			alert('next');
+			togglePage(parseInt($(".page-item.active").text()) + 1);
 			break;
 
 		default:
