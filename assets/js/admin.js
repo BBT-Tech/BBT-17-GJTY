@@ -112,6 +112,11 @@ $("#login-modal-btn").click(function() {
 });
 
 function initialPrepare() {
+	$("#all-info").show();
+	$("#information").hide();
+	$(".buttons").hide();
+	return;
+	///////////////////////////////////////
 	$("#logout-btn").click(function() {
 		confirmOperation(
 			'<p>确定要退出系统吗？</p>',
@@ -244,6 +249,7 @@ function allInfoPrepare() {
 		$("#show-all-info").fadeOut(100, function() {
 			$("#hide-all-info").fadeIn(200);
 		});
+		//prepare table
 		$("#all-info").show();
 		$("body").animate({scrollTop: $(document).height()}, 3000);
 	});
