@@ -7,9 +7,7 @@ $.get(
 			switch(response.data.status) {
 				case 1:
 					$("#placeholder-title").text('预约系统暂未开放');
-					$("#placeholder-content").html(
-						'<p>提示： 连接投影页至大屏幕 &raquo; 开始接受预约</p>'
-					);
+					$("#placeholder-content").text('提示： 连接投影页至大屏幕 » 开始接受预约');
 					$("#placeholder").show();
 
 					$("#show-all-info").hide();
