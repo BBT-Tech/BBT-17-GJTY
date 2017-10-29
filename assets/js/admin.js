@@ -19,33 +19,12 @@ $.get(
 					$("#open-screen").hide();
 					$("#start-system").hide();
 					$("#close-system").hide();
-					// Todo
+					initialPrepare();
 					break;
 
 				case 0:
 					$("#start-system").hide();
-					$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
-						if (data.queueLength == 0) {
-							$("#placeholder").show();
-							setInterval(function() {
-								$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(d) {
-									if (d.queueLength > 0) location.reload();
-								});
-							}, 10000);
-						} else {
-							$("#related").show();
-							$("#call-next").show();
-
-							updateQueue(data.queueLength, data.curPos);
-
-							setInterval(function() {
-								// Automatically request and add new reserve data
-								updateQueue();
-							}, 10000);
-						}
-					}).fail(function() {
-						errorAlert('获取状态信息失败，请联系管理员');
-					});
+					initialPrepare();
 					break;
 			}
 			$("#login-btn").hide();
@@ -57,6 +36,7 @@ $.get(
 			$("#logout-btn").hide();
 			errorAlert(response.errorMessage, false);
 		}
+
 		$("#hide-all-info").hide();
 		$(".buttons").animate({"opacity": 1}, 1000);
 	}
@@ -249,6 +229,29 @@ $("#logout-btn").click(function() {
 		}
 	);
 });
+
+function initialPrepare() {
+	$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
+		if (data.queueLength == 0) {
+			$("#placeholder").show();
+			setInterval(function() {
+				$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(d) {
+					if (d.queueLength > 0) location.reload();
+				});
+			}, 10000);
+		} else {
+			$("#related").show();
+			$("#call-next").show();
+
+			updateQueue(data.queueLength, data.curPos);
+
+			// Automatically request and add new reserve data
+			setInterval(function() { updateQueue(); }, 10000);
+		}
+	}).fail(function() {
+		errorAlert('获取状态信息失败，请联系管理员');
+	});
+}
 
 function updateQueue(l, p) {
 	// Variable l(length) and p(position) are for the initial render
