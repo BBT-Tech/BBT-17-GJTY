@@ -1,9 +1,36 @@
+var testing = true;
+
+var systemClosed = false,
+	paths = {
+		"getRegisterAble": "../admin/getRegisterAble/",
+		"setRegisterAble": "../admin/setIsRegisterAble/",
+		"getQueueItem": "../admin/getQueueItem/posID/",
+		"getQueueListByPos": "../admin/getQueueListByPos/",
+		"getQueueList": "../admin/getQueueList/",
+		"callNext": "../admin/goNext/",
+		"login": "../admin/checkLogin/",
+		"logout": "../admin/logOut/",
+		"queueInfo": "../queueinfo.json"
+	};
+
+if (testing) {
+	paths = {
+		"getRegisterAble": "../test_registerable.php",
+		"setRegisterAble": "../test_registerable.php",
+		"getQueueItem": "../test_queueitem.php",
+		"getQueueListByPos": "../test_queuelist.php",
+		"getQueueList": "../test_queuelist.php",
+		"callNext": "../test_callnext.php",
+		"login": "../test_log.php",
+		"logout": "../test_log.php",
+		"queueInfo": "../test_queueinfo.php"
+	};
+}
+
 $.get(
-	// '../admin/getRegisterAble/',
-	'../test_registerable.php',
+	paths["getRegisterAble"],
 	function(response) {
 		$("body").show();
-		systemClosed = false;
 		if (response.status == 0) {
 			switch(response.data.status) {
 				case 1:
@@ -20,7 +47,6 @@ $.get(
 					systemClosed = true;
 					initialPrepare();
 
-					$("#open-screen").hide();
 					$("#start-system").hide();
 					$("#close-system").hide();
 					break;
@@ -76,8 +102,7 @@ $("#start-system").click(function() {
 		'<p>一切就绪的话就点击下面的确定键吧</p>',
 		function() {
 			$.post(
-				// '../admin/setIsRegisterAble/',
-				'../test_registerable.php',
+				paths["setRegisterAble"],
 				'{"status": 0}',
 				function(response) {
 					handleResponse(response, function() {
@@ -96,8 +121,7 @@ $("#close-system").click(function() {
 		'<p>是否确定结束本次光迹涂鸦活动？</p>',
 		function() {
 			$.post(
-				// '../admin/setIsRegisterAble/',
-				'../test_registerable.php',
+				paths["setRegisterAble"],
 				'{"status": -1}',
 				function(response) {
 					handleResponse(response, function() {
@@ -112,8 +136,7 @@ $("#close-system").click(function() {
 
 $("#login-modal-btn").click(function() {
 	$.post(
-		// '../admin/checkLogin/',
-		'../test_log.php',
+		paths["login"],
 		'{"userName": "' + $("#username").val() +
 		'","passWord": "' + $("#password").val() + '"}',
 		function(response) {
@@ -133,9 +156,7 @@ $("#logout-btn").click(function() {
 		'<p>确定要退出系统吗？</p>',
 		function() {
 			$.post(
-				// '../admin/logOut/',
-				'../test_log.php',
-				'',
+				paths["logout"], '',
 				function(response) {
 					handleResponse(response, function() {
 						errorAlert('退出系统成功！', false);
@@ -169,11 +190,11 @@ $("#logout-btn").click(function() {
 });
 
 function initialPrepare() {
-	$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
+	$.getJSON(paths["queueInfo"], function(data) {
 		if (data.queueLength == 0) {
 			$("#placeholder").show();
 			setInterval(function() {
-				$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(d) {
+				$.getJSON(paths["queueInfo"], function(d) {
 					if (d.queueLength > 0) location.reload();
 				});
 			}, 10000);
@@ -181,6 +202,8 @@ function initialPrepare() {
 		} else {
 			if (systemClosed && (data.queueLength == data.curPos)) {
 				$("#name").text('（活动已结束）');
+				$("#open-screen").hide();
+
 				$("#placeholder-title").text('本次光迹涂鸦活动已经结束');
 				$("#placeholder-content").text('预约队列处理完毕 现在可以查看或导出所有数据');
 				$("#placeholder").show();
@@ -206,8 +229,7 @@ function callNextPrepare() {
 			'<p>是否确定更新？</p>',
 			function() {
 				$.post(
-					// '../admin/goNext/',
-					'../test_callnext.php',
+					paths["callNext"],
 					'{"curPos": ' + $("#position").text() + '}',
 					function(r) {
 						handleResponse(r, function() {
@@ -218,8 +240,7 @@ function callNextPrepare() {
 							}
 
 							$.get(
-								// '../admin/getQueueItem/posID/' + r.data.curPos + '/',
-								'../test_queueitem.php',
+								paths["getQueueItem"] + (testing ? '' : (r.data.curPos + '/')),
 								function(response) {
 									handleResponse(response, function() {
 										var d = response.data;
@@ -265,10 +286,12 @@ function updateQueue(l, p) {
 			  * Center current position among rows if length >= 7
 			  * And then append all the responsed data to table
 			  ***********************************************************/
-			// '../admin/getQueueListByPos/start/' +
-			// (curLength == 0 ? parseStartPos(l, p) : (curLength + 1)) +
-			// '/limit/' + (7 - curLength) + '/',
-			'../test_queuelist.php',
+			paths["getQueueListByPos"] +
+			(
+				testing ? '' :
+				'start/' + (curLength == 0 ? parseStartPos(l, p) : (curLength + 1)) + '/' +
+				'limit/' + (7 - curLength) + '/'
+			),
 			function(response) {
 				handleResponse(response, function() {
 					$.each(response.data, function(i, d) {
@@ -278,13 +301,12 @@ function updateQueue(l, p) {
 			}
 		).fail(function() { failed(); });
 	} else {
-		$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
+		$.getJSON(paths["queueInfo"], function(data) {
 			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
 			if (data.queueLength > curMax) {
 				// There is new item in queue data
 				$.get(
-					// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
-					'../test_queueitem.php',
+					paths["getQueueItem"] + (testing ? '' : ((curMax + 1) + '/')),
 					function(response) {
 						handleResponse(response, function() {
 							var curCenter = parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text());

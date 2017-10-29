@@ -1,13 +1,26 @@
-var regPattern = {
-	"phone": /^1[0-9]{10}$/,
-	"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-};
+var testing = true;
 
-// var formSource = '';
-var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
-var duringHeight = "calc(((100vh - 496px) / 2) + 2em)";
-var statusHeight = "calc((100vh - 496px) / 2)";
-var successHeight = "calc((100vh - 419px) / 2)";
+var regPattern = {
+		"phone": /^1[0-9]{10}$/,
+		"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+	},
+	paths = {
+		"register": "./user/register/",
+		"isInQueue": "./user/isUserInQueue/",
+		"queueInfo": "./queueinfo.json"
+	},
+	formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/',
+	duringHeight = "calc(((100vh - 496px) / 2) + 2em)",
+	statusHeight = "calc((100vh - 496px) / 2)",
+	successHeight = "calc((100vh - 419px) / 2)";
+
+if (testing) {
+	paths = {
+		"register": "./test_register.php",
+		"isInQueue": "./test_isUserInQueue.php",
+		"queueInfo": "./test_queueinfo.php"
+	};
+}
 
 if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
@@ -30,8 +43,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 		);
 
 		$.post(
-			// './user/register/',
-			'./test_register.php',
+			paths["register"],
 			JSON.stringify(data),
 			function(response) {
 				if (response.status == 0) {
@@ -67,8 +79,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 	});
 } else {
 	$.get(
-		// './user/isUserInQueue/',
-		'./test_isUserInQueue.php',
+		paths["isInQueue"],
 		function(response) {
 			if (response.status == 0) {
 				var d = response.data;
@@ -117,8 +128,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 
 $("#fresh").click(function () {
 	$.getJSON(
-		// './queueinfo.json',
-		'./test_queueinfo.php',
+		paths["queueInfo"],
 		function(d) {
 			var waiting = parseWaiting($("#position").text() - d.curPos);
 			switch(waiting) {
