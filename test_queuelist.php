@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 echo
 '{"status": 0,' .
 '"data":[' .
-'{"posID": 14, "name": "麦克华莱士", "mobileNumber": "13366651512", "emailAddress": "wallace@gmail.com", "registerDate": "2017-10-27 21:52:36", "isNoticed":true},' .
+// '{"posID": 14, "name": "麦克华莱士", "mobileNumber": "13366651512", "emailAddress": "wallace@gmail.com", "registerDate": "2017-10-27 21:52:36", "isNoticed":true},' .
 // '{"posID": 15, "name": "董建华", "mobileNumber": "13322265552", "emailAddress": "Chee-hwa@gmail.com", "registerDate": "2017-10-27 21:52:36", "isNoticed":true},' .
 // '{"posID": 17, "name": "董建华", "mobileNumber": "13322265552", "emailAddress": "Chee-hwa@gmail.com", "registerDate": "2017-10-27 21:52:36", "isNoticed":false},' .
 // '{"posID": 18, "name": "董建华", "mobileNumber": "13322265552", "emailAddress": "Chee-hwa@gmail.com", "registerDate": "2017-10-27 21:52:36", "isNoticed":true},' .

@@ -44,68 +44,6 @@ $.get(
 	errorAlert('获取状态信息失败，请联系管理员');
 });
 
-$("#call-next").click(function() {
-	confirmOperation(
-		'<p>更新至下一号的同时将通过微信提醒接下来的三位同学</p>' +
-		'<p>该操作可能需要较长的处理时间，请耐心等待</p>' +
-		'<p>是否确定更新？</p>',
-		function() {
-			$.post(
-				// '../admin/goNext/',
-				'../test_callnext.php',
-				'{"curPos": ' + $("#position").text() + '}',
-				function(r) {
-					if (r.status == 0) {
-						if (r.curPos == r.queueLength) {
-							$("#call-next").fadeTo(1000, 0, function() {
-								$(this).css("visibility", "hidden");
-							});
-						}
-
-						$.get(
-							// '../admin/getQueueItem/posID/' + r.data.curPos + '/',
-							'../test_queueitem.php',
-							function(response) {
-								if (response.status == 0) {
-									var d = response.data;
-									$("#progress").hide();
-									$("#confirm-operation").modal('hide');
-									setTimeout(function() {
-										infoToggle("#name", d.name);
-										infoToggle("#phone", d.mobileNumber);
-										infoToggle("#email", d.emailAddress);
-										infoToggle("#reg-time", d.registerDate);
-										infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
-
-										setTimeout(function() {
-											$("#position").removeClass("fadeInUp");
-											$("#position").addClass("fadeOutUp");
-
-											setTimeout(function() {
-												$("#position").text(d.posID);
-												$("#position").removeClass("fadeOutUp");
-												$("#position").addClass("fadeInUp");
-											}, 700);
-										}, 2333);
-									}, 700);
-								} else {
-									errorAlert(response.errorMessage);
-								}
-							}
-						).fail(function() {
-							errorAlert('获取更新信息失败，请联系管理员');
-						});
-					} else {
-						errorAlert(r.errorMessage);
-					}
-				}
-			).fail(function() {
-				errorAlert('操作失败，请联系管理员');
-			});
-		}
-	)
-});
-
 $("#open-screen").click(function() {
 	window.open('./screen.html');
 });
@@ -256,7 +194,7 @@ function initialPrepare(closed =false) {
 
 			$("#related").show();
 			$("#call-next").show();
-
+			callNextPrepare();
 			updateQueue(data.queueLength, data.curPos);
 
 			// Automatically request and add new reserve data
@@ -264,6 +202,69 @@ function initialPrepare(closed =false) {
 		}
 	}).fail(function() {
 		errorAlert('获取状态信息失败，请联系管理员');
+	});
+}
+
+function callNextPrepare() {
+	$("#call-next").click(function() {
+		confirmOperation(
+			'<p>更新至下一号的同时将通过微信提醒接下来的三位同学</p>' +
+			'<p>该操作可能需要较长的处理时间，请耐心等待</p>' +
+			'<p>是否确定更新？</p>',
+			function() {
+				$.post(
+					// '../admin/goNext/',
+					'../test_callnext.php',
+					'{"curPos": ' + $("#position").text() + '}',
+					function(r) {
+						if (r.status == 0) {
+							if (r.data.curPos == r.data.queueLength) {
+								$("#call-next").unbind('click');
+								$("#call-next").addClass("disabled");
+							}
+
+							$.get(
+								// '../admin/getQueueItem/posID/' + r.data.curPos + '/',
+								'../test_queueitem.php',
+								function(response) {
+									if (response.status == 0) {
+										var d = response.data;
+										$("#progress").hide();
+										$("#confirm-operation").modal('hide');
+										setTimeout(function() {
+											infoToggle("#name", d.name);
+											infoToggle("#phone", d.mobileNumber);
+											infoToggle("#email", d.emailAddress);
+											infoToggle("#reg-time", d.registerDate);
+											infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
+
+											setTimeout(function() {
+												$("#position").removeClass("fadeInUp");
+												$("#position").addClass("fadeOutUp");
+
+												setTimeout(function() {
+													$("#position").text(d.posID);
+													$("#position").removeClass("fadeOutUp");
+													$("#position").addClass("fadeInUp");
+												}, 700);
+											}, 2333);
+										}, 700);
+									} else {
+										errorAlert(response.errorMessage);
+									}
+								}
+							).fail(function() {
+								errorAlert('获取更新信息失败，请联系管理员');
+							});
+						} else {
+							errorAlert(r.errorMessage);
+						}
+					}
+				).fail(function() {
+					errorAlert('操作失败，请联系管理员');
+				});
+			}
+		)
 	});
 }
 
@@ -336,8 +337,10 @@ function appendToQueue(newRow) {
 		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
 	'</tr>');
 
-	if ($("#call-next").css("visibility") == "hidden")
-		$("#call-next").css("visibility", "visible").fadeTo(1000, 1);
+	if ($("#call-next.disabled").length == 1) {
+		callNextPrepare();
+		$("#call-next").removeClass("disabled");
+	}
 }
 
 function parseStartPos(len, pos) {
