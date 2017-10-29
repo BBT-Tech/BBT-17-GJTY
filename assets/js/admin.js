@@ -24,45 +24,42 @@ $.get(
 
 				case 0:
 					$("#start-system").hide();
-					$.getJSON(
-						// '../queueinfo.json',
-						'../test_queueinfo.php',
-						function(data) {
-							if (data.queueLength == 0) {
-								$("#placeholder").show();
-								setInterval(function() {
-									$.getJSON(
-										// '../queueinfo.json',
-										'../test_queueinfo.php',
-										function(d) {
-											if (d.queueLength > 0) location.reload();
-										}
-									);
-								}, 5000);
-							} else {
-								$("#related").show();
-								$("#call-next").show();
-								$.get(
-									// Make sure there are 7 suitable rows of data
-									// '../admin/getQueueListByPos/start/' +
-									// parseStartPos(data.queueLength, data.curPos) +
-									// '/limit/7/',
-									'../test_queuelist.php',
-									function(response) {
-										if (response.status == 0) {
-											$.each(response.data, function(i, d) {
-												appendToQueue(d);
-											});
-										} else {
-											errorAlert(response.errorMessage);
-										}
-									}
-								).fail(function() {
-									errorAlert('获取队列信息失败，请联系管理员');
+					$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
+						if (data.queueLength == 0) {
+							$("#placeholder").show();
+							setInterval(function() {
+								$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(d) {
+									if (d.queueLength > 0) location.reload();
 								});
-							}
+							}, 10000);
+						} else {
+							$("#related").show();
+							$("#call-next").show();
+							$.get(
+								// Make sure there are 7 suitable rows of data
+								// Better if the current position is centerd
+								// '../admin/getQueueListByPos/start/' +
+								// parseStartPos(data.queueLength, data.curPos) +
+								// '/limit/7/',
+								'../test_queuelist.php',
+								function(response) {
+									if (response.status == 0) {
+										$.each(response.data, function(i, d) {
+											appendToQueue(d);
+										});
+										setInterval(function() {
+											// Automatically request and add new reserve data
+											updateQueue();
+										}, 10000);
+									} else {
+										errorAlert(response.errorMessage);
+									}
+								}
+							).fail(function() {
+								errorAlert('获取队列信息失败，请联系管理员');
+							});
 						}
-					).fail(function() {
+					}).fail(function() {
 						errorAlert('获取状态信息失败，请联系管理员');
 					});
 					break;
@@ -109,8 +106,6 @@ $("#call-next").click(function() {
 										infoToggle("#email", d.emailAddress);
 										infoToggle("#reg-time", d.registerDate);
 										infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
-										// Not so easy of course
-										updateQueue(d);
 
 										setTimeout(function() {
 											$("#position").removeClass("fadeInUp");
@@ -272,37 +267,39 @@ $("#logout-btn").click(function() {
 });
 
 function updateQueue() {
-	$.getJSON(
-		// '../queueinfo.json',
-		'../test_queueinfo.php',
-		function(data) {
-			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
-			// New item in queue
-			if (data.queueLength > curMax) {
-				$.get(
-					// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
-					'../test_queueitem.php',
-					function(response) {
-						if (response.status == 0) {
-							var removeFirstRow = $("#related-queue>tr").length == 7;
-
-							if (removeFirstRow)
-								$("#related-queue>tr:first-child").addClass("animated fadeOutUp");
-
-							setTimeout(function() {
-								if (removeFirstRow) $("#related-queue>tr:first-child").remove();
-								appendToQueue(response.data);
-							}, 700);
+	$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
+		var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
+		if (data.queueLength > curMax) {
+			// There is new item in queue data
+			$.get(
+				// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
+				'../test_queueitem.php',
+				function(response) {
+					if (response.status == 0) {
+						if (!($("#related-queue>tr").length == 7)) {
+							// Rendered queue length is shorter than 7
+							// So just append the new row directly
+							appendToQueue(response.data);
 						} else {
-							errorAlert(response.errorMessage);
+							var curCenter = parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text());
+							if (data.curPos > curCenter) {
+								// Make sure the centered row shows data of current position
+								$("#related-queue>tr:first-child").addClass("fadeOutUp");
+								setTimeout(function() {
+									$("#related-queue>tr:first-child").remove();
+									appendToQueue(response.data);
+								}, 700);
+							}
 						}
+					} else {
+						errorAlert(response.errorMessage);
 					}
-				).fail(function() {
-					errorAlert('获取更新信息失败，请联系管理员');
-				});
-			}
+				}
+			).fail(function() {
+				errorAlert('获取更新信息失败，请联系管理员');
+			});
 		}
-	)
+	});
 }
 
 function appendToQueue(newRow) {
