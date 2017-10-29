@@ -43,9 +43,7 @@ $.get(
 		$("#hide-all-info").hide();
 		$(".buttons").animate({"opacity": 1}, 1000);
 	}
-).fail(function() {
-	errorAlert('获取状态信息失败，请联系管理员');
-});
+).fail(function() { failed(); });
 
 $("#open-screen").click(function() {
 	window.open('./screen.html');
@@ -82,11 +80,11 @@ $("#start-system").click(function() {
 				'../test_registerable.php',
 				'{"status": 0}',
 				function(response) {
-					errorAlert('操作成功，系统开始接受预约');
+					handleResponse(response, function() {
+						errorAlert('操作成功，系统开始接受预约');
+					});
 				}
-			).fail(function() {
-				errorAlert('操作失败，请联系管理员');
-			});
+			).fail(function() { failed(); });
 		}
 	)
 });
@@ -102,12 +100,12 @@ $("#close-system").click(function() {
 				'../test_registerable.php',
 				'{"status": -1}',
 				function(response) {
-					errorAlert('已结束本次光迹涂鸦活动', false);
-					systemClosed = true;
+					handleResponse(response, function() {
+						errorAlert('已结束本次光迹涂鸦活动', false);
+						systemClosed = true;
+					});
 				}
-			).fail(function() {
-				errorAlert('操作失败，请联系管理员');
-			});
+			).fail(function() { failed(); });
 		}
 	)
 });
@@ -119,15 +117,11 @@ $("#login-modal-btn").click(function() {
 		'{"userName": "' + $("#username").val() +
 		'","passWord": "' + $("#password").val() + '"}',
 		function(response) {
-			if (response.status == 0) {
+			handleResponse(response, function() {
 				location.reload();
-			} else {
-				errorAlert(response.errorMessage);
-			}
+			});
 		}
-	).fail(function() {
-		errorAlert('操作失败，请联系管理员');
-	});
+	).fail(function() { failed(); });
 });
 
 $("#login-btn").click(function() {
@@ -143,7 +137,7 @@ $("#logout-btn").click(function() {
 				'../test_log.php',
 				'',
 				function(response) {
-					if (response.status == 0) {
+					handleResponse(response, function() {
 						errorAlert('退出系统成功！', false);
 						$("#error-alert").on('hide.bs.modal', function () {
 							$("#information").fadeOut(700);
@@ -167,13 +161,9 @@ $("#logout-btn").click(function() {
 								});
 							});
 						});
-					} else {
-						errorAlert(response.errorMessage);
-					}
+					});
 				}
-			).fail(function() {
-				errorAlert('操作失败，请联系管理员');
-			});
+			).fail(function() { failed(); });
 		}
 	);
 });
@@ -205,9 +195,7 @@ function initialPrepare() {
 			// Automatically request and add new reserve data
 			setInterval(function() { updateQueue(); }, 10000);
 		}
-	}).fail(function() {
-		errorAlert('获取状态信息失败，请联系管理员');
-	});
+	}).fail(function() { failed(); });
 }
 
 function callNextPrepare() {
@@ -222,7 +210,7 @@ function callNextPrepare() {
 					'../test_callnext.php',
 					'{"curPos": ' + $("#position").text() + '}',
 					function(r) {
-						if (r.status == 0) {
+						handleResponse(r, function() {
 							if (r.data.curPos == r.data.queueLength) {
 								if (systemClosed) location.reload();
 								$("#call-next").unbind('click');
@@ -233,7 +221,7 @@ function callNextPrepare() {
 								// '../admin/getQueueItem/posID/' + r.data.curPos + '/',
 								'../test_queueitem.php',
 								function(response) {
-									if (response.status == 0) {
+									handleResponse(response, function() {
 										var d = response.data;
 										$("#progress").hide();
 										$("#confirm-operation").modal('hide');
@@ -255,20 +243,12 @@ function callNextPrepare() {
 												}, 700);
 											}, 2333);
 										}, 700);
-									} else {
-										errorAlert(response.errorMessage);
-									}
+									});
 								}
-							).fail(function() {
-								errorAlert('获取更新信息失败，请联系管理员');
-							});
-						} else {
-							errorAlert(r.errorMessage);
-						}
+							).fail(function() { failed(); });
+						});
 					}
-				).fail(function() {
-					errorAlert('操作失败，请联系管理员');
-				});
+				).fail(function() { failed(); });
 			}
 		)
 	});
@@ -290,17 +270,13 @@ function updateQueue(l, p) {
 			// '/limit/' + (7 - curLength) + '/',
 			'../test_queuelist.php',
 			function(response) {
-				if (response.status == 0) {
+				handleResponse(response, function() {
 					$.each(response.data, function(i, d) {
 						appendToQueue(d);
 					});
-				} else {
-					errorAlert(response.errorMessage);
-				}
+				});
 			}
-		).fail(function() {
-			errorAlert('获取队列信息失败，请联系管理员');
-		});
+		).fail(function() { failed(); });
 	} else {
 		$.getJSON(/*'../queueinfo.json',*/'../test_queueinfo.php', function(data) {
 			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
@@ -310,7 +286,7 @@ function updateQueue(l, p) {
 					// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
 					'../test_queueitem.php',
 					function(response) {
-						if (response.status == 0) {
+						handleResponse(response, function() {
 							var curCenter = parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text());
 							if (data.curPos > curCenter) {
 								// Make sure the centered row shows data of current position
@@ -320,15 +296,11 @@ function updateQueue(l, p) {
 									appendToQueue(response.data);
 								}, 700);
 							}
-						} else {
-							errorAlert(response.errorMessage);
-						}
+						});
 					}
-				).fail(function() {
-					errorAlert('获取更新信息失败，请联系管理员');
-				});
+				).fail(function() { failed(); });
 			}
-		});
+		}).fail(function() { failed(); });;
 	}
 }
 
@@ -397,4 +369,16 @@ function errorAlert(err, refresh =true) {
 	$("#progress").hide();
 	$("#confirm-operation").modal('hide');
 	$("#error-alert").modal('show');
+}
+
+function handleResponse(response, successFunc) {
+	if (response.status == 0) {
+		successFunc();
+	} else {
+		errorAlert(response.errorMessage);
+	}
+}
+
+function failed() {
+	errorAlert('获取数据失败，请联系管理员');
 }
