@@ -202,6 +202,11 @@ function initialPrepare() {
 			callNextPrepare();
 			updateQueue(data.queueLength, data.curPos);
 
+			if (data.curPos > 0)
+				showCurPos(data.curPos);
+			else
+				$("#name").text('（暂未开始叫号）');
+
 			// Automatically request and add new reserve data
 			setInterval(function() { updateQueue(); }, 10000);
 		}
@@ -225,41 +230,44 @@ function callNextPrepare() {
 								$("#call-next").unbind('click');
 								$("#call-next").addClass("disabled");
 							}
-
-							$.get(
-								paths["getQueueItem"] + (testing ? '' : (r.data.curPos + '/')),
-								function(response) {
-									handleResponse(response, function() {
-										var d = response.data;
-										$("#progress").hide();
-										$("#confirm-operation").modal('hide');
-										setTimeout(function() {
-											infoToggle("#name", d.name);
-											infoToggle("#phone", d.mobileNumber);
-											infoToggle("#email", d.emailAddress);
-											infoToggle("#reg-time", d.registerDate);
-											infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
-
-											setTimeout(function() {
-												$("#position").removeClass("fadeInUp");
-												$("#position").addClass("fadeOutUp");
-
-												setTimeout(function() {
-													$("#position").text(d.posID);
-													$("#position").removeClass("fadeOutUp");
-													$("#position").addClass("fadeInUp");
-												}, 700);
-											}, 2333);
-										}, 700);
-									});
-								}
-							).fail(function() { failed(); });
+							showCurPos(r.data.posID);
 						});
 					}
 				).fail(function() { failed(); });
 			}
 		)
 	});
+}
+
+function showCurPos(pos) {
+	$.get(
+		paths["getQueueItem"] + (testing ? '' : (pos + '/')),
+		function(response) {
+			handleResponse(response, function() {
+				var d = response.data;
+				$("#progress").hide();
+				$("#confirm-operation").modal('hide');
+				setTimeout(function() {
+					infoToggle("#name", d.name);
+					infoToggle("#phone", d.mobileNumber);
+					infoToggle("#email", d.emailAddress);
+					infoToggle("#reg-time", d.registerDate);
+					infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
+
+					setTimeout(function() {
+						$("#position").removeClass("fadeInUp");
+						$("#position").addClass("fadeOutUp");
+
+						setTimeout(function() {
+							$("#position").text(d.posID);
+							$("#position").removeClass("fadeOutUp");
+							$("#position").addClass("fadeInUp");
+						}, 700);
+					}, 2333);
+				}, 700);
+			});
+		}
+	).fail(function() { failed(); });
 }
 
 function allInfoPrepare() {
