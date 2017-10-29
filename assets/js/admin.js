@@ -239,6 +239,37 @@ function callNextPrepare() {
 	});
 }
 
+function allInfoPrepare() {
+	$("#show-all-info").click(function() {
+		$("#show-all-info").fadeOut(100, function() {
+			$("#hide-all-info").fadeIn(200);
+		});
+		$("#all-info").show();
+		$("body").animate({scrollTop: $(document).height()}, 3000);
+	});
+
+	$("#hide-all-info").click(function() {
+		$("#hide-all-info").fadeOut(100, function() {
+			$("#show-all-info").fadeIn(200);
+		});
+		$("body").animate({scrollTop: 0}, 3000);
+		$("#all-info").hide(2000);
+	});
+
+	$("#export-all-info").click(function() {
+		$.getJSON(paths["queueInfo"], function(data) {
+			$.get(
+				paths["getQueueList"] +
+				(testing ? '' : ('/page/1/limit/' + data.queueLength + '/')),
+				function(response) {
+					handleResponse(response, function() {
+						exportData(response.data, '光迹涂鸦预约信息.csv');
+					});
+				}).fail(function() { failed(); });
+		}).fail(function() { failed(); });
+	});
+}
+
 function showCurPos(pos) {
 	$.get(
 		paths["getQueueItem"] + (testing ? '' : (pos + '/')),
@@ -270,28 +301,6 @@ function showCurPos(pos) {
 	).fail(function() { failed(); });
 }
 
-function allInfoPrepare() {
-	$("#show-all-info").click(function() {
-		$("#show-all-info").fadeOut(100, function() {
-			$("#hide-all-info").fadeIn(200);
-		});
-		$("#all-info").show();
-		$("body").animate({scrollTop: $(document).height()}, 3000);
-	});
-
-	$("#hide-all-info").click(function() {
-		$("#hide-all-info").fadeOut(100, function() {
-			$("#show-all-info").fadeIn(200);
-		});
-		$("body").animate({scrollTop: 0}, 3000);
-		$("#all-info").hide(2000);
-	});
-
-	$("#export-all-info").click(function() {
-		//Todo
-	});
-}
-
 function updateQueue(l, p) {
 	// Variable l(length) and p(position) are for the initial render
 	var curLength = $("#related-queue>tr").length;
@@ -312,7 +321,7 @@ function updateQueue(l, p) {
 			function(response) {
 				handleResponse(response, function() {
 					$.each(response.data, function(i, d) {
-						appendToQueue(d);
+						if (i < 7) appendToQueue(d);
 					});
 				});
 			}
@@ -392,11 +401,8 @@ function confirmOperation(msg, func) {
 function errorAlert(err, refresh =true) {
 	$("#error-info").text(err);
 	$('#error-alert').on('hide.bs.modal', function () {
-		if (refresh) {
-			setTimeout(function() {
-				location.reload();
-			}, 500);
-		}
+		if (refresh)
+			setTimeout(function() { location.reload(); }, 500);
 	});
 	$('#error-alert').on('show.bs.modal', function () {
 		// Prevent Bootstrap Operation: add scrollbarWidth as padding-right
@@ -414,6 +420,21 @@ function handleResponse(response, successFunc) {
 	} else {
 		errorAlert(response.errorMessage);
 	}
+}
+
+function exportData(data, filename) {
+	var string = '\ufeff' + '号码,姓名,手机号,邮箱地址,报名时间,微信提醒' + '\n';
+	$.each(data, function(index, row) {
+		string += String(Object.values(row))
+		.replace(/(true)|(false)/g, function(noticed) {
+			return (noticed == 'true' ? '已发送' : '未发送');
+		}) + '\n';
+	});
+	var blob = new Blob([string], { type: 'text/csv;charset=utf-8' });
+
+	var link = document.createElement('a');
+	$(link).attr({ 'download': filename, 'href': URL.createObjectURL(blob)});
+	link.click();
 }
 
 function failed() {
