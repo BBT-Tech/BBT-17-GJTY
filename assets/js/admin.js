@@ -51,15 +51,7 @@ $.get(
 									function(response) {
 										if (response.status == 0) {
 											$.each(response.data, function(i, d) {
-												$("#related-queue").append(
-												'<tr>' +
-													'<td>' + d.posID + '</td>' +
-													'<td>' + d.name + '</td>' +
-													'<td>' + d.mobileNumber + '</td>' +
-													'<td>' + d.emailAddress + '</td>' +
-													'<td>' + d.registerDate + '</td>' +
-													'<td>' + (d.isNoticed ? '已发送' : '') + '</td>' +
-												'</tr>');
+												appendToQueue(d);
 											});
 										} else {
 											errorAlert(response.errorMessage);
@@ -285,13 +277,13 @@ function updateQueue() {
 		'../test_queueinfo.php',
 		function(data) {
 			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
+			// New item in queue
 			if (data.queueLength > curMax) {
 				$.get(
 					// '../admin/getQueueItem/posID/' + (curMax + 1) + '/',
 					'../test_queueitem.php',
 					function(response) {
 						if (response.status == 0) {
-							var newRow = response.data;
 							var removeFirstRow = $("#related-queue>tr").length == 7;
 
 							if (removeFirstRow)
@@ -299,16 +291,7 @@ function updateQueue() {
 
 							setTimeout(function() {
 								if (removeFirstRow) $("#related-queue>tr:first-child").remove();
-
-								$("#related-queue").append(
-								'<tr class="animated fadeInUp">' +
-									'<td>' + newRow.posID + '</td>' +
-									'<td>' + newRow.name + '</td>' +
-									'<td>' + newRow.mobileNumber + '</td>' +
-									'<td>' + newRow.emailAddress + '</td>' +
-									'<td>' + newRow.registerDate + '</td>' +
-									'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
-								'</tr>');
+								appendToQueue(response.data);
 							}, 700);
 						} else {
 							errorAlert(response.errorMessage);
@@ -320,6 +303,18 @@ function updateQueue() {
 			}
 		}
 	)
+}
+
+function appendToQueue(newRow) {
+	$("#related-queue").append(
+	'<tr class="animated fadeInUp">' +
+		'<td>' + newRow.posID + '</td>' +
+		'<td>' + newRow.name + '</td>' +
+		'<td>' + newRow.mobileNumber + '</td>' +
+		'<td>' + newRow.emailAddress + '</td>' +
+		'<td>' + newRow.registerDate + '</td>' +
+		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
+	'</tr>');
 }
 
 function parseStartPos(len, pos) {
