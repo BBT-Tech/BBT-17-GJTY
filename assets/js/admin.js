@@ -1,34 +1,7 @@
-var testing = true;
-
-var systemClosed = false,
-	paths = {
-		"getRegisterAble": "../admin/getRegisterAble/",
-		"setRegisterAble": "../admin/setIsRegisterAble/",
-		"getQueueItem": "../admin/getQueueItem/posID/",
-		"getQueueListByPos": "../admin/getQueueListByPos/",
-		"getQueueList": "../admin/getQueueList/",
-		"callNext": "../admin/goNext/",
-		"login": "../admin/checkLogin/",
-		"logout": "../admin/logOut/",
-		"queueInfo": "../queueinfo.json"
-	};
-
-if (testing) {
-	paths = {
-		"getRegisterAble": "../test_registerable.php",
-		"setRegisterAble": "../test_registerable.php",
-		"getQueueItem": "../test_queueitem.php",
-		"getQueueListByPos": "../test_queuelist.php",
-		"getQueueList": "../test_queuelist.php",
-		"callNext": "../test_callnext.php",
-		"login": "../test_log.php",
-		"logout": "../test_log.php",
-		"queueInfo": "../test_queueinfo.php"
-	};
-}
+var systemClosed = false;
 
 $.get(
-	paths["getRegisterAble"],
+	paths.admin.getRegisterAble,
 	function(response) {
 		$("body").show();
 		if (response.status == 0) {
@@ -49,7 +22,7 @@ $.get(
 							'<p>一切就绪的话就点击下面的确定键吧</p>',
 							function() {
 								$.post(
-									paths["setRegisterAble"],
+									paths.admin.setRegisterAble,
 									'{"status": 0}',
 									function(response) {
 										handleResponse(response, function() {
@@ -99,7 +72,7 @@ $("#login-btn").click(function() {
 
 $("#login-modal-btn").click(function() {
 	$.post(
-		paths["login"],
+		paths.admin.login,
 		'{"userName": "' + $("#username").val() +
 		'","passWord": "' + $("#password").val() + '"}',
 		function(response) {
@@ -116,7 +89,7 @@ function initialPrepare() {
 			'<p>确定要退出系统吗？</p>',
 			function() {
 				$.post(
-					paths["logout"], '',
+					paths.admin.logout, '',
 					function(response) {
 						handleResponse(response, function() {
 							errorAlert('退出系统成功！', false);
@@ -156,7 +129,7 @@ function initialPrepare() {
 				'<p>是否确定结束本次光迹涂鸦活动？</p>',
 				function() {
 					$.post(
-						paths["setRegisterAble"],
+						paths.admin.setRegisterAble,
 						'{"status": -1}',
 						function(response) {
 							handleResponse(response, function() {
@@ -170,14 +143,14 @@ function initialPrepare() {
 		});
 	}
 
-	$.getJSON(paths["queueInfo"], function(data) {
+	$.getJSON(paths.admin.queueInfo, function(data) {
 		if (data.queueLength == 0) {
 			$("#name").text('（暂无预约信息）');
 			$("#placeholder").show();
 			$("#show-all-info").hide();
 			$("#export-all-info").hide();
 			setInterval(function() {
-				$.getJSON(paths["queueInfo"], function(d) {
+				$.getJSON(paths.admin.queueInfo, function(d) {
 					if (d.queueLength > 0) location.reload();
 				});
 			}, 10000);
@@ -219,7 +192,7 @@ function callNextPrepare() {
 			'<p>是否确定更新？</p>',
 			function() {
 				$.post(
-					paths["callNext"],
+					paths.admin.callNext,
 					'{"curPos": ' + $("#position").text() + '}',
 					function(r) {
 						handleResponse(r, function() {
@@ -240,7 +213,7 @@ function callNextPrepare() {
 function allInfoPrepare() {
 	$("#show-all-info").click(function() {
 		$("#show-all-info").addClass("disabled");
-		$.getJSON(paths["queueInfo"], function(data) {
+		$.getJSON(paths.admin.queueInfo, function(data) {
 			var rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
 			for (var i = 0; i < pages; i++) {
@@ -258,17 +231,18 @@ function allInfoPrepare() {
 	});
 
 	$("#hide-all-info").click(function() {
-		$("#show-all-info").removeClass("disabled");
-		$("body").animate({scrollTop: 0}, 3000);
-		$("#all-info").hide(2000, function() {
+		$("body").animate({scrollTop: 0}, 2000, function() {
+			$("#show-all-info").removeClass("disabled");
 			$("#all-content").html('');
 		});
+
+		$("#all-info").hide(2000);
 	});
 
 	$("#export-all-info").click(function() {
-		$.getJSON(paths["queueInfo"], function(data) {
+		$.getJSON(paths.admin.queueInfo, function(data) {
 			$.get(
-				paths["getQueueList"] +
+				paths.admin.getQueueList +
 				(testing ? '' : ('/page/1/limit/' + data.queueLength + '/')),
 				function(response) {
 					handleResponse(response, function() {
@@ -281,7 +255,7 @@ function allInfoPrepare() {
 
 function showCurPos(pos) {
 	$.get(
-		paths["getQueueItem"] + (testing ? '' : (pos + '/')),
+		paths.admin.getQueueItem + (testing ? '' : (pos + '/')),
 		function(response) {
 			handleResponse(response, function() {
 				var d = response.data;
@@ -321,7 +295,7 @@ function updateQueue(l, p) {
 			  * Center current position among rows if length >= 7
 			  * And then append all the responsed data to table
 			  ***********************************************************/
-			paths["getQueueListByPos"] +
+			paths.admin.getQueueListByPos +
 			(
 				testing ? '' :
 				'start/' + (curLength == 0 ? parseStartPos(l, p) : (curLength + 1)) + '/' +
@@ -336,14 +310,14 @@ function updateQueue(l, p) {
 			}
 		).fail(function() { failed(); });
 	} else {
-		$.getJSON(paths["queueInfo"], function(data) {
+		$.getJSON(paths.admin.queueInfo, function(data) {
 			var curMax = parseInt($("#related-queue>tr:eq(-1)>td:eq(0)").text());
 			if (data.queueLength > curMax
 				// There is new item in queue data
 				&& data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
 				// Make sure the centered row displays data of current position
 				$.get(
-					paths["getQueueItem"] + (testing ? '' : ((curMax + 1) + '/')),
+					paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
 					function(response) {
 						handleResponse(response, function() {
 							$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
@@ -412,7 +386,7 @@ function togglePage(page, limit) {
 			freshPagination(page);
 
 			$.get(
-				paths["getQueueList"] + (testing ? '' : 'page/' + page + '/limit/' + limit + '/'),
+				paths.admin.getQueueList + (testing ? '' : 'page/' + page + '/limit/' + limit + '/'),
 				function(response) {
 					handleResponse(response, function() {
 						$("#all-content").html('');
@@ -456,12 +430,12 @@ function confirmOperation(msg, func) {
 	$("#progress").hide();
 	$("#confirm-info").html(msg);
 
-	$('#confirm-btn').on('click', function () {
+	$("#confirm-btn").on('click', function () {
 		$("#progress").show();
 		func();
 	});
 
-	$('#confirm-operation').on('hide.bs.modal', function () {
+	$("#confirm-operation").on('hide.bs.modal', function () {
 		$("#confirm-btn").unbind('click');
 	});
 
@@ -470,11 +444,11 @@ function confirmOperation(msg, func) {
 
 function errorAlert(err, refresh =true) {
 	$("#error-info").text(err);
-	$('#error-alert').on('hide.bs.modal', function () {
+	$("#error-alert").on('hide.bs.modal', function () {
 		if (refresh)
 			setTimeout(function() { location.reload(); }, 500);
 	});
-	$('#error-alert').on('show.bs.modal', function () {
+	$("#error-alert").on('show.bs.modal', function () {
 		// Prevent Bootstrap Operation: add scrollbarWidth as padding-right
 		$("body").css("padding-right", 0);
 	});

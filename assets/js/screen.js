@@ -13,7 +13,6 @@ request.onload = function() {
 };
 
 setInterval(function() {
-	// request.open('GET', '../queueinfo.json');
-	request.open('GET', '../test_queueinfo.php');
+	request.open('GET', paths.admin.queueInfo);
 	request.send();
 }, 5000);

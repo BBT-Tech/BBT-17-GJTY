@@ -1,6 +1,5 @@
 $.get(
-	// './user/isUserInQueue/',
-	'./test_isUserInQueue.php',
+	paths.user.isInQueue,
 	function(r) {
 		if (r.status == 0 || r.status == -1) {
 			regStatus = (r.status == -1 ? 0 : r.data.isRegisterAble);
@@ -21,8 +20,7 @@ $.get(
 					setVerticalAlign("#pending");
 					$("#fresh").click(function() {
 						$.get(
-							// './user/isUserInQueue/',
-							'./test_isUserInQueue.php',
+							paths.user.isInQueue,
 							function(re) {
 								if (re.data.isRegisterAble == 0)
 									location.reload();
@@ -38,8 +36,7 @@ $.get(
 					break;
 
 				case -1:
-					if (!r.data.isInQueue)
-						$("#show-pos").hide();
+					if (!r.data.isInQueue) $("#show-pos").hide();
 					setVerticalAlign("#closed");
 
 					$("#show-pos").click(function() {

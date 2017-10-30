@@ -1,26 +1,12 @@
-var testing = true;
-
+var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
 var regPattern = {
 		"phone": /^1[0-9]{10}$/,
 		"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-	},
-	paths = {
-		"register": "./user/register/",
-		"isInQueue": "./user/isUserInQueue/",
-		"queueInfo": "./queueinfo.json"
-	},
-	formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/',
-	duringHeight = "calc(((100vh - 496px) / 2) + 2em)",
-	statusHeight = "calc((100vh - 496px) / 2)",
-	successHeight = "calc((100vh - 419px) / 2)";
-
-if (testing) {
-	paths = {
-		"register": "./test_register.php",
-		"isInQueue": "./test_isUserInQueue.php",
-		"queueInfo": "./test_queueinfo.php"
 	};
-}
+
+var duringHeight = "calc(((100vh - 496px) / 2) + 2em)";
+var statusHeight = "calc((100vh - 496px) / 2)";
+var successHeight = "calc((100vh - 419px) / 2)";
 
 if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
@@ -43,7 +29,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 		);
 
 		$.post(
-			paths["register"],
+			paths.user.register,
 			JSON.stringify(data),
 			function(response) {
 				if (response.status == 0) {
@@ -79,7 +65,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 	});
 } else {
 	$.get(
-		paths["isInQueue"],
+		paths.user.isInQueue,
 		function(response) {
 			if (response.status == 0) {
 				var d = response.data;
@@ -128,7 +114,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 
 $("#fresh").click(function () {
 	$.getJSON(
-		paths["queueInfo"],
+		paths.user.queueInfo,
 		function(d) {
 			var waiting = parseWaiting($("#position").text() - d.curPos);
 			switch(waiting) {
