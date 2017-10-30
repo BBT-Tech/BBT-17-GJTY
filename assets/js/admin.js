@@ -121,28 +121,6 @@ function initialPrepare() {
 		);
 	});
 
-	if (!systemClosed) {
-		$("#close-system").click(function() {
-			confirmOperation(
-				'<p>活动结束后系统将不再接受新的预约</p>' +
-				'<p>管理页面会继续正常显示 直到所有已预约号码都处理完毕</p>' +
-				'<p>是否确定结束本次光迹涂鸦活动？</p>',
-				function() {
-					$.post(
-						paths.admin.setRegisterAble,
-						'{"status": -1}',
-						function(response) {
-							handleResponse(response, function() {
-								errorAlert('已结束本次光迹涂鸦活动', false);
-								systemClosed = true;
-							});
-						}
-					).fail(function() { failed(); });
-				}
-			)
-		});
-	}
-
 	$.getJSON(paths.admin.queueInfo, function(data) {
 		if (data.queueLength == 0) {
 			$("#name").text('（暂无预约信息）');
@@ -177,8 +155,30 @@ function initialPrepare() {
 				showCurPos(data.curPos);
 			else
 				$("#name").text('（暂未开始叫号）');
+		}
 
-			// Automatically request and add new reserve data
+		if (!systemClosed) {
+			$("#close-system").click(function() {
+				confirmOperation(
+					'<p>活动结束后系统将不再接受新的预约</p>' +
+					'<p>管理页面会继续正常显示 直到所有已预约号码都处理完毕</p>' +
+					'<p>是否确定结束本次光迹涂鸦活动？</p>',
+					function() {
+						$.post(
+							paths.admin.setRegisterAble,
+							'{"status": -1}',
+							function(response) {
+								handleResponse(response, function() {
+									errorAlert('已结束本次光迹涂鸦活动', false);
+									systemClosed = true;
+								});
+							}
+						).fail(function() { failed(); });
+					}
+				)
+			});
+
+			// Automatically request and add new reserve data while reserve system is open
 			setInterval(function() { updateQueue(); }, 10000);
 		}
 	}).fail(function() { failed(); });
@@ -202,6 +202,10 @@ function callNextPrepare() {
 								$("#call-next").addClass("disabled");
 							}
 							showCurPos(r.data.posID);
+
+							// On reserve system opening: automatically request and update per 10s
+							// On reserve system closed: update when there is a next-call
+							if (systemClosed) updateQueue();
 						});
 					}
 				).fail(function() { failed(); });
