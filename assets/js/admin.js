@@ -112,12 +112,6 @@ $("#login-modal-btn").click(function() {
 });
 
 function initialPrepare() {
-	$("#all-info").show();
-	$("#information").hide();
-	$(".buttons").hide();
-	allInfoPrepare();
-	return;
-	///////////////////////////////////////
 	$("#logout-btn").click(function() {
 		confirmOperation(
 			'<p>确定要退出系统吗？</p>',
@@ -246,9 +240,9 @@ function callNextPrepare() {
 }
 
 function allInfoPrepare() {
-	// $("#show-all-info").click(function() {
+	$("#show-all-info").click(function() {
 		$.getJSON(paths["queueInfo"], function(data) {
-			var rowLimit = 15, pageLimit = 9;
+			var rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
 			for (var i = 0; i < pages; i++) {
 				$(".page-item:eq(-2)").before(
@@ -257,23 +251,25 @@ function allInfoPrepare() {
 					);
 			}
 			$(".page-link").click(function() { togglePage($(this).text()); });
-			togglePage(5, rowLimit);
+			togglePage(1, rowLimit);
 		});
 
 		$("#show-all-info").fadeOut(100, function() {
 			$("#hide-all-info").fadeIn(200);
 		});
-		//prepare pagination and table
+
 		$("#all-info").show();
 		$("body").animate({scrollTop: $(document).height()}, 3000);
-	// });
+	});
 
 	$("#hide-all-info").click(function() {
 		$("#hide-all-info").fadeOut(100, function() {
 			$("#show-all-info").fadeIn(200);
 		});
 		$("body").animate({scrollTop: 0}, 3000);
-		$("#all-info").hide(2000);
+		$("#all-info").hide(2000, function() {
+			$("#all-content").html('');
+		});
 	});
 
 	$("#export-all-info").click(function() {
