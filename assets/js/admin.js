@@ -422,8 +422,28 @@ function freshPagination(newPage) {
 		(
 			(pages - newPage) < 5 ? -12 : (newPage - 4))
 		);
-	$(".page-item:gt(1):lt(-2)").addClass("d-none");
-	$(".page-item:gt(" + start + "):lt(9)").removeClass("d-none");
+	var prev = $(".page-item:gt(1):lt(-2):not(.d-none)");
+	var next = $(".page-item:gt(" + start + "):lt(9)");
+
+	$(diffObjectArray(prev,next)).fadeOut(500, function() {
+		$(this).addClass("d-none");
+	});
+
+	$(diffObjectArray(next,prev)).removeClass("d-none");
+	$(diffObjectArray(next,prev)).hide();
+    $(diffObjectArray(next,prev)).fadeIn(500);
+}
+
+function diffObjectArray(a, b) {
+	var t = new Array();
+	$.each(a, function(i, x) {
+		var dup = false;
+		$.each(b, function(j, y) {
+			if (x == y) dup = true;
+		});
+		if (!dup) t.push(x);
+	});
+	return t;
 }
 
 function confirmOperation(msg, func) {
