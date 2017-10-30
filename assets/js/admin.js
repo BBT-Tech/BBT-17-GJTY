@@ -212,31 +212,33 @@ function callNextPrepare() {
 
 function allInfoPrepare() {
 	$("#show-all-info").click(function() {
-		$("#show-all-info").addClass("disabled");
 		$.getJSON(paths.admin.queueInfo, function(data) {
-			var rowLimit = 11, pageLimit = 9;
+			rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
-			for (var i = 0; i < pages; i++) {
+
+			var linkNum = (pages > pageLimit ? pageLimit : pages);
+			for (var i = 0; i < linkNum; i++) {
 				$(".page-item:eq(-2)").before(
-					'<li class="page-item' + (i < pageLimit ? '' : ' d-none') +
-					'"><a class="page-link">' + (i + 1) + '</a></li>'
-					);
+					'<li class="page-item"><a class="page-link">' + (i + 1) + '</a></li>'
+				);
 			}
-			togglePage(1, rowLimit);
+			togglePage(1);
 			$(".page-link").click(function() { togglePage($(this).text()); });
 		});
 
 		$("#all-info").show();
-		$("body").animate({scrollTop: $(document).height()}, 2000);
+		$("body").animate({scrollTop: $(document).height()}, 1700, function() {
+			$("#show-all-info").addClass("disabled");
+		});
 	});
 
 	$("#hide-all-info").click(function() {
-		$("body").animate({scrollTop: 0}, 2000, function() {
+		$("body").animate({scrollTop: 0}, 1700, function() {
 			$("#show-all-info").removeClass("disabled");
 			$("#all-content").html('');
 		});
 
-		$("#all-info").hide(2000);
+		$("#all-info").hide(1700);
 	});
 
 	$("#export-all-info").click(function() {
@@ -386,7 +388,7 @@ function togglePage(page, limit) {
 			freshPagination(page);
 
 			$.get(
-				paths.admin.getQueueList + (testing ? '' : 'page/' + page + '/limit/' + limit + '/'),
+				paths.admin.getQueueList + (testing ? '' : 'page/' + page + '/limit/' + rowLimit + '/'),
 				function(response) {
 					handleResponse(response, function() {
 						$("#all-content").html('');
@@ -410,7 +412,6 @@ function togglePage(page, limit) {
 
 function freshPagination(newPage) {
 	$(".page-item.active").removeClass("active");
-	$(".page-item:eq(" + (newPage + 1) + ")").addClass("active");
 
 	$(".page-item.disabled").removeClass("disabled");
 	if (newPage == 1) $(".page-item:eq(1)").addClass("disabled");
@@ -420,30 +421,20 @@ function freshPagination(newPage) {
 	// ELSE: display 9 page buttons and make sure the active page is centered
 	var start = ((pages < 9 || newPage < 5) ? 1 :
 		(
-			(pages - newPage) < 5 ? -12 : (newPage - 4))
+			(pages - newPage) < 5 ? (pages - 8) : (newPage - 4))
 		);
-	var prev = $(".page-item:gt(1):lt(-2):not(.d-none)");
-	var next = $(".page-item:gt(" + start + "):lt(9)");
 
-	$(diffObjectArray(prev,next)).fadeOut(500, function() {
-		$(this).addClass("d-none");
+	$.each($(".page-item:gt(1):lt(-2)>a"), function(i) {
+		var n = start + i;
+		$(this).text(prefixNumber(n, String(pages).length));
+		if (n == newPage)
+			$(this).parent().addClass("active");
 	});
-
-	$(diffObjectArray(next,prev)).removeClass("d-none");
-	$(diffObjectArray(next,prev)).hide();
-    $(diffObjectArray(next,prev)).fadeIn(500);
 }
 
-function diffObjectArray(a, b) {
-	var t = new Array();
-	$.each(a, function(i, x) {
-		var dup = false;
-		$.each(b, function(j, y) {
-			if (x == y) dup = true;
-		});
-		if (!dup) t.push(x);
-	});
-	return t;
+function prefixNumber(n, width) {
+	var n = String(n), len = n.length;
+	return len >= width ? n : (new Array(width - len + 1).join('0') + n);
 }
 
 function confirmOperation(msg, func) {
