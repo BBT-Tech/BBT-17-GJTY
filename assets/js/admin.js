@@ -256,8 +256,8 @@ function allInfoPrepare() {
 					'"><a class="page-link">' + (i + 1) + '</a></li>'
 					);
 			}
-			$(".page-item:nth-child(3)").addClass("active");
 			$(".page-link").click(function() { togglePage($(this).text()); });
+			togglePage(1, rowLimit);
 		});
 
 		$("#show-all-info").fadeOut(100, function() {
@@ -402,7 +402,7 @@ function infoToggle(ele, val) {
 	}, 1000);
 }
 
-function togglePage(page) {
+function togglePage(page, limit) {
 	switch(page) {
 		case '首页':
 			togglePage(1);
@@ -418,7 +418,20 @@ function togglePage(page) {
 			break;
 
 		default:
-			alert(page);
+			page = parseInt(page);
+			if (page <= 0 || page > pages) return;
+			$(".page-item.active").removeClass("active");
+			$(".page-item:nth-child(" + (page + 2) + ")").addClass("active");
+			// Make sure the active page is centered
+			// "d-none"
+			$.get(
+				paths["getQueueList"] + (testing ? '' : 'page/' + page + 'limit/' + limit + '/'),
+				function(response) {
+					handleResponse(response, function() {
+						//Remove and Render;
+					});
+				}
+			).fail(function() { failed(); });
 			break;
 	}
 }
