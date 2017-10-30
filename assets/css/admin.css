@@ -65,10 +65,22 @@ body {
 .all-info {
 	display: none;
 	margin-top: 50px;
-	margin-bottom: 5px;
 	border-width: 2px 0 0 0;
 	border-color: rgb(255,136,0);
 	border-style: solid;
+}
+.pages {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+}
+.pages button {
+	margin-right: 50px;
+}
+.page-item {
+	line-height: 1 !important;
+	margin-bottom: 0 !important;
 }
 
 .error-info {

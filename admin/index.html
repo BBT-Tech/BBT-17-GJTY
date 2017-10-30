@@ -154,10 +154,6 @@
 			查看所有预约信息
 		</button>
 
-		<button class="btn btn-outline-warning waves-effect" id="hide-all-info">
-			收起所有预约信息
-		</button>
-
 		<button class="btn btn-outline-warning waves-effect" id="export-all-info">
 			导出所有预约信息
 		</button>
@@ -195,14 +191,20 @@
 			<tbody id="all-content"></tbody>
 		</table>
 
-		<nav class="flex-center">
-			<ul class="pagination pagination-circle pg-amber mb-0">
-				<li class="page-item"><a class="page-link">首页</a></li>
-				<li class="page-item"><a class="page-link">«</a></li>
-				<li class="page-item"><a class="page-link">»</a></li>
-				<li class="page-item"><a class="page-link">末页</a></li>
-			</ul>
-		</nav>
+		<div class="pages">
+			<nav>
+				<ul class="pagination pagination-circle pg-amber mb-0">
+					<li class="page-item"><a class="page-link">首页</a></li>
+					<li class="page-item"><a class="page-link">«</a></li>
+					<li class="page-item"><a class="page-link">»</a></li>
+					<li class="page-item"><a class="page-link">末页</a></li>
+				</ul>
+			</nav>
+
+			<button class="btn btn-outline-warning waves-effect" id="hide-all-info">
+				收起所有预约信息
+			</button>
+		</div>
 	</div>
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>

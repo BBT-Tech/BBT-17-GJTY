@@ -85,7 +85,6 @@ $.get(
 			errorAlert(response.errorMessage, false);
 		}
 
-		$("#hide-all-info").hide();
 		$(".buttons").animate({"opacity": 1}, 1000);
 	}
 ).fail(function() { failed(); });
@@ -127,7 +126,6 @@ function initialPrepare() {
 
 								$(".buttons").fadeOut(700, function() {
 									$("#show-all-info").hide();
-									$("#hide-all-info").hide();
 									$("#export-all-info").hide();
 									$("#start-system").hide();
 									$("#close-system").hide();
@@ -241,6 +239,7 @@ function callNextPrepare() {
 
 function allInfoPrepare() {
 	$("#show-all-info").click(function() {
+		$("#show-all-info").addClass("disabled");
 		$.getJSON(paths["queueInfo"], function(data) {
 			var rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
@@ -250,22 +249,16 @@ function allInfoPrepare() {
 					'"><a class="page-link">' + (i + 1) + '</a></li>'
 					);
 			}
-			$(".page-link").click(function() { togglePage($(this).text()); });
 			togglePage(1, rowLimit);
-		});
-
-		$("#show-all-info").fadeOut(100, function() {
-			$("#hide-all-info").fadeIn(200);
+			$(".page-link").click(function() { togglePage($(this).text()); });
 		});
 
 		$("#all-info").show();
-		$("body").animate({scrollTop: $(document).height()}, 3000);
+		$("body").animate({scrollTop: $(document).height()}, 2000);
 	});
 
 	$("#hide-all-info").click(function() {
-		$("#hide-all-info").fadeOut(100, function() {
-			$("#show-all-info").fadeIn(200);
-		});
+		$("#show-all-info").removeClass("disabled");
 		$("body").animate({scrollTop: 0}, 3000);
 		$("#all-info").hide(2000, function() {
 			$("#all-content").html('');
