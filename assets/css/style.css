@@ -1,3 +1,13 @@
+@media (min-width: 397px) {
+	html {
+		margin-left: calc((100vw - 397px) / 2) !important;
+		margin-right: calc((100vw - 397px) / 2) !important;
+	}
+	.title {
+		margin: 32px calc((397px - 244px) / 2) !important;
+	}
+}
+
 body {
 	margin: 0;
 	text-align: center;
@@ -84,12 +94,12 @@ button {
 }
 
 .notice {
-	padding-top: 1em;
+	padding-top: .5em;
 	color: #fff !important;
 }
 
-.pending-info {
-	padding-bottom: 2em;
+.pending {
+	padding-top: 12px;
 }
 
 .error {

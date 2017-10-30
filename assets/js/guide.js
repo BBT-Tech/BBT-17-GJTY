@@ -60,7 +60,7 @@ $.get(
 });
 
 function setVerticalAlign(e) {
-	divBase = e == "#closed" ? 3 : 2;
+	divBase = e == "#welcome" ? 2 : 3;
 
 	$(e).show();
 	$("body").css("margin-top", function() {

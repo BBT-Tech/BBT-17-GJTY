@@ -8,5 +8,6 @@ header('Content-Type: application/json');
 
 // echo '{"status": 0, "data":{"isInQueue": true, "isRegisterAble": 0, "userPos": 17, "curPos": 26, "queueLength":233, "avgServeTime":5 }}';
 // echo '{"status": 0, "data":{"isInQueue": true, "isRegisterAble": -1, "userPos": 17, "curPos": 26, "queueLength":233, "avgServeTime":5 }}';
-echo '{"status": 0, "data":{"isInQueue": true, "isRegisterAble": 0, "userPos": 17, "curPos": 11, "queueLength":233, "avgServeTime":5 }}';
+echo '{"status": 0, "data":{"isInQueue": true, "isRegisterAble": 0, "userPos": 17, "curPos": 17, "queueLength":233, "avgServeTime":5 }}';
+// echo '{"status": 0, "data":{"isInQueue": true, "isRegisterAble": 0, "userPos": 17, "curPos": 11, "queueLength":233, "avgServeTime":5 }}';
 // echo '{"status": 0, "data":{"isInQueue": true, "isRegisterAble": -1, "userPos": 17, "curPos": 11, "queueLength":233, "avgServeTime":5 }}';

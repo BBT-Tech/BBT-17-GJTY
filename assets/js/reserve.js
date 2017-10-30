@@ -4,9 +4,8 @@ var regPattern = {
 		"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 	};
 
-var duringHeight = "calc(((100vh - 496px) / 2) + 2em)";
-var statusHeight = "calc((100vh - 496px) / 2)";
-var successHeight = "calc((100vh - 419px) / 2)";
+var statusHeight = "calc((100vh - 488px) / 2)";
+var successHeight = "calc((100vh - 411px) / 2)";
 
 if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
@@ -35,7 +34,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 				if (response.status == 0) {
 					$("body").css("margin-top", successHeight);
 
-					var waiting = response.data.userPos - response.data.curPos;
+					var waiting = parseWaiting(response.data.userPos - response.data.curPos);
 					if (waiting == 0) {
 						$("#waiting-content").hide();
 						$("body").css("margin-top", "+=2em");
@@ -80,7 +79,6 @@ if (document.referrer.indexOf(formSource) == 0) {
 					case 0:
 						$("#waiting-content").hide();
 						$("#position").text(d.userPos);
-						marginT = duringHeight;
 						break;
 
 					default:
@@ -88,11 +86,11 @@ if (document.referrer.indexOf(formSource) == 0) {
 						$("#position").text(d.userPos);
 						$("#waiting").text(waiting);
 						$("#time").text(waiting * d.avgServeTime);
-						marginT = statusHeight;
 						break;
 				}
 
-				$("body").css("margin-top", marginT);
+				$("body").css("margin-top", statusHeight);
+				if (waiting == 0) $("body").css("margin-top", "+=2em");
 
 				$("#success").hide();
 				$("#position").hide();

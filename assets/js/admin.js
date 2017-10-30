@@ -58,7 +58,16 @@ $.get(
 			errorAlert(response.errorMessage, false);
 		}
 
-		$(".buttons").animate({"opacity": 1}, 1000);
+		// Show only current position card when there is no enough width = =
+		if (document.body.clientWidth < 700) {
+			$(".buttons").remove()
+			$("#call-next").remove();
+			$("#placeholder").remove();
+			$("#related").remove();
+			$("#all-info").remove();
+		} else {
+			$(".buttons").animate({"opacity": 1}, 1000);
+		}
 	}
 ).fail(function() { failed(); });
 
