@@ -251,13 +251,13 @@ function allInfoPrepare() {
 			var rowLimit = 15, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
 			for (var i = 0; i < pages; i++) {
-				$(".page-item:nth-last-child(2)").before(
+				$(".page-item:eq(-2)").before(
 					'<li class="page-item' + (i < pageLimit ? '' : ' d-none') +
 					'"><a class="page-link">' + (i + 1) + '</a></li>'
 					);
 			}
 			$(".page-link").click(function() { togglePage($(this).text()); });
-			togglePage(1, rowLimit);
+			togglePage(5, rowLimit);
 		});
 
 		$("#show-all-info").fadeOut(100, function() {
@@ -348,18 +348,18 @@ function updateQueue(l, p) {
 		).fail(function() { failed(); });
 	} else {
 		$.getJSON(paths["queueInfo"], function(data) {
-			var curMax = parseInt($("#related-queue>tr:last-child>td:first-child").text());
+			var curMax = parseInt($("#related-queue>tr:eq(-1)>td:eq(0)").text());
 			if (data.queueLength > curMax
 				// There is new item in queue data
-				&& data.curPos > parseInt($("#related-queue>tr:nth-child(4)>td:first-child").text())) {
+				&& data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
 				// Make sure the centered row displays data of current position
 				$.get(
 					paths["getQueueItem"] + (testing ? '' : ((curMax + 1) + '/')),
 					function(response) {
 						handleResponse(response, function() {
-							$("#related-queue>tr:first-child").addClass("fadeOutUp");
+							$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
 							setTimeout(function() {
-								$("#related-queue>tr:first-child").remove();
+								$("#related-queue>tr:eq(0)").remove();
 								appendToQueue(response.data);
 							}, 700);
 						});
@@ -420,20 +420,47 @@ function togglePage(page, limit) {
 		default:
 			page = parseInt(page);
 			if (page <= 0 || page > pages) return;
-			$(".page-item.active").removeClass("active");
-			$(".page-item:nth-child(" + (page + 2) + ")").addClass("active");
-			// Make sure the active page is centered
-			// "d-none"
+			freshPagination(page);
+
 			$.get(
-				paths["getQueueList"] + (testing ? '' : 'page/' + page + 'limit/' + limit + '/'),
+				paths["getQueueList"] + (testing ? '' : 'page/' + page + '/limit/' + limit + '/'),
 				function(response) {
 					handleResponse(response, function() {
-						//Remove and Render;
+						$("#all-content").html('');
+						$.each(response.data, function(i, d) {
+							$("#all-content").append(
+							'<tr>' +
+								'<td>' + d.posID + '</td>' +
+								'<td>' + d.name + '</td>' +
+								'<td>' + d.mobileNumber + '</td>' +
+								'<td>' + d.emailAddress + '</td>' +
+								'<td>' + d.registerDate + '</td>' +
+								'<td>' + (d.isNoticed ? '已发送' : '') + '</td>' +
+							'</tr>');
+						});
 					});
 				}
 			).fail(function() { failed(); });
 			break;
 	}
+}
+
+function freshPagination(newPage) {
+	$(".page-item.active").removeClass("active");
+	$(".page-item:eq(" + (newPage + 1) + ")").addClass("active");
+
+	$(".page-item.disabled").removeClass("disabled");
+	if (newPage == 1) $(".page-item:eq(1)").addClass("disabled");
+	if (newPage == pages) $(".page-item:eq(-2)").addClass("disabled");
+
+	// IF pages < 9: just display all the page buttons
+	// ELSE: display 9 page buttons and make sure the active page is centered
+	var start = ((pages < 9 || newPage < 5) ? 1 :
+		(
+			(pages - newPage) < 5 ? -12 : (newPage - 4))
+		);
+	$(".page-item:gt(1):lt(-2)").addClass("d-none");
+	$(".page-item:gt(" + start + "):lt(9)").removeClass("d-none");
 }
 
 function confirmOperation(msg, func) {
