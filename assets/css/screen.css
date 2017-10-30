@@ -35,8 +35,33 @@ p {
 .position {
 	font-size: 156px;
 	color: #f3ff74;
-	transition: opacity 1s ease-in-out;
+	animation-name: showUp;
+	animation-duration: 1s;
 }
-.fade {
-	opacity: 0;
+
+.fresh {
+	animation-name: hideUp;
+	animation-duration: 1s;
+}
+
+@keyframes hideUp {
+	0% {
+		opacity: 1;
+		transform: none;
+	}
+	100% {
+		opacity: 0;
+		transform: translate3d(0,-50%,0);
+	}
+}
+
+@keyframes showUp {
+	0% {
+		opacity: 0;
+		transform: translate3d(0,50%,0);
+	}
+	100% {
+		opacity: 1;
+		transform: none;
+	}
 }

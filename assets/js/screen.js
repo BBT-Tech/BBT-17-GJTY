@@ -4,10 +4,10 @@ request.onload = function() {
 	var e = document.getElementById("position");
 
 	if(e.innerText != data.curPos) {
-		e.classList.add("fade");
+		e.classList.add("fresh");
 		setTimeout(function() {
 			e.innerText = data.curPos;
-			e.classList.remove("fade");
+			e.classList.remove("fresh");
 		}, 1000);
 	}
 };
