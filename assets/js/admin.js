@@ -233,6 +233,7 @@ function showAllPrepare() {
 			pages = Math.ceil(data.queueLength / rowLimit);
 
 			var linkNum = (pages > pageLimit ? pageLimit : pages);
+			$(".page-item:gt(1):lt(-2)>a").remove();
 			for (var i = 0; i < linkNum; i++) {
 				$(".page-item:eq(-2)").before(
 					'<li class="page-item"><a class="page-link">' + (i + 1) + '</a></li>'
@@ -456,8 +457,6 @@ function togglePage(page, limit) {
 }
 
 function freshPagination(newPage) {
-	$(".page-item.active").removeClass("active");
-
 	$(".page-item.disabled").removeClass("disabled");
 	if (newPage == 1) $(".page-item:eq(1)").addClass("disabled");
 	if (newPage == pages) $(".page-item:eq(-2)").addClass("disabled");
@@ -472,8 +471,10 @@ function freshPagination(newPage) {
 	$.each($(".page-item:gt(1):lt(-2)>a"), function(i) {
 		var n = start + i;
 		$(this).text(prefixZero(n, String(pages).length));
-		if (n == newPage)
+		if (n == newPage) {
+			$(".page-item.active").removeClass("active");
 			$(this).parent().addClass("active");
+		}
 	});
 }
 
@@ -521,7 +522,8 @@ function exportData(data, filename) {
 }
 
 function parseTime(timestamp) {
-	var date = new Date(parseInt(timestamp));
+	var date = new Date(0);
+	date.setSeconds(parseInt(timestamp));
 
 	var ymd = [
 		date.getFullYear(),
