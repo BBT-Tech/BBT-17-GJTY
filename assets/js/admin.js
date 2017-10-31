@@ -224,8 +224,12 @@ function callNextPrepare() {
 	});
 }
 
-function allInfoPrepare() {
+function showAllPrepare() {
+	$("#show-all-info").removeClass("disabled");
+
 	$("#show-all-info").click(function() {
+		$("#show-all-info").unbind('click');
+
 		$.getJSON(paths.admin.queueInfo, function(data) {
 			rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
@@ -245,11 +249,15 @@ function allInfoPrepare() {
 			$("#show-all-info").addClass("disabled");
 		});
 	});
+}
+
+function allInfoPrepare() {
+	showAllPrepare();
 
 	$("#hide-all-info").click(function() {
 		$("body").animate({scrollTop: 0}, 1700, function() {
-			$("#show-all-info").removeClass("disabled");
 			$("#all-content").html('');
+			showAllPrepare();
 		});
 
 		$("#all-info").hide(1700);
