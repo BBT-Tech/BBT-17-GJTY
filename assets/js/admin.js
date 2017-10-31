@@ -161,7 +161,7 @@ function initialPrepare() {
 			updateQueue(data.queueLength, data.curPos);
 
 			if (data.curPos > 0)
-				showCurPos(data.curPos);
+				updateCurPos(data.curPos);
 			else
 				$("#name").text('（暂未开始叫号）');
 		}
@@ -210,7 +210,11 @@ function callNextPrepare() {
 								$("#call-next").unbind('click');
 								$("#call-next").addClass("disabled");
 							}
-							showCurPos(r.data.posID);
+
+							$("#related-queue>tr.rgba-orange-strong").removeClass("rgba-orange-strong");
+							$("#related-queue>tr>td:first-child:contains(" + r.data.curPos + ")").parent()
+							.addClass("rgba-orange-strong");
+							updateCurPos(r.data.curPos);
 
 							// On reserve system opening: automatically request and update per 10s
 							// On reserve system closed: update when there is a next-call
@@ -268,7 +272,7 @@ function allInfoPrepare() {
 	});
 }
 
-function showCurPos(pos) {
+function updateCurPos(pos) {
 	$.get(
 		paths.admin.getQueueItem + (testing ? '' : (pos + '/')),
 		function(response) {
@@ -320,6 +324,13 @@ function updateQueue(l, p) {
 					});
 				}
 			).fail(function() { failed(); });
+
+			// Delay some time to make sure queue data is in DOM = =
+			setTimeout(function() {
+				// Initial highlight for current position
+				$("#related-queue>tr>td:first-child:contains(" + p + ")").parent()
+				.addClass("rgba-orange-strong");
+			}, 300);
 			break;
 
 		case 'full':
