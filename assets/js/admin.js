@@ -3,7 +3,6 @@ var systemClosed = false, posUpdating = false;
 $.get(
 	paths.admin.getRegisterAble,
 	function(response) {
-		$("body").show();
 		if (response.status == 0) {
 			switch(response.data.status) {
 				case 1:

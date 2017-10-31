@@ -52,10 +52,8 @@ if (document.referrer.indexOf(formSource) == 0) {
 						$("#position").show(1300);
 					});
 				} else {
-					if (response.status == -1)
-						location.href = response.redirect;
-					else
-						alert(response.errorMessage);
+					if (response.status == -1) location.href = './guide.html';
+					else alert(response.errorMessage);
 				}
 			}
 		).fail(function() {
@@ -99,10 +97,8 @@ if (document.referrer.indexOf(formSource) == 0) {
 					$("#position").show(1300);
 				});
 			} else {
-				if (response.status == -1)
-					location.href = response.redirect;
-				else
-					alert(response.errorMessage);
+				if (response.status == -1) location.href = './guide.html';
+				else alert(response.errorMessage);
 			}
 		}
 	).fail(function() {
