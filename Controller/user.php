@@ -84,7 +84,7 @@ class user extends SlimvcController
                 }
             }
             $return['data']=$this->helper("global_helper")->updateQueueInfo();
-            $return['userPos']=$queue_id;
+            $return['data']['userPos']=$queue_id;
             $return['status'] = 0;
             $this->outputJson($return);
 
