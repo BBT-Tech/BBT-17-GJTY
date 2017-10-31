@@ -78,9 +78,9 @@ class global_helper extends SlimvcHelper
         /** @var var_model $var_model */
         $var_model=$this->model("var_model");
         $json=array(
-            "curPos"=>$var_model->getValue("curPos"),
+            "curPos"=>intval($var_model->getValue("curPos")),
             "queueLength"=>$queue_model->getQueueTotalLength(),
-            "avgServeTime"=>$var_model->getValue("avgServeTime")
+            "avgServeTime"=>intval($var_model->getValue("avgServeTime"))
         );
         file_put_contents(_Root ._DS_ . "queueinfo.json",json_encode($json));
         return $json;

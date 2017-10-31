@@ -21,9 +21,9 @@ class user extends SlimvcController
                 $return['data']=array(
                     "isInQueue"=>true,
                     "userPos"=>$item['queue_id'],
-                    "curPos"=>$var_model->getValue("curPos"),
+                    "curPos"=>intval($var_model->getValue("curPos")),
                     "queueLength"=>$queue_model->getQueueTotalLength(),
-                    "avgServeTime"=>$var_model->getValue("avgServeTime")
+                    "avgServeTime"=>intval($var_model->getValue("avgServeTime"))
 
                 );
             }
@@ -31,7 +31,7 @@ class user extends SlimvcController
             {
                 $return['data']=array(
                     "isInQueue"=>false,
-                    "isRegisterAble"=>$var_model->getValue("isRegisterAble")
+                    "isRegisterAble"=>intval($var_model->getValue("isRegisterAble"))
                 );
             }
 
