@@ -4,9 +4,10 @@ $.get(
 		if (r.status == 0) {
 			regStatus = r.data.isRegisterAble;
 
-			switch(regStatus) {
+			switch(parseInt(regStatus)) {
 				case 0:
-					if (r.data.isInQueue && (r.data.curPos - r.data.userPos <= 5))
+					if (r.data.isInQueue
+						&& (r.data.curPos - r.data.userPos <= 5))
 						location.href = './index.html';
 
 					setVerticalAlign("#welcome");

@@ -1,13 +1,16 @@
 var formSource = 'https://100steps.withcic.cn/2017_gjty/user/onSubscribedMsg/';
+var wechatSource = 'https://mp.weixin.qq.com/mp/subscribemsg';
+
 var regPattern = {
 		"phone": /^1[0-9]{10}$/,
-		"email": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		"email": /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,}(\.[a-z]{2,})*)$/
 	};
 
 var statusHeight = "calc((100vh - 488px) / 2)";
 var successHeight = "calc((100vh - 411px) / 2)";
 
-if (document.referrer.indexOf(formSource) == 0) {
+if (document.referrer.indexOf(wechatSource) == 0
+	|| document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").show();
 	setVerticalAlign("#reserve");
 
@@ -17,8 +20,8 @@ if (document.referrer.indexOf(formSource) == 0) {
 	$("#reserve").submit(function(e) {
 		e.preventDefault();
 
-		if (!(regPattern["phone"].test($("#phone").val())
-			&& regPattern["email"].test($("#email").val())))
+		if (!(regPattern.phone.test($("#phone").val())
+			&& regPattern.email.test($("#email").val())))
 			return;
 
 		var data = {};
@@ -34,15 +37,10 @@ if (document.referrer.indexOf(formSource) == 0) {
 				if (response.status == 0) {
 					$("body").css("margin-top", successHeight);
 
-					var waiting = parseWaiting(response.data.userPos - response.data.curPos);
-					if (waiting == 0) {
-						$("#waiting-content").hide();
-						$("body").css("margin-top", "+=2em");
-					} else {
-						$("#during-content").hide();
-						$("#waiting").text(waiting);
-						$("#time").text(waiting * response.data.avgServeTime);
-					}
+					var waiting = response.data.userPos - response.data.curPos;
+					$("#during-content").hide();
+					$("#waiting").text(waiting);
+					$("#time").text(waiting * response.data.avgServeTime);
 
 					$("#position").text(response.data.userPos);
 					$("#position").hide();

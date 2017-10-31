@@ -4,7 +4,7 @@ $.get(
 	paths.admin.getRegisterAble,
 	function(response) {
 		if (response.status == 0) {
-			switch(response.data.status) {
+			switch(parseInt(response.data.status)) {
 				case 1:
 					$("#placeholder-title").text('预约系统暂未开放');
 					$("#placeholder-content").text('提示： 连接投影页至大屏幕 » 开始接受预约');
