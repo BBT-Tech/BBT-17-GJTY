@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title></title>
+</head>
+<body>
+<input type="text" id="url">
+<br />
+<textarea id="request"></textarea>
+<br />
+<button onclick="get()">get</button>
+<button onclick="post()">post</button>
+<br />
+<div id="response"></div>
+<script>
+    function post()
+    {
+        axios.post($("#url").val(),$("#request").val())
+                .then(function(response)
+                {
+                    let tmp=JSON.stringify(response.data);
+                    if(!tmp)
+                        $('#response')[0].innerText=response.data;
+                    else
+                        $('#response')[0].innerText=tmp;
+                });
+    }
+    function get()
+    {
+        axios.get($("#url").val())
+                .then(function(response)
+                {
+                    let tmp=JSON.stringify(response.data);
+                    if(!tmp)
+                        $('#response')[0].innerText=response.data;
+                    else
+                        $('#response')[0].innerText=tmp;
+                });
+    }
+</script>
+</body>
+</html>

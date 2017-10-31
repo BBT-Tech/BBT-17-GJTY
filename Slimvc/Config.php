@@ -16,3 +16,9 @@ $Config['Host'] = 'localhost';
 $Config['User'] = 'root';
 $Config['Password'] = '';
 $Config['DBname'] = '';
+
+$Config['AdminUsername']='admin';
+$Config['AdminPassword']='password';
+
+$Config['wx_template_id']='';
+$Config['wx_app_id']='';
