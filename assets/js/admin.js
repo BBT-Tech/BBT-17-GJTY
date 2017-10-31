@@ -300,51 +300,67 @@ function showCurPos(pos) {
 }
 
 function updateQueue(l, p) {
-	// Variable l(length) and p(position) are for the initial render
-	var curLength = $("#related-queue>tr").length;
-	if (curLength < 7) {
-		// Rendered queue is not full
-		$.get(
-			/*************************************************************
+	// The Maximum of queue rows is 7
+	var displayedLen = $("#related-queue>tr").length;
+	var queueStatus = displayedLen >= 7 ? 'full' : (displayedLen == 0 ? 'empty' : 'filled');
+
+	switch(queueStatus) {
+		case 'empty':
+			/******************************************************************
+			  * Variable l(length) and p(position) are for this initial render
 			  * Send request with appropriate start position
-			  * Center current position among rows if length >= 7
-			  * And then append all the responsed data to table
-			  ***********************************************************/
-			paths.admin.getQueueListByPos +
-			(
-				testing ? '' :
-				'start/' + (curLength == 0 ? parseStartPos(l, p) : (curLength + 1)) + '/' +
-				'limit/' + (7 - curLength) + '/'
-			),
-			function(response) {
-				handleResponse(response, function() {
-					$.each(response.data, function(i, d) {
-						if (i < 7) appendToQueue(d);
+			  * Center the row of current position data if rows == 7
+			  ****************************************************************/
+			$.get(
+				paths.admin.getQueueListByPos +
+				(testing ? '' : 'start/' + String(parseStartPos(l, p)) + '/limit/7/'),
+				function(response) {
+					handleResponse(response, function() {
+						$.each(response.data, function(i, d) { appendToQueue(d); });
 					});
-				});
-			}
-		).fail(function() { failed(); });
-	} else {
-		$.getJSON(paths.admin.queueInfo, function(data) {
-			var curMax = parseInt($("#related-queue>tr:eq(-1)>td:eq(0)").text());
-			if (data.queueLength > curMax
-				// There is new item in queue data
-				&& data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
-				// Make sure the centered row displays data of current position
-				$.get(
-					paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
-					function(response) {
-						handleResponse(response, function() {
-							$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
-							setTimeout(function() {
-								$("#related-queue>tr:eq(0)").remove();
-								appendToQueue(response.data);
-							}, 700);
-						});
-					}
-				).fail(function() { failed(); });
-			}
-		}).fail(function() { failed(); });;
+				}
+			).fail(function() { failed(); });
+			break;
+
+		case 'full':
+			$.getJSON(paths.admin.queueInfo, function(data) {
+				var curMax = parseInt($("#related-queue>tr:eq(-1)>td:eq(0)").text());
+				if (data.queueLength > curMax
+					// There is new item in queue data
+					&& data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
+					// Make sure the centered row displays data of current position
+					$.get(
+						paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
+						function(response) {
+							handleResponse(response, function() {
+								$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
+								setTimeout(function() {
+									$("#related-queue>tr:eq(0)").remove();
+									appendToQueue(response.data);
+								}, 700);
+							});
+						}
+					).fail(function() { failed(); });
+				}
+			}).fail(function() { failed(); });
+			break;
+
+		case 'filled':
+			// Append all the responsed data to table
+			$.get(
+				paths.admin.getQueueListByPos +
+				(
+					testing ? '' :
+					('start/' + String(displayedLen + 1) +
+					'/limit/' + String(7 - displayedLen) + '/')
+				),
+				function(response) {
+					handleResponse(response, function() {
+						$.each(response.data, function(i, d) { appendToQueue(d); });
+					});
+				}
+			).fail(function() { failed(); });
+			break;
 	}
 }
 
