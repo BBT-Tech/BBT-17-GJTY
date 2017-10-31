@@ -1,4 +1,4 @@
-var systemClosed = false;
+var systemClosed = false, posUpdating = false;
 
 $.get(
 	paths.admin.getRegisterAble,
@@ -157,13 +157,10 @@ function initialPrepare() {
 
 			$("#related").show();
 			$("#call-next").show();
-			callNextPrepare();
 			updateQueue(data.queueLength, data.curPos);
 
-			if (data.curPos > 0)
-				updateCurPos(data.curPos);
-			else
-				$("#name").text('（暂未开始叫号）');
+			if (data.curPos > 0) updateCurPos(data.curPos, (data.queueLength == data.curPos));
+			else $("#name").text('（暂未开始叫号）');
 		}
 
 		if (!systemClosed) {
@@ -194,6 +191,7 @@ function initialPrepare() {
 }
 
 function callNextPrepare() {
+	$("#call-next").removeClass("disabled");
 	$("#call-next").click(function() {
 		confirmOperation(
 			'<p>更新至下一号的同时将通过微信提醒接下来的三位同学</p>' +
@@ -203,18 +201,17 @@ function callNextPrepare() {
 				$.post(
 					paths.admin.callNext,
 					'{"curPos": ' + $("#position").text() + '}',
-					function(r) {
-						handleResponse(r, function() {
-							if (r.data.curPos == r.data.queueLength) {
-								if (systemClosed) location.reload();
-								$("#call-next").unbind('click');
-								$("#call-next").addClass("disabled");
-							}
+					function(response) {
+						handleResponse(response, function() {
+							var d = response.data;
+							if ((d.queueLength == d.curPos)
+								&& systemClosed) location.reload();
 
 							$("#related-queue>tr.rgba-orange-strong").removeClass("rgba-orange-strong");
-							$("#related-queue>tr>td:first-child:contains(" + r.data.curPos + ")").parent()
+							$("#related-queue>tr>td:first-child:contains(" + d.curPos + ")").parent()
 							.addClass("rgba-orange-strong");
-							updateCurPos(r.data.curPos);
+
+							updateCurPos(d.curPos, (d.queueLength == d.curPos));
 
 							// On reserve system opening: automatically request and update per 10s
 							// On reserve system closed: update when there is a next-call
@@ -272,14 +269,19 @@ function allInfoPrepare() {
 	});
 }
 
-function updateCurPos(pos) {
+function updateCurPos(pos, final) {
+	posUpdating = true;
+	$("#call-next").unbind('click');
+	$("#call-next").addClass("disabled");
+
 	$.get(
 		paths.admin.getQueueItem + (testing ? '' : (pos + '/')),
 		function(response) {
 			handleResponse(response, function() {
-				var d = response.data;
 				$("#progress").hide();
 				$("#confirm-operation").modal('hide');
+
+				var d = response.data;
 				setTimeout(function() {
 					infoToggle("#name", d.name);
 					infoToggle("#phone", d.mobileNumber);
@@ -295,6 +297,9 @@ function updateCurPos(pos) {
 							$("#position").text(d.posID);
 							$("#position").removeClass("fadeOutUp");
 							$("#position").addClass("fadeInUp");
+
+							posUpdating = false;
+							if (!final) callNextPrepare();
 						}, 700);
 					}, 2333);
 				}, 700);
@@ -386,10 +391,8 @@ function appendToQueue(newRow) {
 		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
 	'</tr>');
 
-	if ($("#call-next.disabled").length == 1) {
-		callNextPrepare();
-		$("#call-next").removeClass("disabled");
-	}
+	if ($("#call-next.disabled").length == 1
+		&& (!posUpdating)) callNextPrepare();
 }
 
 function parseStartPos(len, pos) {
@@ -493,22 +496,6 @@ function confirmOperation(msg, func) {
 	$("#confirm-operation").modal('show');
 }
 
-function errorAlert(err, refresh =true) {
-	$("#error-info").text(err);
-	$("#error-alert").on('hide.bs.modal', function () {
-		if (refresh)
-			setTimeout(function() { location.reload(); }, 500);
-	});
-	$("#error-alert").on('show.bs.modal', function () {
-		// Prevent Bootstrap Operation: add scrollbarWidth as padding-right
-		$("body").css("padding-right", 0);
-	});
-
-	$("#progress").hide();
-	$("#confirm-operation").modal('hide');
-	$("#error-alert").modal('show');
-}
-
 function handleResponse(response, successFunc) {
 	if (response.status == 0) {
 		successFunc();
@@ -530,6 +517,22 @@ function exportData(data, filename) {
 	var link = document.createElement('a');
 	$(link).attr({ 'download': filename, 'href': URL.createObjectURL(blob)});
 	link.click();
+}
+
+function errorAlert(err, refresh =true) {
+	$("#error-info").text(err);
+	$("#error-alert").on('hide.bs.modal', function () {
+		if (refresh)
+			setTimeout(function() { location.reload(); }, 500);
+	});
+	$("#error-alert").on('show.bs.modal', function () {
+		// Prevent Bootstrap Operation: add scrollbarWidth as padding-right
+		$("body").css("padding-right", 0);
+	});
+
+	$("#progress").hide();
+	$("#confirm-operation").modal('hide');
+	$("#error-alert").modal('show');
 }
 
 function failed() {
