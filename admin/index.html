@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>光迹涂鸦 · 管理页面</title>
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/mdbootstrap/4.4.1/css/mdb.min.css">
+	<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+
+<body>
+	<div class="modal fade" id="login-modal">
+		<div class="modal-dialog cascading-modal modal-avatar modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<img src="../assets/img/login.jpg" class="rounded-circle img-responsive">
+				</div>
+
+				<div class="modal-body mx-3">
+					<div class="md-form">
+						<input type="text" class="form-control" id="username">
+						<label for="username">用户名</label>
+					</div>
+
+					<div class="md-form">
+						<input type="password" class="form-control" id="password">
+						<label for="password">密码</label>
+					</div>
+				</div>
+
+				<div class="modal-footer d-flex justify-content-center">
+					<button class="btn btn-deep-orange" id="login-modal-btn">登录系统</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="confirm-operation">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header justify-content-center">
+					<h5 class="modal-title">操作确认</h5>
+				</div>
+
+				<div class="modal-body confirm-info" id="confirm-info"></div>
+
+				<div class="progress" id="progress">
+					<div class="indeterminate bg-warning"></div>
+				</div>
+
+				<div class="modal-footer justify-content-center">
+					<button class="btn btn-outline-default waves-effect" data-dismiss="modal">
+						不了
+					</button>
+
+					<button class="btn btn-outline-primary waves-effect" id="confirm-btn">
+						确定
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="error-alert">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header justify-content-center">
+					<h5 class="modal-title">系统提示</h5>
+				</div>
+
+				<div class="modal-body">
+					<p class="error-info" id="error-info">emmm 操作上出现了一些偏差</p>
+				</div>
+
+				<div class="modal-footer justify-content-center">
+					<button class="btn btn-outline-info waves-effect" data-dismiss="modal">
+						我知道了
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="view overlay hm-white-slight">
+		<div class="flex-center position-text white-text z-depth-1">
+			<h2>当前号码为 <span class="animated" id="position">0</span></h2>
+		</div>
+
+		<a class="mask"></a>
+	</div>
+
+	<div class="information" id="information">
+		<div class="current">
+			<p class="information-title">当前预约者：</p>
+
+			<div class="card">
+				<div class="view overlay hm-white-slight">
+					<img class="admin-title" src="../assets/img/admin-title.png">
+					<a><div class="mask"></div></a>
+				</div>
+
+				<div class="card-body">
+					<p class="card-text">姓名： <span id="name">（预约系统暂未开放）</span></p>
+					<p class="card-text">手机： <span id="phone">不给</span></p>
+					<p class="card-text">邮箱： <span id="email">不了不了</span></p>
+					<p class="card-text">报名时间： <span id="reg-time">2017-10-27 21:52:36</span></p>
+					<p class="card-text">微信提醒： <span id="wechat-msg">未发送</span></p>
+				</div>
+			</div>
+		</div>
+
+		<button class="btn btn-outline-warning waves-effect call-next" id="call-next">
+			更新至下一号
+		</button>
+
+		<div class="placeholder" id="placeholder">
+			<h4 id="placeholder-title">（暂无预约信息）</h4>
+
+			<br><hr>
+			<p id="placeholder-content">
+				系统会每隔 10s 自动更新一次实时数据 直到预约队列全部处理完毕
+			</p>
+			<p>* 建议在浏览器全屏模式下进行操作</p>
+		</div>
+
+		<div class="related" id="related">
+			<p class="information-title">附近队列信息：</p>
+
+			<table class="table table-hover table-responsive">
+				<thead>
+					<tr>
+						<th>号码</th>
+						<th>姓名</th>
+						<th>手机号</th>
+						<th>邮箱地址</th>
+						<th>报名时间</th>
+						<th>微信提醒</th>
+					</tr>
+				</thead>
+
+				<tbody id="related-queue"></tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="buttons">
+		<button class="btn btn-outline-warning waves-effect" id="open-screen">
+			打开投影页
+		</button>
+
+		<button class="btn btn-outline-warning waves-effect" id="show-all-info">
+			查看所有预约信息
+		</button>
+
+		<button class="btn btn-outline-warning waves-effect" id="export-all-info">
+			导出所有预约信息
+		</button>
+
+		<button class="btn btn-outline-danger waves-effect" id="start-system">
+			开始接受预约
+		</button>
+
+		<button  class="btn btn-outline-danger waves-effect" id="close-system">
+			结束本次光迹涂鸦活动
+		</button>
+
+		<button class="btn btn-outline-danger waves-effect" id="login-btn">
+			登录管理系统
+		</button>
+
+		<button class="btn btn-outline-danger waves-effect" id="logout-btn">
+			退出管理系统
+		</button>
+	</div>
+
+	<div class="all-info" id="all-info">
+		<table class="table table-hover table-responsive">
+			<thead>
+				<tr>
+					<th>号码</th>
+					<th>姓名</th>
+					<th>手机号</th>
+					<th>邮箱地址</th>
+					<th>报名时间</th>
+					<th>微信提醒</th>
+				</tr>
+			</thead>
+
+			<tbody id="all-content"></tbody>
+		</table>
+
+		<div class="pages">
+			<nav>
+				<ul class="pagination pagination-circle pg-amber mb-0">
+					<li class="page-item"><a class="page-link">首页</a></li>
+					<li class="page-item"><a class="page-link">«</a></li>
+					<li class="page-item"><a class="page-link">»</a></li>
+					<li class="page-item"><a class="page-link">末页</a></li>
+				</ul>
+			</nav>
+
+			<button class="btn btn-outline-warning waves-effect" id="hide-all-info">
+				收起所有预约信息
+			</button>
+		</div>
+	</div>
+
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="../assets/js/popper.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	<script src="https://cdn.bootcss.com/mdbootstrap/4.4.1/js/mdb.min.js"></script>
+	<script src="../assets/js/config.js"></script>
+	<script src="../assets/js/admin.js"></script>
+</body>
+</html>

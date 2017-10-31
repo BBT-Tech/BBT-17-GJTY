@@ -1,0 +1,67 @@
+@font-face {
+	font-family: ScreenFont;
+	src: url(../fonts/ScreenFont.ttf);
+}
+
+body {
+	margin: 0;
+	padding-top: calc((100vh - 698px) / 2);
+	font-family: ScreenFont;
+	font-size: 36px;
+	text-align: center;
+	color: #f7ffa0;
+	background-image: url(../img/screen-background.png);
+	background-repeat-x: no-repeat;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
+p {
+	margin: 12px 0;
+}
+
+.title {
+	width: 453px;
+	height: 144px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 68px;
+	background-image: url(../img/screen-title.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+.position {
+	font-size: 156px;
+	color: #f3ff74;
+	animation-name: showUp;
+	animation-duration: 1s;
+}
+
+.fresh {
+	animation-name: hideUp;
+	animation-duration: 1s;
+}
+
+@keyframes hideUp {
+	0% {
+		opacity: 1;
+		transform: none;
+	}
+	100% {
+		opacity: 0;
+		transform: translate3d(0,-50%,0);
+	}
+}
+
+@keyframes showUp {
+	0% {
+		opacity: 0;
+		transform: translate3d(0,50%,0);
+	}
+	100% {
+		opacity: 1;
+		transform: none;
+	}
+}

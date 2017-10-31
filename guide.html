@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>百步梯 · 光迹涂鸦</title>
+	<link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+	<div class="guide" id="guide">
+		<div class="title"></div>
+
+		<div class="guide-content" id="welcome">
+			<p>这里是百步梯光迹涂鸦预约系统φ(>ω<*)</p>
+			<p>参与本次活动需要首先通过微信授权</p>
+			<p>确定的话就按下下面的按钮吧</p>
+
+			<button id="auth">预约取号</button>
+		</div>
+
+		<div class="guide-content pending" id="pending">
+			<p class="pending-info" id="pending-info">唔>< 预约还没开始哦</p>
+
+			<button id="fresh">刷新状态</button>
+		</div>
+
+		<div class="guide-content" id="closed">
+			<p id="closed-info">唔>< 预约已经结束啦</p>
+
+			<div class="closed-pos" id="closed-pos">
+				<p>你在本次光迹涂鸦活动中的参与序号是</p>
+				<p class="position" id="position">loading...</p>
+			</div>
+
+			<div id="epilogue">
+				<p>感谢你对百步梯的支持( • ̀ω•́ )✧</p>
+
+				<p class="notice">欢迎继续关注我们的其他活动哦</p>
+			</div>
+
+			<button id="show-pos">查看号码</button>
+		</div>
+	</div>
+
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="./assets/js/config.js"></script>
+	<script src="./assets/js/guide.js"></script>
+</body>
+</html>

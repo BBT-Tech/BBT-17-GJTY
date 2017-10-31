@@ -1,0 +1,146 @@
+body {
+	margin: 0;
+}
+
+.modal-dialog {
+	margin-top: 11em !important;
+}
+.modal-confirm {
+	margin-top: 7em !important;
+}
+
+.confirm-info p {
+	text-align: center;
+	margin: 1em 0;
+}
+
+.position-text {
+	margin-bottom: 20px;
+	height: 4.5em;
+	background: linear-gradient(40deg,#FFD86F,#FC6262);
+}
+
+.position-text span,
+.card-text span {
+	display: inline-block;
+}
+
+.information {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-flow: wrap;
+}
+.information-title {
+	font-size: 1.2em;
+	margin-top: 25px;
+	margin-bottom: 15px;
+}
+.current .card {
+	padding: 20px 20px 0 20px;
+}
+.current .card-body {
+	padding-bottom: 0 !important;
+}
+
+.admin-title {
+	border-radius: 10px !important;
+}
+
+.buttons {
+	display: flex;
+	opacity: 0;
+	justify-content: space-around;
+	padding-top: 55px;
+	padding-bottom: 1em;
+}
+
+.placeholder,
+.related,
+.call-next {
+	display: none;
+}
+
+.all-info {
+	display: none;
+	margin-top: 50px;
+	border-width: 2px 0 0 0;
+	border-color: rgb(255,136,0);
+	border-style: solid;
+}
+.pages {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+}
+.pages button {
+	margin-right: 50px;
+}
+.page-item {
+	line-height: 1 !important;
+	margin-bottom: 0 !important;
+}
+
+.error-info {
+	text-align: center;
+	margin-top: 1rem !important;
+}
+
+
+
+/*********************************************************************************
+  * The Following Progress-Bar-Related CSS Code Are From MaterializeCSS:
+  *     https://github.com/Dogfalo/materialize
+ *********************************************************************************/
+
+.progress .indeterminate:before {
+	content:'';
+	position:absolute;
+	background-color:inherit;
+	top:0;
+	left:0;
+	bottom:0;
+	will-change:left, right;
+	animation:indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite
+}
+.progress .indeterminate:after {
+	content:'';
+	position:absolute;
+	background-color:inherit;
+	top:0;
+	left:0;
+	bottom:0;
+	will-change:left, right;-webkit-animation:indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+	animation:indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+	animation-delay:1.15s
+}
+
+@keyframes indeterminate {
+	0% {
+		left:-35%;
+		right:100%
+	}
+	60% {
+		left:100%;
+		right:-90%
+	}
+	100% {
+		left:100%;
+		right:-90%
+	}
+}
+@keyframes indeterminate-short {
+	0% {
+		left:-200%;
+		right:100%
+	}
+	60% {
+		left:107%;
+		right:-8%
+	}
+	100% {
+		left:107%;
+		right:-8%
+	}
+}

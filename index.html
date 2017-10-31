@@ -11,38 +11,61 @@
 <body>
 	<div class="status" id="status">
 		<p id="success">预约成功啦(*´▽｀*)</p>
-		<div class="title"></div>
+		<div class="title" id="status-title"></div>
+
 		<p>你的号码为</p>
 		<p class="position" id="position">loading...</p>
-		<p>前方还有 <span id="waiting">loading...</span> 位同学在等待</p>
-		<p>大约需要 <span id="time">loading...</span> 分钟</p>
-		<p>到号前将有微信提示 但具体仍以现场为准</p>
-		<p>所以请留意大屏幕上的叫号信息哦</p>
-		<p>感谢你的参与(•̀ω•́)✧</p>
 
-		<button class="fresh" id="fresh">刷新</button>
+		<div id="waiting-content">
+			<p>前方还有 <span id="waiting">loading...</span> 位同学在等待</p>
+			<p>大约需要 <span id="time">loading...</span> 分钟</p>
+			<p>到号前将有微信提示 请留意现场叫号信息</p>
+
+			<p class="notice">注意不要过号五个以上哦(｀・ω・´)</p>
+
+			<button id="fresh">刷新</button>
+		</div>
+
+		<div id="during-content">
+			<p>大屏幕上的号码已经指向你啦</p>
+			<p>快到现场去参与活动吧ヾ(*>∀＜*)</p>
+
+			<p class="notice">过号五个以上时号码将不再保留哦</p>
+		</div>
 	</div>
 
+	<div class="missed" id="missed">
+		<div class="title"></div>
+
+		<p>你已经过号五个以上了><</p>
+		<p>为了保证活动的正常进行 原号码不再保留</p>
+		<p>不过可以通过重新取号继续参与哦(｀・ω・´)</p>
+
+		<button id="reserve-again">重新取号</button>
+	</div>
 
 	<form class="reserve" id="reserve">
 		<div class="title"></div>
 
 		<div class="info name">
-			<input type="text" name="name" placeholder="姓名">
+			<input type="text" name="name" placeholder="姓名" required>
 		</div>
 
 		<div class="info phone">
-			<input type="number" name="mobileNumber" placeholder="手机">
+			<input type="number" id="phone" name="mobileNumber" placeholder="手机" required>
 		</div>
+		<div class="error" id="phone-error">请输入十一位手机号(>ω･* )ﾉ</div>
 
 		<div class="info email">
-			<input type="email" name="emailAddress" placeholder="邮箱（照片将发送至此哦）">
+			<input type="email" id="email" name="emailAddress" placeholder="邮箱（照片将发送至此哦）" required>
 		</div>
+		<div class="error" id="email-error">请输入正确格式的邮箱(>ω･* )ﾉ</div>
 
-		<button class="submit">提交</button>
+		<button type="submit">提交</button>
 	</form>
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-	<script src="./assets/js/reserve.js"></script> 
+	<script src="./assets/js/config.js"></script>
+	<script src="./assets/js/reserve.js"></script>
 </body>
 </html>
