@@ -291,7 +291,7 @@ function updateCurPos(pos, final) {
 					infoToggle("#name", d.name);
 					infoToggle("#phone", d.mobileNumber);
 					infoToggle("#email", d.emailAddress);
-					infoToggle("#reg-time", d.registerDate);
+					infoToggle("#reg-time", parseTime(d.registerDate));
 					infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
 
 					setTimeout(function() {
@@ -390,7 +390,7 @@ function appendToQueue(newRow) {
 		'<td>' + newRow.name + '</td>' +
 		'<td>' + newRow.mobileNumber + '</td>' +
 		'<td>' + newRow.emailAddress + '</td>' +
-		'<td>' + newRow.registerDate + '</td>' +
+		'<td>' + parseTime(newRow.registerDate) + '</td>' +
 		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
 	'</tr>');
 
@@ -444,7 +444,7 @@ function togglePage(page, limit) {
 								'<td>' + d.name + '</td>' +
 								'<td>' + d.mobileNumber + '</td>' +
 								'<td>' + d.emailAddress + '</td>' +
-								'<td>' + d.registerDate + '</td>' +
+								'<td>' + parseTime(d.registerDate) + '</td>' +
 								'<td>' + (d.isNoticed ? '已发送' : '') + '</td>' +
 							'</tr>');
 						});
@@ -471,13 +471,13 @@ function freshPagination(newPage) {
 
 	$.each($(".page-item:gt(1):lt(-2)>a"), function(i) {
 		var n = start + i;
-		$(this).text(prefixNumber(n, String(pages).length));
+		$(this).text(prefixZero(n, String(pages).length));
 		if (n == newPage)
 			$(this).parent().addClass("active");
 	});
 }
 
-function prefixNumber(n, width) {
+function prefixZero(n, width) {
 	var n = String(n), len = n.length;
 	return len >= width ? n : (new Array(width - len + 1).join('0') + n);
 }
@@ -509,16 +509,32 @@ function handleResponse(response, successFunc) {
 function exportData(data, filename) {
 	var string = '\ufeff' + '号码,姓名,手机号,邮箱地址,报名时间,微信提醒' + '\n';
 	$.each(data, function(index, row) {
-		string += String(Object.values(row))
-		.replace(/(true)|(false)/g, function(noticed) {
-			return (noticed == 'true' ? '已发送' : '未发送');
-		}) + '\n';
+		row.isNoticed = row.isNoticed ? '已发送' : '未发送';
+		row.registerDate = parseTime(row.registerDate);
+		string += String(Object.values(row)) + '\n';
 	});
-	var blob = new Blob([string], { type: 'text/csv;charset=utf-8' });
 
 	var link = document.createElement('a');
+	var blob = new Blob([string], { type: 'text/csv;charset=utf-8' });
 	$(link).attr({ 'download': filename, 'href': URL.createObjectURL(blob)});
 	link.click();
+}
+
+function parseTime(timestamp) {
+	var date = new Date(parseInt(timestamp));
+
+	var ymd = [
+		date.getFullYear(),
+		prefixZero(date.getMonth() + 1, 2),
+		prefixZero(date.getDate(), 2),
+	],
+		hms = [
+		prefixZero(date.getHours(), 2),
+		prefixZero(date.getMinutes(), 2),
+		prefixZero(date.getSeconds(), 2),
+	];
+
+	return ymd.join('-') + ' ' + hms.join(':');
 }
 
 function errorAlert(err, refresh =true) {
