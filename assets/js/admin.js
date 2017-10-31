@@ -386,12 +386,12 @@ function updateQueue(l, p) {
 function appendToQueue(newRow) {
 	$("#related-queue").append(
 	'<tr class="animated fadeInUp">' +
-		'<td>' + newRow.posID + '</td>' +
-		'<td>' + newRow.name + '</td>' +
-		'<td>' + newRow.mobileNumber + '</td>' +
-		'<td>' + newRow.emailAddress + '</td>' +
-		'<td>' + parseTime(newRow.registerDate) + '</td>' +
-		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
+		'<td>' + escapeStr(newRow.posID) + '</td>' +
+		'<td>' + escapeStr(newRow.name) + '</td>' +
+		'<td>' + escapeStr(newRow.mobileNumber) + '</td>' +
+		'<td>' + escapeStr(newRow.emailAddress) + '</td>' +
+		'<td>' + escapeStr(parseTime(newRow.registerDate)) + '</td>' +
+		'<td>' + escapeStr((newRow.isNoticed ? '已发送' : '')) + '</td>' +
 	'</tr>');
 
 	if ($("#call-next.disabled").length == 1) callNextPrepare();
@@ -440,12 +440,12 @@ function togglePage(page, limit) {
 						$.each(response.data, function(i, d) {
 							$("#all-content").append(
 							'<tr>' +
-								'<td>' + d.posID + '</td>' +
-								'<td>' + d.name + '</td>' +
-								'<td>' + d.mobileNumber + '</td>' +
-								'<td>' + d.emailAddress + '</td>' +
-								'<td>' + parseTime(d.registerDate) + '</td>' +
-								'<td>' + (d.isNoticed ? '已发送' : '') + '</td>' +
+								'<td>' + escapeStr(d.posID) + '</td>' +
+								'<td>' + escapeStr(d.name) + '</td>' +
+								'<td>' + escapeStr(d.mobileNumber) + '</td>' +
+								'<td>' + escapeStr(d.emailAddress) + '</td>' +
+								'<td>' + escapeStr(parseTime(d.registerDate)) + '</td>' +
+								'<td>' + escapeStr((d.isNoticed ? '已发送' : '')) + '</td>' +
 							'</tr>');
 						});
 					});
@@ -535,6 +535,20 @@ function parseTime(timestamp) {
 	];
 
 	return ymd.join('-') + ' ' + hms.join(':');
+}
+
+function escapeStr(str) {
+	var m = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#39;',
+		'/': '&#x2F;',
+		'`': '&#x60;',
+		'=': '&#x3D;'
+	};
+	return String(str).replace(/[&<>"'`=\/]/g, function (s) { return m[s]; });
 }
 
 function errorAlert(err, refresh =true) {
