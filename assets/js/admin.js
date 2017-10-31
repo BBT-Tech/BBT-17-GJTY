@@ -1,4 +1,4 @@
-var systemClosed = false, posUpdating = false;
+var systemClosed = false;
 
 $.get(
 	paths.admin.getRegisterAble,
@@ -48,6 +48,42 @@ $.get(
 					break;
 			}
 			$("#login-btn").hide();
+			$("#logout-btn").click(function() {
+				confirmOperation(
+					'<p>确定要退出系统吗？</p>',
+					function() {
+						$.post(
+							paths.admin.logout, '',
+							function(response) {
+								handleResponse(response, function() {
+									errorAlert('退出系统成功！', false);
+									$("#error-alert").on('hide.bs.modal', function () {
+										$("#information").fadeOut(700);
+										$("#all-info").fadeOut(700);
+
+										$(".buttons").fadeOut(700, function() {
+											$("#show-all-info").hide();
+											$("#export-all-info").hide();
+											$("#start-system").hide();
+											$("#close-system").hide();
+											$("#logout-btn").hide();
+											$("#login-btn").show();
+											$("#open-screen").show();
+
+											$(".buttons").css("padding-top", "calc(100vh - 11em)");
+											$(".buttons").fadeIn(500, function() {
+												setTimeout(function() {
+													$("#login-modal").modal('show');
+												}, 500);
+											});
+										});
+									});
+								});
+							}
+						).fail(function() { failed(); });
+					}
+				);
+			});
 		} else {
 			$("#show-all-info").hide();
 			$("#export-all-info").hide();
@@ -92,43 +128,6 @@ $("#login-modal-btn").click(function() {
 });
 
 function initialPrepare() {
-	$("#logout-btn").click(function() {
-		confirmOperation(
-			'<p>确定要退出系统吗？</p>',
-			function() {
-				$.post(
-					paths.admin.logout, '',
-					function(response) {
-						handleResponse(response, function() {
-							errorAlert('退出系统成功！', false);
-							$("#error-alert").on('hide.bs.modal', function () {
-								$("#information").fadeOut(700);
-								$("#all-info").fadeOut(700);
-
-								$(".buttons").fadeOut(700, function() {
-									$("#show-all-info").hide();
-									$("#export-all-info").hide();
-									$("#start-system").hide();
-									$("#close-system").hide();
-									$("#logout-btn").hide();
-									$("#login-btn").show();
-									$("#open-screen").show();
-
-									$(".buttons").css("padding-top", "calc(100vh - 11em)");
-									$(".buttons").fadeIn(500, function() {
-										setTimeout(function() {
-											$("#login-modal").modal('show');
-										}, 500);
-									});
-								});
-							});
-						});
-					}
-				).fail(function() { failed(); });
-			}
-		);
-	});
-
 	$.getJSON(paths.admin.queueInfo, function(data) {
 		if (data.queueLength == 0) {
 			$("#name").text('（暂无预约信息）');
@@ -194,7 +193,7 @@ function callNextPrepare() {
 	$("#call-next").click(function() {
 		confirmOperation(
 			'<p>更新至下一号的同时将通过微信提醒接下来的三位同学</p>' +
-			'<p>该操作可能需要较长的处理时间，请耐心等待</p>' +
+			'<p>请在“当前号码”区块更新完成后进行此操作</p>' +
 			'<p>是否确定更新？</p>',
 			function() {
 				$.post(
@@ -277,7 +276,6 @@ function allInfoPrepare() {
 }
 
 function updateCurPos(pos, final) {
-	posUpdating = true;
 	$("#call-next").unbind('click');
 	$("#call-next").addClass("disabled");
 
@@ -304,8 +302,6 @@ function updateCurPos(pos, final) {
 							$("#position").text(d.posID);
 							$("#position").removeClass("fadeOutUp");
 							$("#position").addClass("fadeInUp");
-
-							posUpdating = false;
 							if (!final) callNextPrepare();
 						}, 700);
 					}, 2333);
@@ -398,8 +394,7 @@ function appendToQueue(newRow) {
 		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
 	'</tr>');
 
-	if ($("#call-next.disabled").length == 1
-		&& (!posUpdating)) callNextPrepare();
+	if ($("#call-next.disabled").length == 1) callNextPrepare();
 }
 
 function parseStartPos(len, pos) {
