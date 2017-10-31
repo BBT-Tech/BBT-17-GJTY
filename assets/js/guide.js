@@ -1,13 +1,12 @@
 $.get(
 	paths.user.isInQueue,
 	function(r) {
-		if (r.status == 0 || r.status == -1) {
-			regStatus = (r.status == -1 ? 0 : r.data.isRegisterAble);
+		if (r.status == 0) {
+			regStatus = r.data.isRegisterAble;
 
 			switch(regStatus) {
 				case 0:
-					if ((r.status != -1)
-						&& (r.data.curPos - r.data.userPos <= 5))
+					if (r.data.isInQueue && (r.data.curPos - r.data.userPos <= 5))
 						location.href = './index.html';
 
 					setVerticalAlign("#welcome");
@@ -52,7 +51,8 @@ $.get(
 					break;
 			}
 		} else {
-			alert(r.errorMessage);
+			if (r.status == -1) location.href = r.redirect;
+			else alert(r.errorMessage);
 		}
 	}
 ).fail(function() {

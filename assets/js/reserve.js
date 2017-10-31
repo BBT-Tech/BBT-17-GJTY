@@ -52,7 +52,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 						$("#position").show(1300);
 					});
 				} else {
-					if (response.status == -1) location.href = './guide.html';
+					if (response.status == -1) location.href = response.redirect;
 					else alert(response.errorMessage);
 				}
 			}
@@ -97,7 +97,7 @@ if (document.referrer.indexOf(formSource) == 0) {
 					$("#position").show(1300);
 				});
 			} else {
-				if (response.status == -1) location.href = './guide.html';
+				if (response.status == -1) location.href = response.redirect;
 				else alert(response.errorMessage);
 			}
 		}
