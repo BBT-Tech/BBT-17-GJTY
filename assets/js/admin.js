@@ -157,8 +157,12 @@ function initialPrepare() {
 			$("#call-next").show();
 			updateQueue(data.queueLength, data.curPos);
 
-			if (data.curPos > 0) updateCurPos(data.curPos, (data.queueLength == data.curPos));
-			else $("#name").text('（暂未开始叫号）');
+			if (data.curPos > 0) {
+				updateCurPos(data.curPos, (data.queueLength == data.curPos));
+			} else {
+				$("#name").text('（暂未开始叫号）');
+				callNextPrepare();
+			}
 		}
 
 		if (!systemClosed) {
@@ -208,7 +212,7 @@ function callNextPrepare() {
 							$("#related-queue>tr.rgba-orange-strong").removeClass("rgba-orange-strong");
 							$("#related-queue>tr>td:first-child:contains(" + d.curPos + ")").parent()
 							.addClass("rgba-orange-strong");
-							$("#related-queue>tr.rgba-orange-strong ~ tr:lt(3)>td:last-child").text('已发送');
+							$("#related-queue>tr.rgba-orange-strong ~ tr:lt(2)>td:last-child").text('已发送');
 
 							updateCurPos(d.curPos, (d.queueLength == d.curPos));
 
@@ -267,7 +271,7 @@ function allInfoPrepare() {
 		$.getJSON(paths.admin.queueInfo, function(data) {
 			$.get(
 				paths.admin.getQueueList +
-				(testing ? '' : ('/page/1/limit/' + data.queueLength + '/')),
+				(testing ? '' : ('page/1/limit/' + data.queueLength + '/')),
 				function(response) {
 					handleResponse(response, function() {
 						exportData(response.data, '光迹涂鸦预约信息.csv');
