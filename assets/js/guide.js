@@ -2,9 +2,7 @@ $.get(
 	paths.user.isInQueue,
 	function(r) {
 		if (r.status == 0) {
-			regStatus = r.data.isRegisterAble;
-
-			switch(parseInt(regStatus)) {
+			switch(r.data.isRegisterAble) {
 				case 0:
 					if (r.data.isInQueue
 						&& (r.data.curPos - r.data.userPos <= 5))

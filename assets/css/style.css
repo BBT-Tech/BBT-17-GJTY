@@ -9,10 +9,12 @@ p {
 }
 input {
 	margin-left: 60px;
+	padding: 0 !important;
 	font-size: 16px;
 	color: rgba(255,255,255,0.87);
 	background-color: transparent;
 	border-color: transparent;
+	border-width: 0;
 }
 input::-webkit-input-placeholder {
 	color: rgba(255,255,255,0.36) !important;
@@ -41,7 +43,6 @@ button {
 
 .info {
 	display: flex;
-	justify-content: center;
 	width: 260px;
 	height: 48px;
 	margin-top: 32px;
@@ -56,13 +57,13 @@ button {
 }
 
 .name {
-	background-image: url(../img/name.png);
+	background-image: url(../img/name.svg);
 }
 .phone {
-	background-image: url(../img/phone.png);
+	background-image: url(../img/phone.svg);
 }
 .email {
-	background-image: url(../img/email.png);
+	background-image: url(../img/email.svg);
 }
 
 .title {
