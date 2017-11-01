@@ -9,15 +9,48 @@ var regPattern = {
 var statusHeight = "calc((100vh - 488px) / 2)";
 var successHeight = "calc((100vh - 411px) / 2)";
 
-if (document.referrer.indexOf(wechatSource) == 0
+(function ($) {
+	var jQuery_css = $.fn.css,
+		gAttr = [
+			'line-height',
+			'background-position',
+			'width',
+			'height',
+			'top',
+			'right',
+			'bottom',
+			'left',
+			'margin-top',
+			'margin-right',
+			'margin-bottom',
+			'margin-left',
+			'padding-top',
+			'padding-right',
+			'padding-bottom',
+			'padding-left'
+		];
+	$.fn.css = function() {
+		if (arguments.length && !$.isArray(arguments[0])) return jQuery_css.apply(this, arguments);
+		var attr = arguments[0] || gAttr,
+			len = attr.length,
+			obj = {};
+		for (var i = 0; i < len; i++) obj[attr[i]] = jQuery_css.call(this, attr[i]);
+		return obj;
+	}
+})(jQuery);
+
+if (document.referrer.indexOf('') == 0
 	|| document.referrer.indexOf(formSource) == 0) {
 	// Android Wechat input elements' margin problem = =
-	if (navigator.userAgent.indexOf('Android') != -1
-		&& navigator.userAgent.indexOf('MicroMessenger') != -1)
-		$("input").css("margin-left", "75px");
+	// if (navigator.userAgent.indexOf('Android') != -1
+	// 	&& navigator.userAgent.indexOf('MicroMessenger') != -1)
+	// 	$("input").css("margin-left", "75px");
 
 	$("#reserve").show();
 	setVerticalAlign("#reserve");
+
+	test = [$("input").css(), $(".info").css()];
+	$.post('./test.php', JSON.stringify(test));
 
 	bindChecker("phone");
 	bindChecker("email");
