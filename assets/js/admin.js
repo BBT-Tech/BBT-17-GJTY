@@ -1,10 +1,10 @@
-var systemClosed = false, posUpdating = false;
+var systemClosed = false;
 
 $.get(
 	paths.admin.getRegisterAble,
 	function(response) {
 		if (response.status == 0) {
-			switch(response.data.status) {
+			switch(parseInt(response.data.status)) {
 				case 1:
 					$("#placeholder-title").text('预约系统暂未开放');
 					$("#placeholder-content").text('提示： 连接投影页至大屏幕 » 开始接受预约');
@@ -48,6 +48,42 @@ $.get(
 					break;
 			}
 			$("#login-btn").hide();
+			$("#logout-btn").click(function() {
+				confirmOperation(
+					'<p>确定要退出系统吗？</p>',
+					function() {
+						$.post(
+							paths.admin.logout, '',
+							function(response) {
+								handleResponse(response, function() {
+									errorAlert('退出系统成功！', false);
+									$("#error-alert").on('hide.bs.modal', function () {
+										$("#information").fadeOut(700);
+										$("#all-info").fadeOut(700);
+
+										$(".buttons").fadeOut(700, function() {
+											$("#show-all-info").hide();
+											$("#export-all-info").hide();
+											$("#start-system").hide();
+											$("#close-system").hide();
+											$("#logout-btn").hide();
+											$("#login-btn").show();
+											$("#open-screen").show();
+
+											$(".buttons").css("padding-top", "calc(100vh - 11em)");
+											$(".buttons").fadeIn(500, function() {
+												setTimeout(function() {
+													$("#login-modal").modal('show');
+												}, 500);
+											});
+										});
+									});
+								});
+							}
+						).fail(function() { failed(); });
+					}
+				);
+			});
 		} else {
 			$("#show-all-info").hide();
 			$("#export-all-info").hide();
@@ -92,43 +128,6 @@ $("#login-modal-btn").click(function() {
 });
 
 function initialPrepare() {
-	$("#logout-btn").click(function() {
-		confirmOperation(
-			'<p>确定要退出系统吗？</p>',
-			function() {
-				$.post(
-					paths.admin.logout, '',
-					function(response) {
-						handleResponse(response, function() {
-							errorAlert('退出系统成功！', false);
-							$("#error-alert").on('hide.bs.modal', function () {
-								$("#information").fadeOut(700);
-								$("#all-info").fadeOut(700);
-
-								$(".buttons").fadeOut(700, function() {
-									$("#show-all-info").hide();
-									$("#export-all-info").hide();
-									$("#start-system").hide();
-									$("#close-system").hide();
-									$("#logout-btn").hide();
-									$("#login-btn").show();
-									$("#open-screen").show();
-
-									$(".buttons").css("padding-top", "calc(100vh - 11em)");
-									$(".buttons").fadeIn(500, function() {
-										setTimeout(function() {
-											$("#login-modal").modal('show');
-										}, 500);
-									});
-								});
-							});
-						});
-					}
-				).fail(function() { failed(); });
-			}
-		);
-	});
-
 	$.getJSON(paths.admin.queueInfo, function(data) {
 		if (data.queueLength == 0) {
 			$("#name").text('（暂无预约信息）');
@@ -194,7 +193,7 @@ function callNextPrepare() {
 	$("#call-next").click(function() {
 		confirmOperation(
 			'<p>更新至下一号的同时将通过微信提醒接下来的三位同学</p>' +
-			'<p>该操作可能需要较长的处理时间，请耐心等待</p>' +
+			'<p>请在“当前号码”区块更新完成后进行此操作</p>' +
 			'<p>是否确定更新？</p>',
 			function() {
 				$.post(
@@ -234,6 +233,7 @@ function showAllPrepare() {
 			pages = Math.ceil(data.queueLength / rowLimit);
 
 			var linkNum = (pages > pageLimit ? pageLimit : pages);
+			$(".page-item:gt(1):lt(-2)>a").remove();
 			for (var i = 0; i < linkNum; i++) {
 				$(".page-item:eq(-2)").before(
 					'<li class="page-item"><a class="page-link">' + (i + 1) + '</a></li>'
@@ -277,7 +277,6 @@ function allInfoPrepare() {
 }
 
 function updateCurPos(pos, final) {
-	posUpdating = true;
 	$("#call-next").unbind('click');
 	$("#call-next").addClass("disabled");
 
@@ -293,7 +292,7 @@ function updateCurPos(pos, final) {
 					infoToggle("#name", d.name);
 					infoToggle("#phone", d.mobileNumber);
 					infoToggle("#email", d.emailAddress);
-					infoToggle("#reg-time", d.registerDate);
+					infoToggle("#reg-time", parseTime(d.registerDate));
 					infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
 
 					setTimeout(function() {
@@ -304,8 +303,6 @@ function updateCurPos(pos, final) {
 							$("#position").text(d.posID);
 							$("#position").removeClass("fadeOutUp");
 							$("#position").addClass("fadeInUp");
-
-							posUpdating = false;
 							if (!final) callNextPrepare();
 						}, 700);
 					}, 2333);
@@ -390,16 +387,15 @@ function updateQueue(l, p) {
 function appendToQueue(newRow) {
 	$("#related-queue").append(
 	'<tr class="animated fadeInUp">' +
-		'<td>' + newRow.posID + '</td>' +
-		'<td>' + newRow.name + '</td>' +
-		'<td>' + newRow.mobileNumber + '</td>' +
-		'<td>' + newRow.emailAddress + '</td>' +
-		'<td>' + newRow.registerDate + '</td>' +
-		'<td>' + (newRow.isNoticed ? '已发送' : '') + '</td>' +
+		'<td>' + escapeStr(newRow.posID) + '</td>' +
+		'<td>' + escapeStr(newRow.name) + '</td>' +
+		'<td>' + escapeStr(newRow.mobileNumber) + '</td>' +
+		'<td>' + escapeStr(newRow.emailAddress) + '</td>' +
+		'<td>' + escapeStr(parseTime(newRow.registerDate)) + '</td>' +
+		'<td>' + escapeStr((newRow.isNoticed ? '已发送' : '')) + '</td>' +
 	'</tr>');
 
-	if ($("#call-next.disabled").length == 1
-		&& (!posUpdating)) callNextPrepare();
+	if ($("#call-next.disabled").length == 1) callNextPrepare();
 }
 
 function parseStartPos(len, pos) {
@@ -445,12 +441,12 @@ function togglePage(page, limit) {
 						$.each(response.data, function(i, d) {
 							$("#all-content").append(
 							'<tr>' +
-								'<td>' + d.posID + '</td>' +
-								'<td>' + d.name + '</td>' +
-								'<td>' + d.mobileNumber + '</td>' +
-								'<td>' + d.emailAddress + '</td>' +
-								'<td>' + d.registerDate + '</td>' +
-								'<td>' + (d.isNoticed ? '已发送' : '') + '</td>' +
+								'<td>' + escapeStr(d.posID) + '</td>' +
+								'<td>' + escapeStr(d.name) + '</td>' +
+								'<td>' + escapeStr(d.mobileNumber) + '</td>' +
+								'<td>' + escapeStr(d.emailAddress) + '</td>' +
+								'<td>' + escapeStr(parseTime(d.registerDate)) + '</td>' +
+								'<td>' + escapeStr((d.isNoticed ? '已发送' : '')) + '</td>' +
 							'</tr>');
 						});
 					});
@@ -461,8 +457,6 @@ function togglePage(page, limit) {
 }
 
 function freshPagination(newPage) {
-	$(".page-item.active").removeClass("active");
-
 	$(".page-item.disabled").removeClass("disabled");
 	if (newPage == 1) $(".page-item:eq(1)").addClass("disabled");
 	if (newPage == pages) $(".page-item:eq(-2)").addClass("disabled");
@@ -476,13 +470,15 @@ function freshPagination(newPage) {
 
 	$.each($(".page-item:gt(1):lt(-2)>a"), function(i) {
 		var n = start + i;
-		$(this).text(prefixNumber(n, String(pages).length));
-		if (n == newPage)
+		$(this).text(prefixZero(n, String(pages).length));
+		if (n == newPage) {
+			$(".page-item.active").removeClass("active");
 			$(this).parent().addClass("active");
+		}
 	});
 }
 
-function prefixNumber(n, width) {
+function prefixZero(n, width) {
 	var n = String(n), len = n.length;
 	return len >= width ? n : (new Array(width - len + 1).join('0') + n);
 }
@@ -514,16 +510,47 @@ function handleResponse(response, successFunc) {
 function exportData(data, filename) {
 	var string = '\ufeff' + '号码,姓名,手机号,邮箱地址,报名时间,微信提醒' + '\n';
 	$.each(data, function(index, row) {
-		string += String(Object.values(row))
-		.replace(/(true)|(false)/g, function(noticed) {
-			return (noticed == 'true' ? '已发送' : '未发送');
-		}) + '\n';
+		row.isNoticed = row.isNoticed ? '已发送' : '未发送';
+		row.registerDate = parseTime(row.registerDate);
+		string += String(Object.values(row)) + '\n';
 	});
-	var blob = new Blob([string], { type: 'text/csv;charset=utf-8' });
 
 	var link = document.createElement('a');
+	var blob = new Blob([string], { type: 'text/csv;charset=utf-8' });
 	$(link).attr({ 'download': filename, 'href': URL.createObjectURL(blob)});
 	link.click();
+}
+
+function parseTime(timestamp) {
+	var date = new Date(0);
+	date.setSeconds(parseInt(timestamp));
+
+	var ymd = [
+		date.getFullYear(),
+		prefixZero(date.getMonth() + 1, 2),
+		prefixZero(date.getDate(), 2),
+	],
+		hms = [
+		prefixZero(date.getHours(), 2),
+		prefixZero(date.getMinutes(), 2),
+		prefixZero(date.getSeconds(), 2),
+	];
+
+	return ymd.join('-') + ' ' + hms.join(':');
+}
+
+function escapeStr(str) {
+	var m = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#39;',
+		'/': '&#x2F;',
+		'`': '&#x60;',
+		'=': '&#x3D;'
+	};
+	return String(str).replace(/[&<>"'`=\/]/g, function (s) { return m[s]; });
 }
 
 function errorAlert(err, refresh =true) {
