@@ -208,6 +208,7 @@ function callNextPrepare() {
 							$("#related-queue>tr.rgba-orange-strong").removeClass("rgba-orange-strong");
 							$("#related-queue>tr>td:first-child:contains(" + d.curPos + ")").parent()
 							.addClass("rgba-orange-strong");
+							$("#related-queue>tr.rgba-orange-strong ~ tr:lt(3)>td:last-child").text('已发送');
 
 							updateCurPos(d.curPos, (d.queueLength == d.curPos));
 
@@ -329,7 +330,7 @@ function updateQueue(l, p) {
 				(testing ? '' : 'start/' + String(parseStartPos(l, p)) + '/limit/7/'),
 				function(response) {
 					handleResponse(response, function() {
-						$.each(response.data, function(i, d) { appendToQueue(d); });
+						$.each(response.data, function(i, d) { appendToQueue(d, true); });
 					});
 				}
 			).fail(function() { failed(); });
@@ -384,7 +385,7 @@ function updateQueue(l, p) {
 	}
 }
 
-function appendToQueue(newRow) {
+function appendToQueue(newRow, init =false) {
 	$("#related-queue").append(
 	'<tr class="animated fadeInUp">' +
 		'<td>' + escapeStr(newRow.posID) + '</td>' +
@@ -395,7 +396,8 @@ function appendToQueue(newRow) {
 		'<td>' + escapeStr((newRow.isNoticed ? '已发送' : '')) + '</td>' +
 	'</tr>');
 
-	if ($("#call-next.disabled").length == 1) callNextPrepare();
+	if ($("#call-next.disabled").length == 1
+		&& !init) callNextPrepare();
 }
 
 function parseStartPos(len, pos) {
