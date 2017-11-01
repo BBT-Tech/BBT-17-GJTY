@@ -237,7 +237,7 @@ class admin extends SlimvcController
             $user_model=$this->model("user_model");
             $json=$this->getRequestJson();
             $return['data']=array(
-                "status"=>$var_model->getValue("isRegisterAble")
+                "status"=>intval($var_model->getValue("isRegisterAble"))
             );
             $return['status']=0;
 
@@ -250,6 +250,10 @@ class admin extends SlimvcController
             $this->outputJson($return);
 
         }
+    }
+    function updateQueueInfo()
+    {
+        echo $this->$this->helper("global_helper")->updateQueueInfo();
     }
 
 }

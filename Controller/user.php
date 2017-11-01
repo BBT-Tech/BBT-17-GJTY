@@ -21,17 +21,17 @@ class user extends SlimvcController
                 $return['data']=array(
                     "isInQueue"=>true,
                     "userPos"=>$item['queue_id'],
-                    "curPos"=>$var_model->getValue("curPos"),
+                    "curPos"=>intval($var_model->getValue("curPos")),
                     "queueLength"=>$queue_model->getQueueTotalLength(),
-                    "avgServeTime"=>$var_model->getValue("avgServeTime"),
-                    "isRegisterAble"=>$var_model->getValue("isRegisterAble")
+                    "avgServeTime"=>intval($var_model->getValue("avgServeTime")),
+                    "isRegisterAble"=>intval($var_model->getValue("isRegisterAble"))
                 );
             }
             else
             {
                 $return['data']=array(
                     "isInQueue"=>false,
-                    "isRegisterAble"=>$var_model->getValue("isRegisterAble")
+                    "isRegisterAble"=>intval($var_model->getValue("isRegisterAble"))
                 );
             }
 
@@ -84,7 +84,7 @@ class user extends SlimvcController
                 }
             }
             $return['data']=$this->helper("global_helper")->updateQueueInfo();
-            $return['userPos']=$queue_id;
+            $return['data']['userPos']=$queue_id;
             $return['status'] = 0;
             $this->outputJson($return);
 
