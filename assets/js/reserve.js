@@ -11,6 +11,11 @@ var successHeight = "calc((100vh - 411px) / 2)";
 
 if (document.referrer.indexOf(wechatSource) == 0
 	|| document.referrer.indexOf(formSource) == 0) {
+	// Android Wechat input elements' margin problem = =
+	if (navigator.userAgent.indexOf('Android') != -1
+		&& navigator.userAgent.indexOf('MicroMessenger') != -1)
+		$("input").css("margin-left", "75px");
+
 	$("#reserve").show();
 	setVerticalAlign("#reserve");
 
