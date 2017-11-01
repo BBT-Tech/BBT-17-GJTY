@@ -60,10 +60,10 @@ class global_helper extends SlimvcHelper
             "url"=>"https://100steps.withcic.cn/2017_gjty/index.html",
             "scene"=>1000,
             "title"=>"即将到号提醒",
-            "content"=>"同学你好！你的光迹涂鸦编号是:【 $cur_pos 】现在前面仅有三位等待的小伙伴啦^_^梯仔提醒你在十分钟内赶到【光迹涂鸦摊位】哦～
-以上信息仅供参考，具体排号进度还请注意现场大屏幕上的排号信息吼--(～￣▽￣)→))*￣▽￣*)o
-【梯仔温馨提示:请及时赶到摊位哦～为了保证游戏的正常进行，过号【5个】后号码将不作保留，需要重新取号_(:з」∠)_】",
-            "color"=>"#0000CC"
+            "content"=>"嘿，光影涂鸦马上就轮到你啦( ´･ᴗ･` )
+你的编号为【". $cur_pos ."】 前面仅有三人在等候啦，赶快来吧୧(﹒︠ᴗ﹒︡)୨
+【注意：过号五个号码将作废哦，届时就需要重新取号啦】",
+            "color"=>"#666666"
         ));
         $json=json_decode($return,true);
         if(!$json || $json['status']!=true)

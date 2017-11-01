@@ -253,7 +253,7 @@ class admin extends SlimvcController
     }
     function updateQueueInfo()
     {
-        echo $this->$this->helper("global_helper")->updateQueueInfo();
+        echo $this->helper("global_helper")->updateQueueInfo();
     }
 
 }
