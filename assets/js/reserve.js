@@ -6,8 +6,8 @@ var regPattern = {
 		"email": /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,}(\.[a-z]{2,})*)$/
 	};
 
-var statusHeight = "calc((100vh - 488px) / 2)";
-var successHeight = "calc((100vh - 411px) / 2)";
+var statusHeight = "calc((100vh - (488px + 2em)) / 2)";
+var successHeight = "calc((100vh - (411px + 2em)) / 2)";
 
 if (document.referrer.indexOf(wechatSource) == 0
 	|| document.referrer.indexOf(formSource) == 0) {
@@ -167,4 +167,5 @@ function setVerticalAlign(e) {
 	$("body").css("margin-top", function() {
 		return (this.scrollHeight - $(e).prop('scrollHeight')) / 2;
 	});
+	$("body").css("margin-top", "-=1em");
 }

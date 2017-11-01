@@ -65,4 +65,5 @@ function setVerticalAlign(e) {
 	$("body").css("margin-top", function() {
 		return (this.scrollHeight - $("#guide").prop('scrollHeight')) / divBase;
 	});
+	$("body").css("margin-top", "-=1em");
 }
