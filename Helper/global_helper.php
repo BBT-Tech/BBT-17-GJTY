@@ -60,10 +60,11 @@ class global_helper extends SlimvcHelper
             "url"=>"https://100steps.withcic.cn/2017_gjty/index.html",
             "scene"=>1000,
             "title"=>"即将到号提醒",
-            "content"=>"嘿，光影涂鸦马上就轮到你啦( ´･ᴗ･` )
-你的编号为【". $cur_pos ."】 前面仅有三人在等候啦，赶快来吧୧(﹒︠ᴗ﹒︡)୨
+            "content"=>"嘿，光迹涂鸦马上就轮到你啦( ´･ᴗ･` )
+你的预约号为". $cur_pos ."
+前面只有不到三人在等候啦，赶快来吧୧(﹒︠ᴗ﹒︡)୨
 【注意：过号五个号码将作废哦，届时就需要重新取号啦】",
-            "color"=>"#666666"
+            "color"=>"#999999"
         ));
         $json=json_decode($return,true);
         if(!$json || $json['status']!=true)
