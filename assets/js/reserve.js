@@ -106,7 +106,7 @@ if (document.referrer.indexOf(wechatSource) == 0
 
 $("#fresh").click(function () {
 	$.getJSON(
-		paths.user.queueInfo,
+		(paths.user.queueInfo + new Date().getSeconds()),
 		function(d) {
 			var waiting = parseWaiting($("#position").text() - d.curPos);
 			switch(waiting) {

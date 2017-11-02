@@ -11,11 +11,11 @@ paths = {
 		"callNext": "../admin/goNext/",
 		"login": "../admin/checkLogin/",
 		"logout": "../admin/logOut/",
-		"queueInfo": "../queueinfo.json"
+		"queueInfo": "../queueinfo.json?t="
 	},
 	"user": {
 		"register": "./user/register/",
 		"isInQueue": "./user/isUserInQueue/",
-		"queueInfo": "./queueinfo.json"
+		"queueInfo": "./queueinfo.json?t="
 	}
 };

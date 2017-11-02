@@ -4,7 +4,7 @@ $.get(
 	paths.admin.getRegisterAble,
 	function(response) {
 		if (response.status == 0) {
-			switch(response.data.status) {
+			switch(0) {
 				case 1:
 					$("#placeholder-title").text('预约系统暂未开放');
 					$("#placeholder-content").text('提示： 连接投影页至大屏幕 » 开始接受预约');
@@ -90,7 +90,7 @@ $.get(
 			$("#start-system").hide();
 			$("#close-system").hide();
 			$("#logout-btn").hide();
-			errorAlert(response.errorMessage, false);
+			$("#login-modal").modal('show');
 		}
 
 		// Show only current position card when there is no enough width = =
@@ -128,17 +128,17 @@ $("#login-modal-btn").click(function() {
 });
 
 function initialPrepare() {
-	$.getJSON(paths.admin.queueInfo, function(data) {
+	$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
 		if (data.queueLength == 0) {
 			$("#name").text('（暂无预约信息）');
 			$("#placeholder").show();
 			$("#show-all-info").hide();
 			$("#export-all-info").hide();
 			setInterval(function() {
-				$.getJSON(paths.admin.queueInfo, function(d) {
+				$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(d) {
 					if (d.queueLength > 0) location.reload();
 				});
-			}, 10000);
+			}, 5000);
 			return;
 		} else {
 			allInfoPrepare();
@@ -187,7 +187,7 @@ function initialPrepare() {
 			});
 
 			// Automatically request and add new reserve data while reserve system is open
-			setInterval(function() { updateQueue(); }, 10000);
+			setInterval(function() { updateQueue(); }, 5000);
 		}
 	}).fail(function() { failed(); });
 }
@@ -233,7 +233,7 @@ function showAllPrepare() {
 	$("#show-all-info").click(function() {
 		$("#show-all-info").unbind('click');
 
-		$.getJSON(paths.admin.queueInfo, function(data) {
+		$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
 			rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
 
@@ -268,7 +268,7 @@ function allInfoPrepare() {
 	});
 
 	$("#export-all-info").click(function() {
-		$.getJSON(paths.admin.queueInfo, function(data) {
+		$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
 			$.get(
 				paths.admin.getQueueList +
 				(testing ? '' : ('page/1/limit/' + data.queueLength + '/')),
@@ -298,7 +298,6 @@ function updateCurPos(pos, final) {
 					infoToggle("#phone", d.mobileNumber);
 					infoToggle("#email", d.emailAddress);
 					infoToggle("#reg-time", parseTime(d.registerDate));
-					infoToggle("#wechat-msg", ((d.isNoticed ? '已' : '未') + '发送'));
 
 					setTimeout(function() {
 						$("#position").removeClass("fadeInUp");
@@ -336,6 +335,7 @@ function updateQueue(l, p) {
 					handleResponse(response, function() {
 						$.each(response.data, function(i, d) { appendToQueue(d, true); });
 					});
+					waitingToggle(response.data.length);
 				}
 			).fail(function() { failed(); });
 
@@ -348,24 +348,27 @@ function updateQueue(l, p) {
 			break;
 
 		case 'full':
-			$.getJSON(paths.admin.queueInfo, function(data) {
+			$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
 				var curMax = parseInt($("#related-queue>tr:eq(-1)>td:eq(0)").text());
-				if (data.queueLength > curMax
+				if (data.queueLength > curMax) {
 					// There is new item in queue data
-					&& data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
-					// Make sure the centered row displays data of current position
-					$.get(
-						paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
-						function(response) {
-							handleResponse(response, function() {
-								$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
-								setTimeout(function() {
-									$("#related-queue>tr:eq(0)").remove();
-									appendToQueue(response.data);
-								}, 700);
-							});
-						}
-					).fail(function() { failed(); });
+					waitingToggle(data.queueLength - data.curPos);
+
+					if (data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
+						// Make sure the centered row displays data of current position
+						$.get(
+							paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
+							function(response) {
+								handleResponse(response, function() {
+									$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
+									setTimeout(function() {
+										$("#related-queue>tr:eq(0)").remove();
+										appendToQueue(response.data);
+									}, 700);
+								});
+							}
+						).fail(function() { failed(); });
+					}
 				}
 			}).fail(function() { failed(); });
 			break;
@@ -383,6 +386,8 @@ function updateQueue(l, p) {
 					handleResponse(response, function() {
 						$.each(response.data, function(i, d) { appendToQueue(d); });
 					});
+					if (response.data.length != 0)
+						waitingToggle(parseInt($("#waiting").text()) + response.data.length);
 				}
 			).fail(function() { failed(); });
 			break;
@@ -417,6 +422,17 @@ function infoToggle(ele, val) {
 		$(ele).removeClass("zoomOutUp");
 		$(ele).addClass("fadeInRight");
 	}, 1000);
+}
+
+function waitingToggle(val) {
+	$("#waiting").removeClass("fadeInUp");
+	$("#waiting").addClass("fadeOutUp");
+
+	setTimeout(function() {
+		$("#waiting").text(val);
+		$("#waiting").removeClass("fadeOutUp");
+		$("#waiting").addClass("fadeInUp");
+	}, 700);
 }
 
 function togglePage(page, limit) {

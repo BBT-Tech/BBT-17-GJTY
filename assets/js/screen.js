@@ -13,6 +13,6 @@ request.onload = function() {
 };
 
 setInterval(function() {
-	request.open('GET', paths.admin.queueInfo);
+	request.open('GET', (paths.admin.queueInfo + new Date().getSeconds()));
 	request.send();
-}, 5000);
+}, 3000);
