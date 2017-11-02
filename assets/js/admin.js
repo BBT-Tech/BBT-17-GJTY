@@ -128,14 +128,14 @@ $("#login-modal-btn").click(function() {
 });
 
 function initialPrepare() {
-	$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
+	$.getJSON((paths.admin.queueInfo + new Date()), function(data) {
 		if (data.queueLength == 0) {
 			$("#name").text('（暂无预约信息）');
 			$("#placeholder").show();
 			$("#show-all-info").hide();
 			$("#export-all-info").hide();
 			setInterval(function() {
-				$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(d) {
+				$.getJSON((paths.admin.queueInfo + new Date()), function(d) {
 					if (d.queueLength > 0) location.reload();
 				});
 			}, 5000);
@@ -233,7 +233,7 @@ function showAllPrepare() {
 	$("#show-all-info").click(function() {
 		$("#show-all-info").unbind('click');
 
-		$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
+		$.getJSON((paths.admin.queueInfo + new Date()), function(data) {
 			rowLimit = 11, pageLimit = 9;
 			pages = Math.ceil(data.queueLength / rowLimit);
 
@@ -268,7 +268,7 @@ function allInfoPrepare() {
 	});
 
 	$("#export-all-info").click(function() {
-		$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
+		$.getJSON((paths.admin.queueInfo + new Date()), function(data) {
 			$.get(
 				paths.admin.getQueueList +
 				(testing ? '' : ('page/1/limit/' + data.queueLength + '/')),
@@ -335,7 +335,7 @@ function updateQueue(l, p) {
 					handleResponse(response, function() {
 						$.each(response.data, function(i, d) { appendToQueue(d, true); });
 					});
-					waitingToggle(response.data.length);
+					waitingToggle(l - p);
 				}
 			).fail(function() { failed(); });
 
@@ -348,27 +348,26 @@ function updateQueue(l, p) {
 			break;
 
 		case 'full':
-			$.getJSON((paths.admin.queueInfo + new Date().getSeconds()), function(data) {
+			$.getJSON((paths.admin.queueInfo + new Date()), function(data) {
+				waitingToggle(data.queueLength - data.curPos);
 				var curMax = parseInt($("#related-queue>tr:eq(-1)>td:eq(0)").text());
-				if (data.queueLength > curMax) {
-					// There is new item in queue data
-					waitingToggle(data.queueLength - data.curPos);
 
-					if (data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
-						// Make sure the centered row displays data of current position
-						$.get(
-							paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
-							function(response) {
-								handleResponse(response, function() {
-									$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
-									setTimeout(function() {
-										$("#related-queue>tr:eq(0)").remove();
-										appendToQueue(response.data);
-									}, 700);
-								});
-							}
-						).fail(function() { failed(); });
-					}
+				if (data.queueLength > curMax
+					// There is new item in queue data
+					&& data.curPos > parseInt($("#related-queue>tr:eq(3)>td:eq(0)").text())) {
+					// Make sure the centered row displays data of current position
+					$.get(
+						paths.admin.getQueueItem + (testing ? '' : ((curMax + 1) + '/')),
+						function(response) {
+							handleResponse(response, function() {
+								$("#related-queue>tr:eq(0)").addClass("fadeOutUp");
+								setTimeout(function() {
+									$("#related-queue>tr:eq(0)").remove();
+									appendToQueue(response.data);
+								}, 700);
+							});
+						}
+					).fail(function() { failed(); });
 				}
 			}).fail(function() { failed(); });
 			break;
@@ -387,7 +386,10 @@ function updateQueue(l, p) {
 						$.each(response.data, function(i, d) { appendToQueue(d); });
 					});
 					if (response.data.length != 0)
-						waitingToggle(parseInt($("#waiting").text()) + response.data.length);
+						waitingToggle(
+							displayedLen + response.data.length -
+							parseInt($("#related-queue>tr.rgba-orange-strong>td:eq(0)").text())
+						);
 				}
 			).fail(function() { failed(); });
 			break;
@@ -425,8 +427,10 @@ function infoToggle(ele, val) {
 }
 
 function waitingToggle(val) {
+	if (val == $("#waiting").text()) return;
+
 	$("#waiting").removeClass("fadeInUp");
-	$("#waiting").addClass("fadeOutUp");
+	$("#waiting").addClass("animated fadeOutUp");
 
 	setTimeout(function() {
 		$("#waiting").text(val);
