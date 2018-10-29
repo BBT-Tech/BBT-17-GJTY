@@ -139,7 +139,6 @@ function initialPrepare() {
 					if (d.queueLength > 0) location.reload();
 				});
 			}, 5000);
-			return;
 		} else {
 			allInfoPrepare();
 
